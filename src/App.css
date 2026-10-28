@@ -125,3 +125,56 @@
 .letter-end{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;min-height:110px;margin-top:65px;color:#b35375;font:700 19px Georgia,serif}
 .letter-end span{font-size:45px}
 @media(max-width:500px){.birthday-letter{border-radius:9px}.letter-body p{margin-bottom:25px}}
+
+
+/* Carta manuscrita: papel cálido y tinta orgánica */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&display=swap');
+.birthday-screen:has(.birthday-letter) .birthday-content {
+  padding: clamp(28px, 5vw, 58px) 18px 85px;
+  perspective: 1400px;
+}
+.birthday-letter {
+  position: relative;
+  width: min(100%, 800px);
+  padding: clamp(34px, 7vw, 78px);
+  border: none;
+  border-radius: 2px 10px 7px 3px;
+  color: #793e39;
+  background:
+    radial-gradient(ellipse at 15% 20%, #fff6e6aa, transparent 54%),
+    radial-gradient(ellipse at 90% 80%, #d28c7280, transparent 60%),
+    repeating-linear-gradient(0deg, transparent 0 37px, #9e71621b 38px, transparent 39px),
+    linear-gradient(125deg,#f9e0c9,#f5cbb5 60%,#edbba7);
+  box-shadow: 4px 5px 0 #d89e8e, 15px 18px 30px #67294955, 0 38px 70px #6b204a77;
+  transform: rotate(-1.15deg);
+  animation: handwrittenPaperOpen 1s cubic-bezier(.18,.82,.23,1) both;
+}
+.birthday-letter::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(circle at 10% 15%, #a35c4820, transparent 18%), radial-gradient(circle at 98% 5%, #bd72522e, transparent 24%);
+  box-shadow: inset 0 0 55px #a7674930;
+}
+.birthday-letter h1 {
+  position: relative;
+  font: 700 clamp(37px,7vw,58px)/1.1 'Caveat', cursive;
+  color: #843b3b; transform: rotate(.7deg);
+}
+.birthday-letter .letter-date { font: 500 clamp(20px,4vw,26px) 'Caveat',cursive; color:#94594f; }
+.birthday-letter .letter-body {
+  position: relative;
+  font: 500 clamp(25px, 4.2vw, 35px)/1.45 'Caveat', cursive;
+  letter-spacing: .1px;
+  color: #73413c;
+}
+.birthday-letter .letter-body p { margin: 0 0 30px; text-indent: .3em; }
+.birthday-letter .letter-body p:nth-child(even) { transform: rotate(.22deg) translateX(2px); }
+.birthday-letter .letter-body p:nth-child(odd) { transform: rotate(-.18deg); }
+.birthday-letter .letter-end { font-family:'Caveat',cursive; font-size:29px; }
+@keyframes handwrittenPaperOpen {
+  from { opacity:0; transform: perspective(1000px) rotateX(-28deg) rotate(-5deg) scale(.75); }
+  to { opacity:1; transform: perspective(1000px) rotateX(0) rotate(-1.15deg) scale(1); }
+}
+@media(max-width:500px) {
+ .birthday-letter { padding: 30px 23px 42px; transform: rotate(-.55deg); }
+ .birthday-letter .letter-body { font-size:clamp(25px,7.5vw,30px); line-height:1.37; }
+}
