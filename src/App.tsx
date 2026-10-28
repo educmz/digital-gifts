@@ -192,7 +192,7 @@ function App() {
                 {Array.from({ length: 6 }, (_, index) => (
                   <div className={`memory-frame frame-${index + 1}`} key={index}>
                     <img
-                      src={import.meta.env.BASE_URL + `images/memories/recuerdo-${index + 1}.webp`}
+                      src={import.meta.env.BASE_URL + `images/memories/recuerdo-${index + 1}.jpeg`}
                       alt={`Recuerdo ${index + 1} de Hetto`}
                       onError={event => { event.currentTarget.style.display = 'none' }}
                     />
