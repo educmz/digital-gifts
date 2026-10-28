@@ -14,11 +14,12 @@ function App() {
   const [result, setResult] = useState<Result>(null)
 
   useEffect(() => {
-    if (code.length !== DIGITS || result !== null) return
-    const timer = window.setTimeout(() => {
-      setResult(code === PASSCODE ? 'success' : 'error')
-    }, 250)
-    return () => window.clearTimeout(timer)
+    if (!code || result !== null) return
+    if (!PASSCODE.startsWith(code)) {
+      setResult('error')
+    } else if (code.length === DIGITS) {
+      setResult('success')
+    }
   }, [code, result])
 
   useEffect(() => {
@@ -80,7 +81,7 @@ function App() {
           <section className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
             <h2 id="result-title">{result === 'success' ? 'Access Granted!' : 'Wrong Passcode!'}</h2>
             <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Happy puppy' : 'Sad puppy'}>
-              <span className="character-fallback" aria-hidden="true">{result === 'success' ? '🐶💗' : '🥺💧'}</span>
+
               <img className="character-image" src={import.meta.env.BASE_URL + "images/" + (result === "success" ? "success-character.webp" : "error-character.webp")} alt="" onError={event => { event.currentTarget.style.display = "none" }} />
             </div>
             <p>{result === 'success' ? 'Congrats you passed!' : 'Try Again?'}</p>
