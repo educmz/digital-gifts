@@ -6,7 +6,7 @@
   position: relative;
   isolation: isolate;
   background-color: #f7d7d1;
-  background-image: url('/digital-gifts/images/plaid-background.png'),
+  background-image: url('/digital-gifts/images/plaid-background.webp'),
     repeating-linear-gradient(90deg, transparent 0 47px, #ce83919e 47px 70px, transparent 70px 130px, #ea9cabac 130px 153px, transparent 153px 213px, #c5728599 213px 237px, transparent 237px 296px),
     repeating-linear-gradient(0deg, transparent 0 44px, #c47e8caa 44px 68px, transparent 68px 115px, #e991a0a3 115px 139px, transparent 139px 186px, #ad6273a1 186px 210px, transparent 210px 257px);
   background-size: cover, auto, auto;
@@ -15,25 +15,24 @@
 .lock { display: flex; flex-direction: column; align-items: center; width: 100%; transform: translateY(-4px); }
 .lock h1 { font: 900 clamp(24px, 5vw, 30px)/1.05 Georgia,serif; color: #87182d; text-shadow: 1px 2px 0 #f3b3b5; margin: 0 0 12px; }
 .heart-slots { display: flex; gap: 3px; }
-.heart-slot { width: 35px; height: 36px; border: 2px solid #171317; border-radius: 6px; background: #fffdfd; display: grid; place-items: center; }
-.heart-slot span { font-family: Arial,sans-serif; font-size: 29px; line-height: 1; color: #c96c80; text-shadow: 1px 2px #9e2c48; transition: transform .2s; }
+.heart-slot { width: 43px; height: 44px; border: 2px solid #171317; border-radius: 6px; background: #fffdfd; display: grid; place-items: center; }
+.heart-slot span { font-family: Arial,sans-serif; font-size: 35px; line-height: 1; color: #c96c80; text-shadow: 1px 2px #9e2c48; transition: transform .2s; }
 .heart-slot.active { background: #f8b5c3; }
 .heart-slot.active span { transform: scale(1.12); color: #a71e46; }
-.hint { font-size: 11px; font-weight: bold; margin: 5px 0 6px; text-align: center; }
-.calculator { padding: 10px 9px 11px; border-radius: 20px; border: 2px solid #171316; background: linear-gradient(#fff,#c4c4c4); box-shadow: 0 2px 0 #fff9; }
-.keys { display: grid; grid-template-columns: repeat(3, 34px); gap: 6px 5px; }
-.keys button { height: 34px; border: 1.8px solid #812035; border-radius: 7px; color: white; background: linear-gradient(#d7667e,#bd4763); box-shadow: inset 0 1px 0 #f7b0bc,0 2px 0 #871d35; font: bold 15px/1 Arial,sans-serif; text-shadow: 0 1px #762036; transition: transform .12s,filter .12s; }
+.hint { font-size: 12px; font-weight: bold; margin: 7px 0 9px; text-align: center; }
+.calculator { padding: 13px 12px 14px; border-radius: 20px; border: 2px solid #171316; background: linear-gradient(#fff,#c4c4c4); box-shadow: 0 2px 0 #fff9; }
+.keys { display: grid; grid-template-columns: repeat(3, 44px); gap: 8px 7px; }
+.keys button { height: 44px; border: 1.8px solid #812035; border-radius: 7px; color: white; background: linear-gradient(#d7667e,#bd4763); box-shadow: inset 0 1px 0 #f7b0bc,0 2px 0 #871d35; font: bold 18px/1 Arial,sans-serif; text-shadow: 0 1px #762036; transition: transform .12s,filter .12s; }
 .keys button:not(:disabled):active { transform: translateY(2px); box-shadow: inset 0 1px 2px #8b2240; }
 .keys button:not(:disabled):hover { filter: brightness(1.1); }
 .keys button:disabled { cursor: default; opacity: .85; }
-.keys button:last-child { font-size: 11px; }
+.keys button:last-child { font-size: 12px; }
 .modal-overlay { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 22px; background: #ce466971; backdrop-filter: blur(3px); animation: fadeIn .22s ease-out; }
 .result-modal { width: min(335px, 100%); min-height: 340px; padding: 17px 17px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px solid #a12e48; border-radius: 20px; background: #fffefd; box-shadow: 0 7px 0 #8e2948,0 20px 40px #62132c50; text-align: center; animation: pop .3s cubic-bezier(.18,1.4,.38,1); }
 .result-modal h2 { font-size: clamp(23px,6vw,30px); line-height: 1.1; margin: 0 0 10px; color: #8e253d; }
 .character { display: grid; place-items: center; width: 230px; height: 175px; max-width: 100%; background-repeat: no-repeat; background-position: center; background-size: contain; }
-.character.success { background-image: url('/digital-gifts/images/success-character.png'); }
-.character.error { background-image: url('/digital-gifts/images/error-character.png'); }
-.character-fallback { font-size: 83px; filter: drop-shadow(1px 3px 2px #f5a8ba); }
+
+
 .result-modal p { font: bold 17px Arial,sans-serif; color: #252025; margin: 6px 0 15px; }
 .modal-button { min-width: 140px; padding: 8px 20px; border: 2px solid #a6274a; border-radius: 30px; background: #d74b6b; color: white; font: bold 15px Arial,sans-serif; box-shadow: inset 0 2px #f2a9b6,0 3px #a6274a; }
 .modal-button:hover { background: #b73155; }
@@ -43,3 +42,62 @@
 
 .character { position: relative; }
 .character-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+
+/* Bigger, touch-friendly passcode calculator */
+.lock h1 { font-size: clamp(30px, 6vw, 40px); margin-bottom: 16px; }
+.heart-slots { gap: 6px; }
+.heart-slot { width: clamp(46px, 12vw, 58px); height: clamp(47px, 12vw, 59px); border-radius: 9px; }
+.heart-slot span { font-size: clamp(36px, 9vw, 46px); }
+.hint { font-size: clamp(12px, 3vw, 14px); margin: 10px 0 12px; }
+.calculator { padding: 16px; border-radius: 25px; border-width: 3px; }
+.keys { grid-template-columns: repeat(3, clamp(55px, 16vw, 69px)); gap: clamp(9px, 2.5vw, 12px); }
+.keys button { height: clamp(55px, 16vw, 69px); border-radius: 11px; font-size: 24px; border-width: 2px; }
+.keys button:last-child { font-size: 15px; }
+@media (max-height: 570px) {
+  .gift-screen { padding-block: 12px; }
+  .lock h1 { font-size: 27px; margin-bottom: 7px; }
+  .heart-slot { width: 42px; height: 43px; }
+  .heart-slot span { font-size: 34px; }
+  .hint { margin: 6px 0; font-size: 11px; }
+  .calculator { padding: 9px; }
+  .keys { grid-template-columns: repeat(3, 45px); gap: 6px; }
+  .keys button { height: 43px; font-size: 18px; }
+}
+
+/* Slightly reduce the enlarged keypad */
+.calculator { padding: 14px; }
+.keys { grid-template-columns: repeat(3, clamp(52px, 14vw, 61px)); gap: clamp(8px, 2vw, 10px); }
+.keys button { height: clamp(52px, 14vw, 61px); font-size: 22px; }
+.heart-slot { width: clamp(44px, 11vw, 53px); height: clamp(45px, 11vw, 54px); }
+.heart-slot span { font-size: clamp(34px, 8vw, 42px); }
+@media (max-height: 570px) { .calculator { padding: 9px; } .keys { grid-template-columns: repeat(3, 45px); gap: 6px; } .keys button { height: 43px; font-size: 18px; } }
+
+/* Birthday scene following a successful passcode */
+.birthday-screen{min-height:100svh;display:grid;place-items:center;padding:24px 16px;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 76%,#6473ee 0%,#344fbd 37%,#182d77 100%);color:white;font-family:Arial,sans-serif;}
+.birthday-screen:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 13% 47%,#859cff66,transparent 24%),radial-gradient(circle at 82% 82%,#9a8cf644,transparent 35%);pointer-events:none}
+.birthday-content{position:relative;width:min(100%,440px);min-height:min(740px,90svh);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;animation:fadeIn .5s ease}
+.birthday-top{font-size:clamp(24px,6vw,36px);margin:0 0 15px;font-weight:900;text-shadow:0 3px 2px #1c2158}
+.birthday-top span{display:block;margin:7px auto 0;font-size:clamp(13px,3.5vw,16px);font-weight:600}
+.count-number{font-size:clamp(44px,12vw,74px);color:#ffcbd5;font-weight:900;text-shadow:2px 4px #ae3457;animation:pop .5s ease}
+.cake-art{width:min(77vw,270px);height:275px;position:relative;margin:14px auto;display:grid;place-items:center}
+.cake-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2}
+.cake-fallback{position:relative;width:195px;height:190px;display:flex;align-items:center;flex-direction:column;justify-content:flex-end;filter:drop-shadow(0 10px 12px #18265d7d)}
+.cake-upper,.cake-lower{display:block;background:linear-gradient(#fff4fb 0 68%,#ffbbde 68%);border:3px solid #c2649e;border-radius:14px 14px 22px 22px;position:absolute}
+.cake-upper{height:64px;width:126px;bottom:66px;z-index:2}
+.cake-lower{height:75px;width:192px;bottom:3px}
+.candle{width:10px;height:47px;background:repeating-linear-gradient(135deg,#fff 0 7px,#fca9c6 7px 12px);position:absolute;bottom:125px;z-index:3;border:2px solid #de83a3;border-radius:3px}
+.candle:before{content:"";position:absolute;width:15px;height:25px;left:-4px;top:-29px;background:#ffcb5f;border-radius:80% 10% 80% 55%;transform:rotate(-10deg);box-shadow:0 0 22px #ffb357;animation:flame 1s infinite alternate}
+@keyframes flame{to{transform:rotate(8deg) scale(.85);filter:brightness(1.25)}}
+.birthday-action{padding:13px 32px;border:2px solid #fa9fc6;border-radius:30px;color:#a53368;background:#fff1fa;font-size:16px;font-weight:800;box-shadow:0 5px 0 #8e3c7a;animation:pop .4s ease}
+.birthday-action:hover{background:white}
+.birthday-headline{font-size:clamp(38px,9vw,60px);max-width:370px;line-height:1.08;margin:0;color:#ffd3e3;text-shadow:3px 4px #a12e66}
+.birthday-subtitle{font-size:17px;margin:25px 0 10px}
+.birthday-character{width:min(84vw,320px);height:320px;position:relative;display:grid;place-items:center;animation:pop .8s ease}
+.birthday-character img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2}
+.birthday-character-fallback{display:flex;flex-direction:column;align-items:center;gap:16px;font:900 140px Georgia,serif;color:#fff2fc;text-shadow:0 3px 0 #ffa1d5}
+.birthday-character-fallback small{font:700 16px Arial,sans-serif;text-shadow:none}
+@media(max-height:620px){.birthday-content{min-height:auto}.cake-art{height:205px;width:190px}.cake-fallback{transform:scale(.75)}.birthday-character{height:225px}}
+
+/* Mantener el escenario del cumpleaños azul, sin el fondo rosado del teclado. */
+.birthday-screen { background: radial-gradient(ellipse at 50% 76%, #6473ee 0%, #344fbd 37%, #182d77 100%); }
