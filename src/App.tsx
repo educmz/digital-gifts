@@ -62,10 +62,13 @@ function App() {
     if (!track || !letter || !gallery) return
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const context = gsap.context(() => {
-      gsap.fromTo(letter, { opacity: 0, y: 80, scale: 0.8, rotation: -6 }, {
-        opacity: 1, y: 0, scale: 1, rotation: -1,
-        duration: reduceMotion ? 0 : 1.2, ease: 'power3.out'
-      })
+      const bounds = letter.getBoundingClientRect()
+      const fromCenter = window.innerHeight / 2 - (bounds.top + bounds.height / 2)
+      gsap.fromTo(letter,
+        { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : fromCenter, scale: reduceMotion ? 1 : 0.07, rotation: reduceMotion ? -1 : -8, transformOrigin: '50% 50%' },
+        { opacity: 1, y: 0, scale: 1, rotation: -1,
+          duration: reduceMotion ? 0 : 1.35, ease: 'power3.out', immediateRender: true }
+      )
       if (reduceMotion) {
         gsap.set(gallery, { opacity: 1, y: 0, scale: 1 })
         return
