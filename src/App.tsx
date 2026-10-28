@@ -22,6 +22,7 @@ function App() {
   const revealTrackRef = useRef<HTMLDivElement>(null)
   const letterRef = useRef<HTMLElement>(null)
   const galleryRef = useRef<HTMLElement>(null)
+  const envelopeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -106,11 +107,25 @@ function App() {
   }
   const openEnvelope = () => {
     if (openingEnvelope) return
+    const envelope = envelopeRef.current
+    if (!envelope) return
     setOpeningEnvelope(true)
-    window.setTimeout(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setBirthdayStage('letter')
       setOpeningEnvelope(false)
-    }, 950)
+      return
+    }
+    gsap.timeline({
+      onComplete: () => {
+        setBirthdayStage('letter')
+        setOpeningEnvelope(false)
+      }
+    })
+      .to(envelope.querySelector('.envelope-heart'), { opacity: 0, duration: 0.15 }, 0)
+      .to(envelope.querySelector('.envelope-instruction'), { opacity: 0, duration: 0.15 }, 0)
+      .to(envelope.querySelector('.envelope-flap'), { rotateX: 175, transformOrigin: '50% 0%', duration: 0.5, ease: 'power2.inOut' }, 0)
+      .to(envelope.querySelector('.envelope-paper'), { y: -70, rotate: -3, duration: 0.65, ease: 'power3.out' }, 0.15)
+      .to(envelope, { scale: 1.7, autoAlpha: 0, duration: 0.5, ease: 'power2.inOut' }, 0.55)
   }
   const tryAgain = () => {
     setCode('')
@@ -171,7 +186,7 @@ function App() {
             <div className="envelope-scene">
               <h1 className="envelope-heading">Tengo algo para ti, Hetto ♡</h1>
               <p>Hay unas palabras que quiero regalarte...</p>
-              <button className={`envelope-button ${openingEnvelope ? "is-opening" : ""}`} onClick={openEnvelope} aria-label="Abrir la carta" disabled={openingEnvelope}>
+              <button className="envelope-button" ref={envelopeRef} onClick={openEnvelope} aria-label="Abrir la carta" disabled={openingEnvelope}>
                 <span className="envelope-paper" />
                 <span className="envelope-flap" />
                 <span className="envelope-heart">♥</span>
