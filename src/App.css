@@ -549,3 +549,16 @@
   .immersive-letter {animation: none !important}
   .cinematic-gallery {transition: none !important}
 }
+
+
+/* Solapa que se levanta y papel que sale antes de abrir la carta */
+.envelope-button { perspective: 850px; }
+.envelope-flap { transform-origin: 50% 7%; backface-visibility: hidden; }
+.envelope-button.is-opening { animation: envelopeOpenZoom .95s cubic-bezier(.22,.78,.25,1) forwards !important; }
+.envelope-button.is-opening .envelope-flap { animation: envelopeFlapLift .55s ease-in-out forwards; }
+.envelope-button.is-opening .envelope-paper { animation: envelopePaperLift .8s .16s ease-out forwards; }
+.envelope-button.is-opening .envelope-heart,
+.envelope-button.is-opening .envelope-instruction { opacity: 0; transition: opacity .2s; }
+@keyframes envelopeFlapLift { to { transform: rotateX(170deg); } }
+@keyframes envelopePaperLift { to { transform: translateY(-50px) rotate(-4deg); } }
+@keyframes envelopeOpenZoom { 0%{transform:scale(1);opacity:1} 55%{transform:scale(1.08);opacity:1} 100%{transform:scale(1.7);opacity:0} }
