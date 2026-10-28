@@ -14,8 +14,6 @@ function App() {
   const [result, setResult] = useState<Result>(null)
   const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter' | 'gallery'>('locked')
   const [seconds, setSeconds] = useState(3)
-  const [showLetterEnd, setShowLetterEnd] = useState(false)
-  const [letterLeaving, setLetterLeaving] = useState(false)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -47,31 +45,6 @@ function App() {
     setShowLetterEnd(false)
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [birthdayStage])
-
-  useEffect(() => {
-    if (birthdayStage !== 'letter') return
-    const node = document.getElementById('letter-end-trigger')
-    if (!node) return
-    let timer: number | undefined
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0]?.isIntersecting) {
-        setShowLetterEnd(true)
-        observer.disconnect()
-        timer = window.setTimeout(() => setLetterLeaving(true), 1200)
-      }
-    }, { threshold: 0.85 })
-    observer.observe(node)
-    return () => { observer.disconnect(); window.clearTimeout(timer) }
-  }, [birthdayStage])
-
-  useEffect(() => {
-    if (!letterLeaving || birthdayStage !== 'letter') return
-    const timer = window.setTimeout(() => {
-      setBirthdayStage('gallery')
-      window.scrollTo(0, 0)
-    }, 700)
-    return () => window.clearTimeout(timer)
-  }, [letterLeaving, birthdayStage])
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -165,7 +138,7 @@ function App() {
             </div>
           )}
           {birthdayStage === 'letter' && (
-            <article className={`birthday-letter ${letterLeaving ? "letter-disappearing" : ""}`}>
+            <article className="birthday-letter">
               <div className="letter-sparkle">♡ ✦ ♡</div>
               <h1>Para Hetto, con cariño</h1>
               <p className="letter-date">Una carta especialmente para ti</p>
@@ -180,11 +153,12 @@ function App() {
               </div>
               <div className="letter-end" id="letter-end-trigger">
                 <span>♥</span>
-                {showLetterEnd && <strong>Fin de la carta. ¡Feliz cumpleaños! ♡</strong>}
+                <strong>Fin de la carta. ¡Feliz cumpleaños! ♡</strong>
+                <small>Desliza hacia abajo para ver nuestros recuerdos ↓</small>
               </div>
             </article>
           )}
-          {birthdayStage === 'gallery' && (
+          {birthdayStage === 'letter' && (
             <section className="memory-gallery" aria-label="Galería de recuerdos de Hetto">
               <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
               <div className="memories-grid">
