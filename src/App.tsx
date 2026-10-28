@@ -12,8 +12,9 @@ type Result = 'success' | 'error' | null
 function App() {
   const [code, setCode] = useState('')
   const [result, setResult] = useState<Result>(null)
-  const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character'>('locked')
+  const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter'>('locked')
   const [seconds, setSeconds] = useState(3)
+  const [showLetterEnd, setShowLetterEnd] = useState(false)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -33,6 +34,18 @@ function App() {
     const timer = window.setTimeout(() => setSeconds(value => value - 1), 1100)
     return () => window.clearTimeout(timer)
   }, [birthdayStage, seconds])
+
+  useEffect(() => {
+    if (birthdayStage !== 'character') return
+    const timer = window.setTimeout(() => setBirthdayStage('envelope'), 3800)
+    return () => window.clearTimeout(timer)
+  }, [birthdayStage])
+
+  useEffect(() => {
+    if (birthdayStage !== 'letter') return
+    setShowLetterEnd(false)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [birthdayStage])
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -112,6 +125,44 @@ function App() {
               </div>
               <button className="birthday-action" onClick={() => setBirthdayStage('character')}>Continuar ♡</button>
             </>
+          )}
+          {birthdayStage === 'envelope' && (
+            <div className="envelope-scene">
+              <h1 className="envelope-heading">Tengo algo para ti, Hetto ♡</h1>
+              <p>Hay unas palabras que quiero regalarte...</p>
+              <button className="envelope-button" onClick={() => setBirthdayStage('letter')} aria-label="Abrir la carta">
+                <span className="envelope-paper" />
+                <span className="envelope-flap" />
+                <span className="envelope-heart">♥</span>
+                <span className="envelope-instruction">Toca para abrir</span>
+              </button>
+            </div>
+          )}
+          {birthdayStage === 'letter' && (
+            <article className="birthday-letter">
+              <div className="letter-sparkle">♡ ✦ ♡</div>
+              <h1>Para Hetto, con cariño</h1>
+              <p className="letter-date">Una carta especialmente para ti</p>
+              <div className="letter-body">
+                <p>Querida Hetto:</p>
+                <p>Hoy es un día especial y quería regalarte algo que pudieras guardar y volver a leer cuando quisieras.</p>
+                <p>Espero que este nuevo año de vida venga lleno de momentos felices, pequeñas sorpresas y muchos motivos para sonreír.</p>
+                <p>Que nunca te falten las personas que te quieren, los sueños que te ilusionan y las ganas de disfrutar cada momento.</p>
+                <p>Gracias por ser tú, por compartir tu alegría y por hacer especiales los días más sencillos.</p>
+                <p>Ojalá que este cumpleaños sea solo el comienzo de muchísimas cosas bonitas que te esperan.</p>
+                <p>Con mucho cariño, feliz cumpleaños, Hetto. ♡</p>
+              </div>
+              <div className="letter-end" ref={node => {
+                if (!node || showLetterEnd) return
+                const observer = new IntersectionObserver(entries => {
+                  if (entries[0].isIntersecting) { setShowLetterEnd(true); observer.disconnect() }
+                }, { threshold: 0.8 })
+                observer.observe(node)
+              }}>
+                <span>♥</span>
+                {showLetterEnd && <strong>Fin de la carta. ¡Feliz cumpleaños! ♡</strong>}
+              </div>
+            </article>
           )}
           {birthdayStage === 'character' && (
             <>
