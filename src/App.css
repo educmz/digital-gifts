@@ -629,3 +629,44 @@
   }
   .birthday-letter .letter-body p {margin-bottom: 13px;}
 }
+
+
+/* Sin huecos: el collage llega inmediatamente al terminar la carta.
+   GSAP eleva la última hoja y revela el collage que ya se ve debajo. */
+.memories-reveal-track {
+  height: 125svh !important;
+  min-height: 0;
+  margin-top: 0 !important;
+  isolation: isolate;
+}
+.birthday-screen:has(.memories-reveal-track) .cinematic-gallery {
+  position: sticky !important;
+  top: 0 !important;
+  opacity: 1;
+  z-index: 1;
+}
+.letter-transition-sheet {
+  position: absolute;
+  z-index: 3;
+  top: 2vh;
+  left: 50%;
+  width: min(80vw, 540px);
+  min-height: clamp(100px, 22vh, 190px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(145deg, #fff, #fff0f7);
+  border: 1px solid #efc9d5;
+  box-shadow: 0 15px 42px #74314c55;
+  transform: translateX(-50%);
+  transform-origin: center top;
+  pointer-events: none;
+}
+.letter-transition-sheet span {
+  font: 700 clamp(28px, 5vw, 43px)/1.1 'Caveat', cursive;
+  color: #87435b;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .letter-transition-sheet { display: none; }
+}
