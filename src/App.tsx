@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './App.css'
@@ -54,7 +54,7 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [birthdayStage])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (birthdayStage !== 'letter') return
     const track = revealTrackRef.current
     const letter = letterRef.current
@@ -81,7 +81,7 @@ function App() {
       })
         .fromTo(letter,
           { y: 0, scale: 1, rotation: -1, rotationX: 0, opacity: 1, filter: 'blur(0px)' },
-          { y: () => window.innerHeight * 0.76, scale: 0.48, rotation: 11, rotationX: -18, opacity: 0, filter: 'blur(7px)', ease: 'power2.in' }, 0)
+          { y: () => -window.innerHeight * 0.76, scale: 0.48, rotation: 11, rotationX: -18, opacity: 0, filter: 'blur(7px)', ease: 'power2.in' }, 0)
         .fromTo(gallery,
           { opacity: 0.08, yPercent: 7, scale: 0.94 },
           { opacity: 1, yPercent: 0, scale: 1, ease: 'power1.out' }, 0.12)
