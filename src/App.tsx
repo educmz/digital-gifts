@@ -54,6 +54,33 @@ function App() {
   }, [birthdayStage])
 
   useEffect(() => {
+    if (birthdayStage !== 'letter') return
+    const track = revealTrackRef.current
+    const letter = letterRef.current
+    const gallery = galleryRef.current
+    if (!track || !letter || !gallery) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const context = gsap.context(() => {
+      gsap.fromTo(letter, { opacity: 0, y: 80, scale: 0.8, rotation: -6 }, {
+        opacity: 1, y: 0, scale: 1, rotation: -1,
+        duration: reduceMotion ? 0 : 1.2, ease: 'power3.out'
+      })
+      if (reduceMotion) {
+        gsap.set(gallery, { opacity: 1, y: 0, scale: 1 })
+        return
+      }
+      gsap.timeline({
+        scrollTrigger: { trigger: track, start: 'top bottom', end: 'top top', scrub: 0.7, invalidateOnRefresh: true }
+      })
+        .to(letter, { scale: 0.87, rotationX: -10, opacity: 0.15, filter: 'blur(3px)', ease: 'none' }, 0)
+        .fromTo(gallery, { opacity: 0, y: 80, scale: 0.92 },
+          { opacity: 1, y: 0, scale: 1, ease: 'none' }, 0)
+    })
+    const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 150)
+    return () => { window.clearTimeout(refresh); context.revert() }
+  }, [birthdayStage])
+
+  useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
       if (result !== null) return
       if (/^[0-9]$/.test(event.key)) {
