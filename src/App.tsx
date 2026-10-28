@@ -71,11 +71,21 @@ function App() {
         return
       }
       gsap.timeline({
-        scrollTrigger: { trigger: track, start: 'top bottom', end: 'top top', scrub: 0.7, invalidateOnRefresh: true }
+        scrollTrigger: {
+          trigger: track,
+          start: 'top bottom',
+          end: 'top top',
+          scrub: 0.55,
+          invalidateOnRefresh: true
+        }
       })
-        .to(letter, { scale: 0.87, rotationX: -10, opacity: 0.15, filter: 'blur(3px)', ease: 'none' }, 0)
-        .fromTo(gallery, { opacity: 0, y: 80, scale: 0.92 },
-          { opacity: 1, y: 0, scale: 1, ease: 'none' }, 0)
+        .fromTo(gallery,
+          { opacity: 0.92, yPercent: 4, scale: 0.96 },
+          { opacity: 1, yPercent: 0, scale: 1, ease: 'none' }, 0)
+        .fromTo(track.querySelector('.letter-transition-sheet'),
+          { opacity: 1, yPercent: 0, scale: 1, rotate: -2 },
+          { opacity: 0, yPercent: -80, scale: 0.72, rotate: 7, ease: 'power1.inOut' }, 0)
+
     })
     const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 150)
     return () => { window.clearTimeout(refresh); context.revert() }
@@ -228,6 +238,9 @@ function App() {
           )}
           {birthdayStage === 'letter' && (
             <div className="memories-reveal-track" ref={revealTrackRef}>
+            <div className="letter-transition-sheet" aria-hidden="true">
+              <span>Con muchísimo cariño, para ti. ♡</span>
+            </div>
             <section className="memory-gallery cinematic-gallery" ref={galleryRef} aria-label="Galería de recuerdos de Hetto">
               <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
               <div className="memories-grid">
