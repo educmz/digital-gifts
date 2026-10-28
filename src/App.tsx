@@ -75,16 +75,16 @@ function App() {
           trigger: track,
           start: 'top bottom',
           end: 'top top',
-          scrub: 0.55,
+          scrub: 0.65,
           invalidateOnRefresh: true
         }
       })
+        .fromTo(letter,
+          { y: 0, scale: 1, rotation: -1, rotationX: 0, opacity: 1, filter: 'blur(0px)' },
+          { y: () => window.innerHeight * 0.76, scale: 0.48, rotation: 11, rotationX: -18, opacity: 0, filter: 'blur(7px)', ease: 'power2.in' }, 0)
         .fromTo(gallery,
-          { opacity: 0.92, yPercent: 4, scale: 0.96 },
-          { opacity: 1, yPercent: 0, scale: 1, ease: 'none' }, 0)
-        .fromTo(track.querySelector('.letter-transition-sheet'),
-          { opacity: 1, xPercent: -50, yPercent: 0, scale: 1, rotate: -2 },
-          { opacity: 0, xPercent: -50, yPercent: -80, scale: 0.72, rotate: 7, ease: 'power1.inOut' }, 0)
+          { opacity: 0.08, yPercent: 7, scale: 0.94 },
+          { opacity: 1, yPercent: 0, scale: 1, ease: 'power1.out' }, 0.12)
 
     })
     const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 150)
@@ -238,9 +238,6 @@ function App() {
           )}
           {birthdayStage === 'letter' && (
             <div className="memories-reveal-track" ref={revealTrackRef}>
-            <div className="letter-transition-sheet" aria-hidden="true">
-              <span>Con muchísimo cariño, para ti. ♡</span>
-            </div>
             <section className="memory-gallery cinematic-gallery" ref={galleryRef} aria-label="Galería de recuerdos de Hetto">
               <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
               <div className="memories-grid">
