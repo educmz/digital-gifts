@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './App.css'
+import { installHeartEffects } from './heartEffects'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,6 +24,8 @@ function App() {
   const letterRef = useRef<HTMLElement>(null)
   const galleryRef = useRef<HTMLElement>(null)
   const envelopeRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => installHeartEffects(), [])
 
   useEffect(() => {
     if (!code || result !== null) return
