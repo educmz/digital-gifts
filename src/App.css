@@ -40,3 +40,6 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 @media(max-width:420px) { .gift-screen { padding: 28px 12px; } .lock { transform: none; } }
+
+.character { position: relative; }
+.character-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
