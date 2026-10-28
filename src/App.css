@@ -6,7 +6,7 @@
   position: relative;
   isolation: isolate;
   background-color: #f7d7d1;
-  background-image: url('/digital-gifts/images/plaid-background.png'),
+  background-image: url('/digital-gifts/images/plaid-background.webp'),
     repeating-linear-gradient(90deg, transparent 0 47px, #ce83919e 47px 70px, transparent 70px 130px, #ea9cabac 130px 153px, transparent 153px 213px, #c5728599 213px 237px, transparent 237px 296px),
     repeating-linear-gradient(0deg, transparent 0 44px, #c47e8caa 44px 68px, transparent 68px 115px, #e991a0a3 115px 139px, transparent 139px 186px, #ad6273a1 186px 210px, transparent 210px 257px);
   background-size: cover, auto, auto;
@@ -31,8 +31,8 @@
 .result-modal { width: min(335px, 100%); min-height: 340px; padding: 17px 17px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 3px solid #a12e48; border-radius: 20px; background: #fffefd; box-shadow: 0 7px 0 #8e2948,0 20px 40px #62132c50; text-align: center; animation: pop .3s cubic-bezier(.18,1.4,.38,1); }
 .result-modal h2 { font-size: clamp(23px,6vw,30px); line-height: 1.1; margin: 0 0 10px; color: #8e253d; }
 .character { display: grid; place-items: center; width: 230px; height: 175px; max-width: 100%; background-repeat: no-repeat; background-position: center; background-size: contain; }
-.character.success { background-image: url('/digital-gifts/images/success-character.png'); }
-.character.error { background-image: url('/digital-gifts/images/error-character.png'); }
+.character.success { background-image: url('/digital-gifts/images/success-character.webp'); }
+.character.error { background-image: url('/digital-gifts/images/error-character.webp'); }
 .character-fallback { font-size: 83px; filter: drop-shadow(1px 3px 2px #f5a8ba); }
 .result-modal p { font: bold 17px Arial,sans-serif; color: #252025; margin: 6px 0 15px; }
 .modal-button { min-width: 140px; padding: 8px 20px; border: 2px solid #a6274a; border-radius: 30px; background: #d74b6b; color: white; font: bold 15px Arial,sans-serif; box-shadow: inset 0 2px #f2a9b6,0 3px #a6274a; }
