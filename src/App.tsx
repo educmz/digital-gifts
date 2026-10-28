@@ -12,9 +12,10 @@ type Result = 'success' | 'error' | null
 function App() {
   const [code, setCode] = useState('')
   const [result, setResult] = useState<Result>(null)
-  const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter'>('locked')
+  const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter' | 'gallery'>('locked')
   const [seconds, setSeconds] = useState(3)
   const [showLetterEnd, setShowLetterEnd] = useState(false)
+  const [letterLeaving, setLetterLeaving] = useState(false)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -46,6 +47,31 @@ function App() {
     setShowLetterEnd(false)
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [birthdayStage])
+
+  useEffect(() => {
+    if (birthdayStage !== 'letter') return
+    const node = document.getElementById('letter-end-trigger')
+    if (!node) return
+    let timer: number | undefined
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0]?.isIntersecting) {
+        setShowLetterEnd(true)
+        observer.disconnect()
+        timer = window.setTimeout(() => setLetterLeaving(true), 1200)
+      }
+    }, { threshold: 0.85 })
+    observer.observe(node)
+    return () => { observer.disconnect(); window.clearTimeout(timer) }
+  }, [birthdayStage])
+
+  useEffect(() => {
+    if (!letterLeaving || birthdayStage !== 'letter') return
+    const timer = window.setTimeout(() => {
+      setBirthdayStage('gallery')
+      window.scrollTo(0, 0)
+    }, 700)
+    return () => window.clearTimeout(timer)
+  }, [letterLeaving, birthdayStage])
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -139,7 +165,7 @@ function App() {
             </div>
           )}
           {birthdayStage === 'letter' && (
-            <article className="birthday-letter">
+            <article className={`birthday-letter ${letterLeaving ? "letter-disappearing" : ""}`}>
               <div className="letter-sparkle">♡ ✦ ♡</div>
               <h1>Para Hetto, con cariño</h1>
               <p className="letter-date">Una carta especialmente para ti</p>
@@ -152,17 +178,31 @@ function App() {
                 <p>Ojalá que este cumpleaños sea solo el comienzo de muchísimas cosas bonitas que te esperan.</p>
                 <p>Con mucho cariño, feliz cumpleaños, Hetto. ♡</p>
               </div>
-              <div className="letter-end" ref={node => {
-                if (!node || showLetterEnd) return
-                const observer = new IntersectionObserver(entries => {
-                  if (entries[0].isIntersecting) { setShowLetterEnd(true); observer.disconnect() }
-                }, { threshold: 0.8 })
-                observer.observe(node)
-              }}>
+              <div className="letter-end" id="letter-end-trigger">
                 <span>♥</span>
                 {showLetterEnd && <strong>Fin de la carta. ¡Feliz cumpleaños! ♡</strong>}
               </div>
             </article>
+          )}
+          {birthdayStage === 'gallery' && (
+            <section className="memory-gallery" aria-label="Galería de recuerdos de Hetto">
+              <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
+              <div className="memories-grid">
+                <p className="memory-caption memory-caption-left">Cada recuerdo contigo es especial. Sigamos creando muchos más.</p>
+                {Array.from({ length: 6 }, (_, index) => (
+                  <div className={`memory-frame frame-${index + 1}`} key={index}>
+                    <img
+                      src={import.meta.env.BASE_URL + `images/memories/recuerdo-${index + 1}.webp`}
+                      alt={`Recuerdo ${index + 1} de Hetto`}
+                      onError={event => { event.currentTarget.style.display = 'none' }}
+                    />
+                    <span className="memory-placeholder">♡<small>Foto {index + 1}</small></span>
+                  </div>
+                ))}
+                <p className="memory-caption memory-caption-right">Por todas las risas, las aventuras y las historias que aún nos esperan.</p>
+              </div>
+              <p className="gallery-footer">¡Por muchos recuerdos más, Hetto! ♥</p>
+            </section>
           )}
           {birthdayStage === 'character' && (
             <>
