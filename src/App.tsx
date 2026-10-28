@@ -42,7 +42,6 @@ function App() {
 
   useEffect(() => {
     if (birthdayStage !== 'letter') return
-    setShowLetterEnd(false)
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [birthdayStage])
 
