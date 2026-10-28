@@ -670,3 +670,15 @@
 @media (prefers-reduced-motion: reduce) {
   .letter-transition-sheet { display: none; }
 }
+
+
+/* La despedida anima la carta original, sin una tarjeta superpuesta. */
+.letter-transition-sheet { display: none !important; }
+.memories-reveal-track { height: 110svh !important; }
+.birthday-screen:has(.memories-reveal-track) .immersive-letter {
+  position: relative;
+  z-index: 8;
+  transform-origin: center bottom;
+  pointer-events: auto;
+}
+.birthday-screen:has(.memories-reveal-track) .cinematic-gallery { z-index: 1; }
