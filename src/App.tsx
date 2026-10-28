@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 // Personalización: cambia el código y la pista aquí.
@@ -14,6 +14,8 @@ function App() {
   const [result, setResult] = useState<Result>(null)
   const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter' | 'gallery'>('locked')
   const [seconds, setSeconds] = useState(3)
+  const [revealProgress, setRevealProgress] = useState(0)
+  const revealTrackRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -43,6 +45,29 @@ function App() {
   useEffect(() => {
     if (birthdayStage !== 'letter') return
     window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [birthdayStage])
+
+  useEffect(() => {
+    if (birthdayStage !== 'letter') return
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const track = revealTrackRef.current
+      if (!track) return
+      const progress = Math.max(0, Math.min(1, (window.innerHeight - track.getBoundingClientRect().top) / Math.max(1, window.innerHeight * 0.9)))
+      setRevealProgress(previous => Math.abs(progress - previous) > 0.005 ? progress : previous)
+    }
+    const onScroll = () => {
+      if (frame === 0) frame = window.requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [birthdayStage])
 
   useEffect(() => {
@@ -137,7 +162,7 @@ function App() {
             </div>
           )}
           {birthdayStage === 'letter' && (
-            <article className="birthday-letter">
+            <article className="birthday-letter immersive-letter" style={{ opacity: 1 - revealProgress * 0.65, filter: `blur(${revealProgress * 3}px)`, transform: `perspective(1100px) rotateX(${revealProgress * -12}deg) rotate(-1deg) scale(${1 - revealProgress * 0.12})` }}>
               <div className="letter-sparkle">♡ ✦ ♡</div>
               <h1>Para Hetto, con cariño</h1>
               <p className="letter-date">Una carta especialmente para ti</p>
@@ -158,7 +183,9 @@ function App() {
             </article>
           )}
           {birthdayStage === 'letter' && (
-            <section className="memory-gallery" aria-label="Galería de recuerdos de Hetto">
+            <div className="memories-reveal-track" ref={revealTrackRef}>
+            <section className="memory-gallery cinematic-gallery" aria-label="Galería de recuerdos de Hetto"
+              style={{ opacity: revealProgress, transform: `translateY(${(1 - revealProgress) * 28}px) scale(${0.93 + revealProgress * 0.07})` }}>
               <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
               <div className="memories-grid">
                 <p className="memory-caption memory-caption-left">Atesoro cada momento compartido contigo. Las risas, las conversaciones y hasta los días más sencillos se vuelven recuerdos bonitos.</p>
@@ -177,6 +204,7 @@ function App() {
               </div>
               <p className="gallery-footer">Que cada día te regale motivos para sonreír. ¡Por muchos recuerdos más, Hetto! ♥</p>
             </section>
+            </div>
           )}
           {birthdayStage === 'character' && (
             <>
