@@ -42,3 +42,25 @@
 
 .character { position: relative; }
 .character-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+
+/* Bigger, touch-friendly passcode calculator */
+.lock h1 { font-size: clamp(30px, 6vw, 40px); margin-bottom: 16px; }
+.heart-slots { gap: 6px; }
+.heart-slot { width: clamp(46px, 12vw, 58px); height: clamp(47px, 12vw, 59px); border-radius: 9px; }
+.heart-slot span { font-size: clamp(36px, 9vw, 46px); }
+.hint { font-size: clamp(12px, 3vw, 14px); margin: 10px 0 12px; }
+.calculator { padding: 16px; border-radius: 25px; border-width: 3px; }
+.keys { grid-template-columns: repeat(3, clamp(55px, 16vw, 69px)); gap: clamp(9px, 2.5vw, 12px); }
+.keys button { height: clamp(55px, 16vw, 69px); border-radius: 11px; font-size: 24px; border-width: 2px; }
+.keys button:last-child { font-size: 15px; }
+@media (max-height: 570px) {
+  .gift-screen { padding-block: 12px; }
+  .lock h1 { font-size: 27px; margin-bottom: 7px; }
+  .heart-slot { width: 42px; height: 43px; }
+  .heart-slot span { font-size: 34px; }
+  .hint { margin: 6px 0; font-size: 11px; }
+  .calculator { padding: 9px; }
+  .keys { grid-template-columns: repeat(3, 45px); gap: 6px; }
+  .keys button { height: 43px; font-size: 18px; }
+}
