@@ -14,6 +14,7 @@ function App() {
   const [result, setResult] = useState<Result>(null)
   const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character' | 'envelope' | 'letter' | 'gallery'>('locked')
   const [seconds, setSeconds] = useState(3)
+  const [openingEnvelope, setOpeningEnvelope] = useState(false)
   const [revealProgress, setRevealProgress] = useState(0)
   const revealTrackRef = useRef<HTMLDivElement>(null)
 
@@ -94,6 +95,14 @@ function App() {
     setSeconds(3)
     setBirthdayStage('countdown')
   }
+  const openEnvelope = () => {
+    if (openingEnvelope) return
+    setOpeningEnvelope(true)
+    window.setTimeout(() => {
+      setBirthdayStage('letter')
+      setOpeningEnvelope(false)
+    }, 950)
+  }
   const tryAgain = () => {
     setCode('')
     setResult(null)
@@ -153,7 +162,7 @@ function App() {
             <div className="envelope-scene">
               <h1 className="envelope-heading">Tengo algo para ti, Hetto ♡</h1>
               <p>Hay unas palabras que quiero regalarte...</p>
-              <button className="envelope-button" onClick={() => setBirthdayStage('letter')} aria-label="Abrir la carta">
+              <button className={`envelope-button ${openingEnvelope ? "is-opening" : ""}`} onClick={openEnvelope} aria-label="Abrir la carta" disabled={openingEnvelope}>
                 <span className="envelope-paper" />
                 <span className="envelope-flap" />
                 <span className="envelope-heart">♥</span>
