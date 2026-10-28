@@ -81,6 +81,7 @@ function App() {
             <h2 id="result-title">{result === 'success' ? 'Access Granted!' : 'Wrong Passcode!'}</h2>
             <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Happy puppy' : 'Sad puppy'}>
               <span className="character-fallback" aria-hidden="true">{result === 'success' ? '🐶💗' : '🥺💧'}</span>
+              <img className="character-image" src={import.meta.env.BASE_URL + "images/" + (result === "success" ? "success-character.png" : "error-character.png")} alt="" onError={event => { event.currentTarget.style.display = "none" }} />
             </div>
             <p>{result === 'success' ? 'Congrats you passed!' : 'Try Again?'}</p>
             <button className="modal-button" onClick={result === 'error' ? tryAgain : () => window.alert('The next gift page is coming soon! 💗')}>
