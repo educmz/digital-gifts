@@ -562,3 +562,10 @@
 @keyframes envelopeFlapLift { to { transform: rotateX(170deg); } }
 @keyframes envelopePaperLift { to { transform: translateY(-50px) rotate(-4deg); } }
 @keyframes envelopeOpenZoom { 0%{transform:scale(1);opacity:1} 55%{transform:scale(1.08);opacity:1} 100%{transform:scale(1.7);opacity:0} }
+
+/* GSAP takes ownership of the immersive letter and gallery transforms. */
+.immersive-letter {animation:none !important;will-change:transform,opacity,filter}
+.cinematic-gallery {animation:none !important;will-change:transform,opacity}
+@media(prefers-reduced-motion:reduce){
+ .immersive-letter,.cinematic-gallery{will-change:auto}
+}
