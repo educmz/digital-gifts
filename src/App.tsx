@@ -4,7 +4,7 @@ import './App.css'
 // Personalización: cambia el código y la pista aquí.
 // Nota: es una sorpresa visual, NO un sistema de autenticación seguro.
 const PASSCODE = '2410'
-const HINT = 'Hint: The day you finally said “YES” to me.'
+const HINT = 'Pista: el día que finalmente me dijiste que sí.'
 const DIGITS = 4
 
 type Result = 'success' | 'error' | null
@@ -66,9 +66,9 @@ function App() {
   return (
     <main className={birthdayStage === 'locked' ? 'gift-screen' : 'birthday-screen'}>
       {birthdayStage === 'locked' && (
-        <section className="lock" aria-label="Enter your secret code">
-          <h1>Enter Code</h1>
-          <div className="heart-slots" aria-label={`${code.length} of 4 digits entered`}>
+        <section className="lock" aria-label="Ingresa tu código secreto">
+          <h1>Ingresa el código</h1>
+          <div className="heart-slots" aria-label={`${code.length} de 4 dígitos ingresados`}>
             {Array.from({ length: DIGITS }, (_, index) => (
               <span key={index} className={`heart-slot ${index < code.length ? 'active' : ''}`}>
                 <span aria-hidden="true">♥</span>
@@ -81,7 +81,7 @@ function App() {
               {['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'DEL'].map(key => (
                 <button key={key} type="button"
                   disabled={key === '.' || code.length === DIGITS}
-                  aria-label={key === 'DEL' ? 'Delete digit' : key === '.' ? 'Decoration' : `Digit ${key}`}
+                  aria-label={key === 'DEL' ? 'Borrar dígito' : key === '.' ? 'Decoración' : `Dígito ${key}`}
                   onClick={() => key === 'DEL' ? deleteDigit() : typeDigit(key)}>
                   {key}
                 </button>
@@ -95,20 +95,20 @@ function App() {
         <section className="birthday-content" aria-live="polite">
           {birthdayStage === 'countdown' && (
             <>
-              <h1 className="birthday-top">ขอพรสิ...<span>Make a wish...</span></h1>
+              <h1 className="birthday-top">¡Pide un deseo!<span>El cumpleaños de Hetto está por comenzar</span></h1>
               <span className="count-number" key={seconds}>{seconds}</span>
               <div className="cake-art">
-                <div className="cake-fallback" aria-label="Birthday cake"><i className="candle" /><i className="cake-upper" /><i className="cake-lower" /></div>
-                <img src={import.meta.env.BASE_URL + 'images/birthday-cake.webp'} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
+                <div className="cake-fallback" aria-label="Torta de cumpleaños"><i className="candle" /><i className="cake-upper" /><i className="cake-lower" /></div>
+                <img src={import.meta.env.BASE_URL + 'images/birthday-cake.gif'} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
               </div>
             </>
           )}
           {birthdayStage === 'ready' && (
             <>
-              <h1 className="birthday-top">ขอพรสิ...<span>¡Pide un deseo, Hetto!</span></h1>
+              <h1 className="birthday-top">¡Pide un deseo!<span>¡Pide un deseo, Hetto!</span></h1>
               <div className="cake-art">
                 <div className="cake-fallback" aria-label="Birthday cake"><i className="candle" /><i className="cake-upper" /><i className="cake-lower" /></div>
-                <img src={import.meta.env.BASE_URL + 'images/birthday-cake.webp'} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
+                <img src={import.meta.env.BASE_URL + 'images/birthday-cake.gif'} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
               </div>
               <button className="birthday-action" onClick={() => setBirthdayStage('character')}>Continuar ♡</button>
             </>
@@ -119,7 +119,7 @@ function App() {
               <p className="birthday-subtitle">Tengo una cartita para ti...</p>
               <div className="birthday-character">
                 <span className="birthday-character-fallback">♡<small>Tu carta está por llegar</small></span>
-                <img src={import.meta.env.BASE_URL + 'images/character-letter.webp'} alt="Personaje entregando una carta" onError={e => { e.currentTarget.style.display = 'none' }} />
+                <img src={import.meta.env.BASE_URL + 'images/character-letter.gif'} alt="Personaje entregando una carta" onError={e => { e.currentTarget.style.display = 'none' }} />
               </div>
             </>
           )}
@@ -129,13 +129,13 @@ function App() {
       {result && birthdayStage === 'locked' && (
         <div className="modal-overlay">
           <section className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
-            <h2 id="result-title">{result === 'success' ? 'Access Granted!' : 'Wrong Passcode!'}</h2>
-            <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Happy puppy' : 'Sad puppy'}>
+            <h2 id="result-title">{result === 'success' ? '¡Acceso permitido!' : '¡Código incorrecto!'}</h2>
+            <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Perrito feliz' : 'Perrito triste'}>
               <img className="character-image" src={import.meta.env.BASE_URL + 'images/' + (result === 'success' ? 'success-character.webp' : 'error-character.webp')} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
             </div>
-            <p>{result === 'success' ? 'Congrats you passed!' : 'Try Again?'}</p>
+            <p>{result === 'success' ? '¡Lo conseguiste!' : '¿Intentamos otra vez?'}</p>
             <button className="modal-button" onClick={result === 'error' ? tryAgain : beginBirthday}>
-              {result === 'success' ? 'Proceed' : 'Retry'}
+              {result === 'success' ? 'Continuar' : 'Reintentar'}
             </button>
           </section>
         </div>
