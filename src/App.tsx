@@ -162,7 +162,7 @@ function App() {
             <section className="memory-gallery" aria-label="Galería de recuerdos de Hetto">
               <h1 className="gallery-heading">Gracias por llenar tantos momentos de alegría ♡</h1>
               <div className="memories-grid">
-                <p className="memory-caption memory-caption-left">Cada recuerdo contigo es especial. Sigamos creando muchos más.</p>
+                <p className="memory-caption memory-caption-left">Atesoro cada momento compartido contigo. Las risas, las conversaciones y hasta los días más sencillos se vuelven recuerdos bonitos.</p>
                 {Array.from({ length: 6 }, (_, index) => (
                   <div className={`memory-frame frame-${index + 1}`} key={index}>
                     <img
@@ -173,9 +173,10 @@ function App() {
                     <span className="memory-placeholder">♡<small>Foto {index + 1}</small></span>
                   </div>
                 ))}
-                <p className="memory-caption memory-caption-right">Por todas las risas, las aventuras y las historias que aún nos esperan.</p>
+                <p className="memory-caption memory-caption-middle">Otro año, otra razón para agradecer que estés aquí. ♡</p>
+                <p className="memory-caption memory-caption-right">Por todas las sonrisas que ya compartimos y por las historias nuevas que todavía nos esperan.</p>
               </div>
-              <p className="gallery-footer">¡Por muchos recuerdos más, Hetto! ♥</p>
+              <p className="gallery-footer">Que cada día te regale motivos para sonreír. ¡Por muchos recuerdos más, Hetto! ♥</p>
             </section>
           )}
           {birthdayStage === 'character' && (
