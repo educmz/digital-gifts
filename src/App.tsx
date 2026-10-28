@@ -1,121 +1,95 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
 
+// Personalización: cambia el código y la pista aquí.
+// Nota: es una sorpresa visual, NO un sistema de autenticación seguro.
+const PASSCODE = '0720'
+const HINT = 'Hint: The day you finally said “YES” to me.'
+const DIGITS = 4
+
+type Result = 'success' | 'error' | null
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [code, setCode] = useState('')
+  const [result, setResult] = useState<Result>(null)
+
+  useEffect(() => {
+    if (code.length !== DIGITS || result !== null) return
+    const timer = window.setTimeout(() => {
+      setResult(code === PASSCODE ? 'success' : 'error')
+    }, 250)
+    return () => window.clearTimeout(timer)
+  }, [code, result])
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (result !== null) return
+      if (/^[0-9]$/.test(event.key)) {
+        setCode(current => current.length < DIGITS ? current + event.key : current)
+      } else if (event.key === 'Backspace' || event.key === 'Delete') {
+        setCode(current => current.slice(0, -1))
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [result])
+
+  const typeDigit = (digit: string) => {
+    if (result || code.length >= DIGITS) return
+    setCode(previous => previous + digit)
+  }
+  const deleteDigit = () => {
+    if (!result) setCode(previous => previous.slice(0, -1))
+  }
+  const tryAgain = () => {
+    setCode('')
+    setResult(null)
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <main className="gift-screen">
+      <section className="lock" aria-label="Enter your secret code">
+        <h1>Enter Code</h1>
+        <div className="heart-slots" aria-label={`${code.length} of 4 digits entered`}>
+          {Array.from({ length: DIGITS }, (_, index) => (
+            <span key={index} className={`heart-slot ${index < code.length ? 'active' : ''}`}>
+              <span aria-hidden="true">♥</span>
+            </span>
+          ))}
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <p className="hint">{HINT}</p>
+        <div className="calculator">
+          <div className="keys">
+            {['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', 'DEL'].map(key => (
+              <button
+                key={key}
+                type="button"
+                disabled={key === '.' || code.length === DIGITS}
+                aria-label={key === 'DEL' ? 'Delete digit' : key === '.' ? 'Decoration' : `Digit ${key}`}
+                onClick={() => key === 'DEL' ? deleteDigit() : typeDigit(key)}
+              >
+                {key}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      {result && (
+        <div className="modal-overlay">
+          <section className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
+            <h2 id="result-title">{result === 'success' ? 'Access Granted!' : 'Wrong Passcode!'}</h2>
+            <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Happy puppy' : 'Sad puppy'}>
+              <span className="character-fallback" aria-hidden="true">{result === 'success' ? '🐶💗' : '🥺💧'}</span>
+            </div>
+            <p>{result === 'success' ? 'Congrats you passed!' : 'Try Again?'}</p>
+            <button className="modal-button" onClick={result === 'error' ? tryAgain : () => window.alert('The next gift page is coming soon! 💗')}>
+              {result === 'success' ? 'Proceed' : 'Retry'}
+            </button>
+          </section>
+        </div>
+      )}
+    </main>
   )
 }
 
