@@ -83,8 +83,8 @@ function App() {
           { opacity: 0.92, yPercent: 4, scale: 0.96 },
           { opacity: 1, yPercent: 0, scale: 1, ease: 'none' }, 0)
         .fromTo(track.querySelector('.letter-transition-sheet'),
-          { opacity: 1, yPercent: 0, scale: 1, rotate: -2 },
-          { opacity: 0, yPercent: -80, scale: 0.72, rotate: 7, ease: 'power1.inOut' }, 0)
+          { opacity: 1, xPercent: -50, yPercent: 0, scale: 1, rotate: -2 },
+          { opacity: 0, xPercent: -50, yPercent: -80, scale: 0.72, rotate: 7, ease: 'power1.inOut' }, 0)
 
     })
     const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 150)
