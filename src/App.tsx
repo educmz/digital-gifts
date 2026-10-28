@@ -12,6 +12,8 @@ type Result = 'success' | 'error' | null
 function App() {
   const [code, setCode] = useState('')
   const [result, setResult] = useState<Result>(null)
+  const [birthdayStage, setBirthdayStage] = useState<'locked' | 'countdown' | 'ready' | 'character'>('locked')
+  const [seconds, setSeconds] = useState(3)
 
   useEffect(() => {
     if (!code || result !== null) return
@@ -21,6 +23,16 @@ function App() {
       setResult('success')
     }
   }, [code, result])
+
+  useEffect(() => {
+    if (birthdayStage !== 'countdown') return
+    if (seconds === 0) {
+      setBirthdayStage('ready')
+      return
+    }
+    const timer = window.setTimeout(() => setSeconds(value => value - 1), 1100)
+    return () => window.clearTimeout(timer)
+  }, [birthdayStage, seconds])
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -42,14 +54,18 @@ function App() {
   const deleteDigit = () => {
     if (!result) setCode(previous => previous.slice(0, -1))
   }
+  const beginBirthday = () => {
+    setSeconds(3)
+    setBirthdayStage('countdown')
+  }
   const tryAgain = () => {
     setCode('')
     setResult(null)
   }
 
   return (
-    <main className="gift-screen">
-      <section className="lock" aria-label="Enter your secret code">
+    <main className={birthdayStage === "locked" ? "gift-screen" : "birthday-screen"}>
+      {birthdayStage === "locked" && <section className="lock" aria-label="Enter your secret code">
         <h1>Enter Code</h1>
         <div className="heart-slots" aria-label={`${code.length} of 4 digits entered`}>
           {Array.from({ length: DIGITS }, (_, index) => (
@@ -85,7 +101,7 @@ function App() {
               <img className="character-image" src={import.meta.env.BASE_URL + "images/" + (result === "success" ? "success-character.webp" : "error-character.webp")} alt="" onError={event => { event.currentTarget.style.display = "none" }} />
             </div>
             <p>{result === 'success' ? 'Congrats you passed!' : 'Try Again?'}</p>
-            <button className="modal-button" onClick={result === 'error' ? tryAgain : () => window.alert('The next gift page is coming soon! 💗')}>
+            <button className="modal-button" onClick={result === 'error' ? tryAgain : beginBirthday}>
               {result === 'success' ? 'Proceed' : 'Retry'}
             </button>
           </section>
