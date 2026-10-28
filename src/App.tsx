@@ -201,12 +201,23 @@ function App() {
               <p className="letter-date">Una carta especialmente para ti</p>
               <div className="letter-body">
                 <p>Querida Hetto:</p>
-                <p>Hoy es un día especial y quería regalarte algo que pudieras guardar y volver a leer cuando quisieras.</p>
-                <p>Espero que este nuevo año de vida venga lleno de momentos felices, pequeñas sorpresas y muchos motivos para sonreír.</p>
-                <p>Que nunca te falten las personas que te quieren, los sueños que te ilusionan y las ganas de disfrutar cada momento.</p>
-                <p>Gracias por ser tú, por compartir tu alegría y por hacer especiales los días más sencillos.</p>
-                <p>Ojalá que este cumpleaños sea solo el comienzo de muchísimas cosas bonitas que te esperan.</p>
-                <p>Con mucho cariño, feliz cumpleaños, Hetto. ♡</p>
+                <p>Hoy quería regalarte algo distinto. No algo que se abra una sola vez y después se guarde en un cajón, sino unas palabras a las que puedas volver cuando quieras. Una pequeña carta para recordarte lo mucho que mereces sentirte querida, acompañada y feliz.</p>
+                <p>Me gusta pensar que hay personas capaces de volver especiales los momentos más simples. A veces no hace falta un gran plan ni una ocasión extraordinaria: basta con una conversación que se alarga sin darnos cuenta, una risa inesperada o esa tranquilidad de poder ser uno mismo.</p>
+                <p>Contigo he aprendido a apreciar todavía más esos pequeños instantes. Los que parecen cotidianos mientras suceden, pero después se convierten en recuerdos a los que uno vuelve con una sonrisa. Ojalá nunca olvidemos lo valioso que puede ser un día cualquiera.</p>
+                <p>Hay tantas cosas que me gustaría desearte en tu cumpleaños que seguramente ninguna carta alcanzaría. Quiero que tengas días ligeros, de esos en los que todo parece acomodarse. Que encuentres motivos para reír incluso cuando la semana se ponga difícil y que nunca falten sueños que te hagan ilusión.</p>
+                <p>También te deseo paciencia contigo misma. Que puedas celebrar cada paso que das, incluso los pequeños, incluso esos que nadie más ve. Que no te exijas tener todas las respuestas ahora y que te permitas descubrir cosas nuevas sin miedo a equivocarte.</p>
+                <p>Espero que este nuevo año te regale aventuras, lugares que todavía no conoces, canciones que se vuelvan favoritas y momentos tan bonitos que desees detener el tiempo un ratito. Y también días tranquilos, porque la felicidad a veces llega sin hacer ruido.</p>
+                <p>Gracias por tu manera de ser, por los detalles que quizá para ti pasan desapercibidos y por la alegría que compartes. Gracias por las conversaciones, por las risas y por esos instantes que se quedan guardados aunque no les hayamos tomado una fotografía.</p>
+                <p>Si algún día todo se siente demasiado pesado, espero que al leer esto recuerdes que no tienes que convertir cada día en algo perfecto. Está bien descansar, empezar de nuevo y avanzar a tu propio ritmo. Lo importante es que no pierdas esa parte de ti que hace que el mundo se sienta un poquito más cálido.</p>
+                <p>Me hace ilusión pensar en todos los recuerdos que todavía faltan. En las fotos que aún no hemos tomado, en los lugares que nos harán reír, en las historias que contaremos una y otra vez y en las pequeñas tradiciones que quizá aparezcan sin planearlas.</p>
+                <p>Quiero que recuerdes que las cosas bonitas no siempre llegan como las imaginamos. A veces se esconden en un mensaje a mitad del día, en una mirada cómplice o en una tarde que empezó sin planes y terminó siendo inolvidable. Ojalá podamos seguir reconociéndolas.</p>
+                <p>Y cuando mires hacia atrás, espero que veas mucho más que fechas y acontecimientos. Que veas cuánto has crecido, cuánto has aprendido, cuántas veces seguiste adelante y cuántas personas han tenido la suerte de coincidir contigo.</p>
+                <p>Si pudiera guardar un deseo especial dentro de esta carta, sería que nunca dudes del cariño que mereces. Que te rodeen personas que escuchen tus historias, celebren tus logros, te acompañen en los días grises y quieran verte brillar sin pedirte que seas diferente.</p>
+                <p>Me gustaría que cada cumpleaños fuera también una oportunidad para agradecer lo vivido. Incluso lo imperfecto, porque muchas veces de allí nacen las lecciones más importantes, las anécdotas más divertidas y las versiones de nosotros mismos que aprendemos a querer.</p>
+                <p>Quizá cuando vuelvas a abrir esta página hayan pasado semanas, meses o mucho más tiempo. Tal vez algunas cosas sean distintas. Pero espero que estas palabras sigan recordándote lo mismo: hoy, y cada vez que las leas, deseo de corazón que estés bien.</p>
+                <p>Gracias por estar aquí, por ser tú y por hacer que tantos momentos merezcan recordarse. Que la vida te sorprenda de las formas más bonitas y que nunca falte una razón para seguir soñando.</p>
+                <p>Feliz cumpleaños, Hetto. Que este sea un capítulo lleno de luz, cariño, aventuras y recuerdos inolvidables. Y que cuando termine, tengas muchísimas historias nuevas que contar.</p>
+                <p>Con muchísimo cariño, para ti. ♡</p>
               </div>
               <div className="letter-end" id="letter-end-trigger">
                 <span>♥</span>
