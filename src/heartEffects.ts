@@ -40,7 +40,7 @@ export function installHeartEffects() {
     const target = event.target
     if (!(target instanceof Element)) return
     const button = target.closest('button')
-    if (!button || button.disabled) return
+    if (!button || button.disabled || button.dataset.noHearts !== undefined) return
     emit(event.clientX, event.clientY, 35)
   }
   document.addEventListener('pointermove', onMove, { passive: true })
