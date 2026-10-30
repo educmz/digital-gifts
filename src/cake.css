@@ -1,0 +1,268 @@
+/* Escena del pastel: aparece, se sopla la vela y se pide un deseo que sale volando como un farolito. */
+
+.birthday-content:has(.cake-scene) { width: min(100%, 760px); }
+/* El espacio de abajo evita que los botones queden sobre el banco de nubes. */
+.cake-scene { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 64px 8px var(--bank-space); color: #fff; }
+.cake-title { margin: 0; max-width: 760px; font: 700 clamp(30px, 8vw, 48px)/1.1 var(--font-fun); color: #fff; text-shadow: 3px 4px 0 #b3416a; text-wrap: balance; }
+.cake-sub { margin: 0; font: 500 clamp(16px, 4.2vw, 20px)/1.3 var(--font-fun); color: #fff; text-shadow: 0 2px 0 #b3416a; text-wrap: balance; }
+/* La torta es una capa fija: solo se mueve con transformaciones (las anima CakeScene) */
+.cake-stage { position: fixed; left: 50%; top: 0; z-index: 1; width: min(74vw, 280px, 36svh); margin: 0; transition: opacity .6s ease; will-change: transform; }
+
+.cake-wrap { position: relative; animation: cakeRise 1.4s cubic-bezier(.22, 1, .36, 1) both, cakeBob 3.4s ease-in-out 1.4s infinite; }
+/* Entra con un ascenso suave, sin rebote ni cambio brusco de tamaño */
+@keyframes cakeRise { from { opacity: 0; transform: translateY(46px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes cakeBob { 0%, 100% { translate: 0 0; rotate: -.6deg; } 50% { translate: 0 -5px; rotate: .6deg; } }
+.cake-svg { display: block; width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 14px 12px #6b1f4a55); }
+
+/* Vela: llama que parpadea, brillo que respira y humo al apagarse */
+.cake-flame { animation: flameFlicker .45s ease-in-out infinite alternate; transition: scale .45s ease, opacity .45s ease; }
+@keyframes flameFlicker { from { transform: scale(1, 1) rotate(-2deg); } to { transform: scale(.9, 1.1) rotate(3deg); } }
+.cake-glow { animation: glowPulse 1.3s ease-in-out infinite alternate; transition: opacity .6s ease; }
+@keyframes glowPulse { from { opacity: .75; } to { opacity: 1; } }
+.is-out .cake-flame { animation: none; scale: .2; opacity: 0; }
+.is-out .cake-glow { animation: none; opacity: 0; }
+.cake-smoke { opacity: 0; }
+.cake-smoke circle { transform-box: fill-box; transform-origin: center; }
+.is-out .cake-smoke circle { animation: smokeRise 2.4s ease-out forwards; }
+.is-out .cake-smoke circle:nth-child(2) { animation-delay: .25s; }
+.is-out .cake-smoke circle:nth-child(3) { animation-delay: .5s; }
+.is-out .cake-smoke { opacity: 1; }
+@keyframes smokeRise { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 20% { opacity: .95; } 100% { opacity: 0; transform: translate(10px, -34px) scale(1.5); } }
+
+/* Destellos alrededor del pastel */
+.cake-spark {
+  position: absolute; width: 16px; aspect-ratio: 1; background: #fff; opacity: 0;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: sparkPop 2.6s ease-in-out 1.2s infinite;
+}
+.cake-spark--a { left: -6%; top: 18%; }
+.cake-spark--b { right: -4%; top: 8%; animation-delay: 1.6s; width: 20px; }
+.cake-spark--c { left: 6%; top: 62%; animation-delay: 2s; width: 12px; }
+.cake-spark--d { right: 2%; top: 58%; animation-delay: 1.4s; }
+.cake-spark--e { left: 22%; top: 6%; animation-delay: 2.4s; width: 12px; }
+.cake-spark--f { right: 22%; top: 80%; animation-delay: 1.8s; width: 12px; }
+@keyframes sparkPop { 0%, 100% { opacity: 0; scale: .3; rotate: 0deg; } 50% { opacity: 1; scale: 1.1; rotate: 40deg; } }
+
+/* Botones */
+.cake-actions { position: fixed; left: 0; right: 0; top: var(--actions-top, 80vh); display: flex; flex-direction: column; align-items: center; gap: 10px; animation: fadeUp .7s ease 1.2s both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.cake-blow {
+  padding: 14px 34px; border: 3px solid #fff; border-radius: 34px; background: #fff; color: #c0457a;
+  font: 700 clamp(17px, 4.4vw, 20px) var(--font-fun); box-shadow: 0 5px 0 #e98db3, 0 10px 14px #5b3a5f30;
+  animation: buttonPulse 1.8s ease-in-out infinite;
+}
+.cake-blow:hover { animation: wiggle .5s ease-in-out; }
+.cake-mic {
+  padding: 8px 18px; border: 2px solid #ffffffaa; border-radius: 30px; background: #ffffff40; color: #fff;
+  font: 600 14px var(--font-fun);
+}
+.cake-mic:disabled { cursor: default; opacity: .8; }
+.cake-note { margin: 0; max-width: 300px; font: 500 14px/1.3 var(--font-fun); text-shadow: 0 1px 0 #b3416a; }
+
+/* Deseo */
+.wish-form { position: fixed; left: 0; right: 0; top: var(--form-top, 40vh); z-index: 6; margin-inline: auto; display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(calc(100% - 16px), 380px); animation: fadeUp .6s ease both; }
+.wish-label { font: 600 17px var(--font-fun); text-shadow: 0 2px 0 #b3416a; }
+.wish-input {
+  width: 100%; padding: 12px 16px; border: 3px solid #fff; border-radius: 22px; resize: none; background: #fffafc; color: #7a3550;
+  font: 500 24px/1.2 'Caveat', cursive; box-shadow: inset 0 3px 6px #c0457a26, 0 8px 14px #5b3a5f30;
+}
+.wish-input::placeholder { color: #d79ab6; }
+.wish-input:focus { outline: 3px solid #ffd27a; outline-offset: 2px; }
+.wish-note { margin: 0; font: 500 13px var(--font-fun); opacity: .95; text-shadow: 0 1px 0 #b3416a; }
+.wish-buttons { margin-top: 4px; }
+
+/* Farolito con el deseo que sube al cielo */
+.wish-sky { position: fixed; inset: 0; z-index: 8; display: grid; place-items: center; pointer-events: none; }
+.wish-flyer { display: grid; place-items: center; opacity: 0; }
+.wish-flyer > * { grid-area: 1 / 1; }
+
+/* Bolita de luz en la que se convierte el farolito: destello de cuatro puntas y cola de cometa */
+.wish-orb { position: relative; width: 60px; height: 60px; border-radius: 50%; background: radial-gradient(circle, #fff 0 24%, #fff0b8 46%, #ffd27a88 70%, transparent 72%); box-shadow: 0 0 38px 14px #ffe9a8aa; }
+.wish-orb::before {
+  content: ""; position: absolute; inset: -34px; background: #fff7d6; opacity: .9;
+  clip-path: polygon(50% 0, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0 50%, 44% 44%); animation: orbSpin 6s linear infinite;
+}
+.wish-orb::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 190px; translate: -50% 0; border-radius: 8px;
+  background: linear-gradient(#ffe9a8cc, #ffd27a55 45%, transparent);
+}
+@keyframes orbSpin { to { rotate: 360deg; } }
+.wish-orb::after { transition: opacity 1s ease; }
+.wish-orb.is-landed::after { opacity: 0; }
+
+/* Mensaje y botón cuando el deseo llega a su estrella */
+.wish-arrival { position: fixed; left: 50%; top: calc(60% + 112px); z-index: 9; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(100%, 360px); text-align: center; animation: fadeUp .8s ease both; }
+.wish-arrival p { margin: 0; font: 600 clamp(18px, 4.6vw, 22px)/1.25 var(--font-fun); color: #fff4cf; text-shadow: 0 0 16px #ffd27a99, 0 2px 0 #1a1450; text-wrap: balance; }
+.wish-lantern {
+  position: relative; width: 190px; padding: 24px 16px 18px; border: 3px solid #fff; border-radius: 28px 28px 20px 20px; text-align: center;
+  background: linear-gradient(180deg, #fff6d0, #ffd48a); color: #7a3550; box-shadow: 0 0 50px 14px #ffe59ccc;
+}
+.wish-lantern p { margin: 6px 0 0; font: 600 24px/1.15 'Caveat', cursive; overflow-wrap: anywhere; }
+.wish-star { position: absolute; top: -20px; left: 50%; translate: -50% 0; font-size: 32px; line-height: 1; color: #fff; text-shadow: 0 0 14px #ffd27a, 0 0 26px #ffd27a; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cake-wrap, .cake-flame, .cake-glow, .cake-spark, .cake-actions, .cake-blow, .wish-form { animation: none; }
+  .cake-spark { opacity: .8; }
+}
+
+
+/* ===== Legibilidad: nada de texto claro sobre el banco de nubes blanco ===== */
+.cake-mic { background: #c0457a73; border-color: #ffffffcc; }
+.cake-note { padding: 4px 12px; border-radius: 14px; background: #c0457a73; text-shadow: none; }
+.picker-hint { background: #c0457a73; }
+.mini-badge { background: #c0457a66; }
+.mini-badge.is-read { background: #fff; }
+.mini-name { text-shadow: -1px 0 #b3416a, 1px 0 #b3416a, 0 -1px #b3416a, 0 2px 0 #b3416a; }
+
+/* Farolito: el deseo largo no lo agranda de más y, al llegar, la caja vacía no estorba */
+.wish-lantern { width: 200px; }
+.wish-lantern p { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; line-clamp: 6; overflow: hidden; font-size: 22px; line-height: 1.12; }
+.wish-flyer.is-landed .wish-lantern { display: none; }
+
+
+/* ===== Pantallas bajitas (celulares pequeños): todo más compacto para no rozar el banco de nubes ===== */
+@media (max-height: 760px) {
+  .cake-scene { padding-top: 54px; gap: 6px; }
+  .cake-title { font-size: clamp(26px, 7vw, 38px); }
+  .cake-stage { width: min(74vw, 280px, 29svh); margin: 10px 0 2px; }
+  .cake-actions { gap: 7px; }
+  .cake-blow { padding: 11px 28px; }
+  .cake-mic { padding: 6px 16px; }
+  .wish-form { gap: 5px; }
+  .wish-input { height: 84px; font-size: 21px; padding: 8px 14px; }
+  .wish-note { font-size: 12px; }
+}
+
+
+/* ===== Transiciones entre pantallas ===== */
+.stage { display: flex; flex-direction: column; align-items: center; width: 100%; animation: stageIn .75s cubic-bezier(.2, .9, .3, 1) both; }
+.stage--leaving { animation: stageOut .55s ease forwards; }
+@keyframes stageIn { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes stageOut { to { opacity: 0; transform: translateY(-22px) scale(.97); } }
+
+/* Al continuar tras el deseo, la escena se desvanece mientras amanece */
+.cake-scene--leaving .cake-title, .cake-scene--leaving .wish-sky, .cake-scene--leaving .wish-arrival { animation: leaveFade .7s ease forwards; pointer-events: none; }
+@keyframes leaveFade { to { opacity: 0; } }
+
+/* Los sobres entran de a uno, después del título */
+.picker-list li { animation: miniEnter .7s cubic-bezier(.2, 1.5, .4, 1) calc(.55s + var(--delay)) backwards, miniFloat 3.4s ease-in-out var(--delay) infinite; }
+@keyframes miniEnter { from { opacity: 0; translate: 0 38px; scale: .7; } }
+.picker-hint { animation: fadeUp .6s ease 1.5s backwards; }
+
+/* ===== Legibilidad: contorno rosa en los títulos, para que se lean aunque pasen sobre una nube blanca ===== */
+.cake-title, .envelope-heading, .birthday-headline {
+  text-shadow: -2px -2px 0 #b3416a, 2px -2px 0 #b3416a, -2px 2px 0 #b3416a, 2px 2px 0 #b3416a, 0 -2px 0 #b3416a, 0 2px 0 #b3416a, -2px 0 0 #b3416a, 2px 0 0 #b3416a, 0 5px 0 #b3416a;
+}
+.cake-sub, .picker-sub, .birthday-subtitle, .wish-label {
+  text-shadow: -1px -1px 0 #b3416a, 1px -1px 0 #b3416a, -1px 1px 0 #b3416a, 1px 1px 0 #b3416a, 0 2px 0 #b3416a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage, .stage--leaving { animation: none; }
+  .picker-list li, .picker-hint { animation: none; }
+}
+
+
+/* ===== Pastel grande, luces que se apagan y se prenden ===== */
+.cake-scene { padding-top: 56px; gap: 6px; }
+.cake-stage { width: min(100vw, 700px, 64svh); }
+@media (max-height: 760px) { .cake-stage { width: min(100vw, 700px, 61svh); } }
+
+/* La sala a oscuras: un círculo de luz centrado en la llama (--fx, --fy), que parpadea (--r) y se apaga (--a) */
+.cake-dark {
+  position: fixed; inset: 0; z-index: 4; pointer-events: none; --a: 0; --r: 400px;
+  background: radial-gradient(circle at var(--fx, 50%) var(--fy, 38%), #0000 0, rgba(70, 26, 12, calc(var(--a) * .2)) calc(var(--r) * .4), rgba(8, 3, 12, var(--a)) var(--r));
+}
+.cake-dark.is-on { display: none; }
+/* Destello cálido cuando se prenden las luces */
+.cake-flash { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 45%, #fff 0, #fffaf0 45%, #fff1d2 100%); }
+
+/* Pum, Lynki y Giank sentados delante del pastel */
+.cake-friends { position: absolute; left: 8%; right: 8%; bottom: -5%; z-index: 2; display: flex; justify-content: space-between; pointer-events: none; }
+.cake-friend { display: block; width: 19%; animation: friendHop 2.6s ease-in-out infinite; }
+.cake-friend svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 4px 0 #0003); }
+@keyframes friendHop { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+
+/* Los botones quedan por encima de la oscuridad, bien visibles */
+.cake-actions { z-index: 6; animation-delay: 2s; }
+/* Al apagarse la vela los botones se desvanecen en su sitio (antes desaparecían y todo se movía) */
+.cake-actions.is-gone { animation: actionsOut .4s ease forwards; pointer-events: none; }
+@keyframes actionsOut { to { opacity: 0; transform: translateY(10px); } }
+.cake-actions-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.cake-mic--icon { display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border-radius: 50%; }
+.cake-blow { animation-name: buttonPulse; }
+.wish-note { opacity: .85; }
+
+@media (max-height: 760px) { .cake-scene { padding-top: 50px; } }
+@media (prefers-reduced-motion: reduce) { .cake-friend { animation: none; } }
+
+/* El título también es fijo: con la torta fuera del flujo, el centrado vertical lo dejaba detrás del formulario */
+.cake-title { position: fixed; top: 98px; left: 0; right: 0; z-index: 6; margin-inline: auto; width: min(calc(100% - 16px), 760px); text-align: center; }
+@media (max-height: 760px) { .cake-title { top: 92px; } }
+.cake-scene--sent .cake-title { top: 29svh; }
+
+/* ===== La estrella del deseo: grande y con mucha animación ===== */
+.wish-flyer { --orb: clamp(76px, 13vmin, 108px); }
+
+/* Farolito grande, que brilla mientras sube */
+.wish-lantern { width: min(300px, 74vw); padding: 38px 22px 28px; border-radius: 36px 36px 26px 26px; animation: lanternGlow 1.6s ease-in-out infinite alternate; }
+.wish-lantern p { font-size: clamp(26px, 6.4vw, 34px); line-height: 1.12; }
+.wish-star { top: -32px; font-size: 48px; animation: starPulse 1.2s ease-in-out infinite alternate; }
+@keyframes lanternGlow { from { box-shadow: 0 0 44px 12px #ffe59caa; } to { box-shadow: 0 0 84px 26px #ffd27acc; } }
+@keyframes starPulse { from { scale: .9; rotate: -8deg; } to { scale: 1.15; rotate: 8deg; } }
+
+/* La estrella: núcleo luminoso, destello de cuatro puntas y cola de cometa */
+.wish-orb { width: var(--orb); height: var(--orb); background: radial-gradient(circle, #fff 0 28%, #fff4c8 48%, #ffd98099 70%, #ffd27a00 100%); box-shadow: 0 0 60px 22px #ffe9a8aa, 0 0 140px 56px #ffd27a44; }
+/* Puntas finas, como el destello de una estrella real */
+.wish-orb::before { inset: -70%; clip-path: polygon(50% 0, 54% 46%, 100% 50%, 54% 54%, 50% 100%, 46% 54%, 0 50%, 46% 46%); animation: orbSpin 9s linear infinite; }
+/* Cola de cometa: ancha junto a la estrella y cada vez más fina */
+.wish-orb::after { width: calc(var(--orb) * .3); height: calc(var(--orb) * 3.6); clip-path: polygon(0 0, 100% 0, 58% 100%, 42% 100%); border-radius: 0; background: linear-gradient(#ffe9a800 0, #ffe9a8dd 16%, #ffd27a66 55%, transparent); }
+.wish-orb.is-landed { animation: orbBreathe 1.7s ease-in-out infinite alternate; }
+@keyframes orbBreathe { from { scale: .94; filter: brightness(1); } to { scale: 1.1; filter: brightness(1.25); } }
+
+/* Rayos de luz que giran detrás de la estrella cuando llega */
+.wish-rays {
+  width: min(98vmin, 700px); aspect-ratio: 1; border-radius: 50%; opacity: 0; transition: opacity 1.4s ease;
+  background: repeating-conic-gradient(from 0deg, #fff3c46e 0 5deg, #fff3c400 5deg 15deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0, #0000 68%); mask-image: radial-gradient(circle, #000 0, #0000 68%);
+}
+.wish-flyer.is-landed .wish-rays { opacity: 1; animation: raysSpin 30s linear infinite; }
+@keyframes raysSpin { to { rotate: 360deg; } }
+
+/* Ondas de luz: una grande al transformarse y otra al llegar (las anima GSAP), y anillos que laten después */
+.wish-shock { width: var(--orb); aspect-ratio: 1; border-radius: 50%; border: 5px solid #fff3c4; opacity: 0; box-shadow: 0 0 30px #ffd27a, inset 0 0 30px #ffd27a88; }
+.wish-ring { width: calc(var(--orb) * 1.4); aspect-ratio: 1; border-radius: 50%; border: 3px solid #ffe9a8bb; opacity: 0; }
+.wish-flyer.is-landed .wish-ring { animation: ringPulse 2.8s ease-out infinite; }
+.wish-flyer.is-landed .wish-ring--late { animation-delay: 1.4s; }
+@keyframes ringPulse { 0% { opacity: .9; scale: .7; } 100% { opacity: 0; scale: 3.4; } }
+
+/* Estrellitas que orbitan alrededor */
+.wish-orbiters { position: relative; width: 0; height: 0; opacity: 0; transition: opacity 1.2s ease; }
+.wish-flyer.is-landed .wish-orbiters { opacity: 1; animation: orbitSpin 10s linear infinite; }
+.wish-orbiters i {
+  position: absolute; left: -10px; top: -10px; width: 20px; aspect-ratio: 1; background: #fff3c4; filter: drop-shadow(0 0 7px #ffd27a);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  transform: rotate(calc(var(--i) * 60deg)) translateY(calc(var(--orb) * -1.3)); animation: orbiterTwinkle 1.5s ease-in-out calc(var(--i) * .22s) infinite alternate;
+}
+@keyframes orbitSpin { to { rotate: 360deg; } }
+@keyframes orbiterTwinkle { from { scale: .5; opacity: .5; } to { scale: 1.4; opacity: 1; } }
+
+.wish-arrival p { font-size: clamp(22px, 5.2vw, 30px); padding: 6px 18px; border-radius: 22px; background: #140e4666; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wish-lantern, .wish-star, .wish-orb::before, .wish-orb.is-landed, .wish-flyer.is-landed .wish-rays, .wish-flyer.is-landed .wish-ring,
+  .wish-flyer.is-landed .wish-orbiters, .wish-orbiters i { animation: none; }
+}
+
+/* ===== Farolito del deseo: más pequeño y delicado (va aquí al final porque este archivo se carga el último) ===== */
+.wish-lantern { width: min(206px, 56vw); padding: 30px 16px 20px; border-radius: 28px 28px 20px 20px; }
+.wish-lantern p { font-size: clamp(21px, 4.6vw, 26px); line-height: 1.1; -webkit-line-clamp: 5; line-clamp: 5; }
+.wish-star { top: -24px; font-size: 36px; }
+
+/* El mensaje y el botón de llegada van bien arriba del borde: si la ventana del navegador se pasa de la pantalla,
+   lo de abajo queda fuera de la vista, así que se deja un margen generoso (14% de la altura, mínimo 110 px). */
+.wish-arrival { bottom: max(110px, 14svh); }
+
+/* El mensaje y el botón van justo debajo del corazón (su posición la calcula CakeScene), no pegados al borde de abajo:
+   así se ven aunque la ventana del navegador se pase de la pantalla. */
+.wish-arrival { bottom: auto; }

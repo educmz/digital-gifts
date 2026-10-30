@@ -1,0 +1,108 @@
+/* Cielo animado de atardecer para las pantallas previas a las cartas. */
+.sky {
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background: linear-gradient(180deg, #ef7fae 0%, #ea88c4 42%, #c9a6f4 100%);
+  animation: skyIn .9s ease both;
+}
+@keyframes skyIn { from { opacity: 0; } to { opacity: 1; } }
+.sky-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 92%, #fff4 0%, transparent 55%), radial-gradient(circle at 16% 18%, #ffd9ea55, transparent 34%);
+}
+
+.sky-star {
+  position: absolute; aspect-ratio: 1; background: #fff; opacity: .4;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: skyTwinkle 3s ease-in-out infinite;
+}
+@keyframes skyTwinkle { 0%, 100% { opacity: .25; scale: .7; } 50% { opacity: 1; scale: 1.15; } }
+
+.sky-shooting {
+  position: absolute; top: 14%; left: 8%; width: 130px; height: 3px; border-radius: 3px; opacity: 0; rotate: 24deg;
+  background: linear-gradient(90deg, #fff0, #fff);
+  animation: skyShoot 11s ease-in 3s infinite;
+}
+@keyframes skyShoot {
+  0% { opacity: 0; translate: 0 0; }
+  2% { opacity: 1; }
+  9% { opacity: 0; translate: 520px 230px; }
+  100% { opacity: 0; translate: 520px 230px; }
+}
+
+.sky-cloud {
+  position: absolute; left: -320px; width: var(--w); height: calc(var(--w) * .3); border-radius: 999px; background: #fff; opacity: .88;
+  filter: drop-shadow(0 8px 0 #ffffff55); animation: skyDrift 90s linear infinite;
+}
+.sky-cloud::before, .sky-cloud::after { content: ""; position: absolute; border-radius: 50%; background: #fff; }
+.sky-cloud::before { left: 14%; top: -62%; width: 46%; height: 150%; }
+.sky-cloud::after { right: 12%; top: -38%; width: 36%; height: 115%; }
+@keyframes skyDrift { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 700px)); } }
+
+/* Banco de nubes en la parte de abajo, en dos capas que se mueven distinto */
+/* --bank-h es la altura del banco de nubes; las pantallas dejan ese espacio libre para que ningún texto quede encima. */
+:root { --bank-h: 22vh; --bank-space: calc(15vh + 10px); }
+/* Cada capa se dibuja con círculos de CSS. Los círculos que tocan el borde del patrón llevan una copia del otro lado
+   (el de 290px es el de 50px de la siguiente repetición, etc.), así las nubes no se cortan. El movimiento recorre
+   exactamente 2 repeticiones (480px y 360px) para volver al inicio sin saltos. */
+.sky-bank { position: absolute; left: 0; right: 0; bottom: -18px; background-repeat: repeat-x; background-position: 0 100%; }
+.sky-bank::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 46%; background-color: var(--bank); }
+/* Todo se mide en múltiplos de --h (la altura de la capa): así la forma de las nubes es la misma a cualquier tamaño
+   de ventana y los círculos grandes nunca se salen por arriba (antes, con radios fijos en px, quedaban aplanados). */
+.sky-bank--back {
+  --h: var(--bank-h); --bank: #ffe9f5; height: var(--h); opacity: .8; background-size: calc(var(--h) * 1.52) 100%;
+  animation: bankDrift 120s linear infinite, bankBob 7s ease-in-out infinite;
+  background-image:
+    radial-gradient(circle at calc(var(--h) * .316) 80%, var(--bank) calc(var(--h) * .354), transparent calc(var(--h) * .354 + 1px)),
+    radial-gradient(circle at calc(var(--h) * 1.835) 80%, var(--bank) calc(var(--h) * .354), transparent calc(var(--h) * .354 + 1px)),
+    radial-gradient(circle at calc(var(--h) * .854) 66%, var(--bank) calc(var(--h) * .443), transparent calc(var(--h) * .443 + 1px)),
+    radial-gradient(circle at calc(var(--h) * 1.266) 82%, var(--bank) calc(var(--h) * .316), transparent calc(var(--h) * .316 + 1px)),
+    radial-gradient(circle at calc(var(--h) * -.253) 82%, var(--bank) calc(var(--h) * .316), transparent calc(var(--h) * .316 + 1px));
+}
+.sky-bank--front {
+  --h: calc(var(--bank-h) * .68); --bank: #fff; height: var(--h); background-size: calc(var(--h) * 1.667) 100%;
+  animation: bankDrift 70s linear infinite reverse, bankBob 5s ease-in-out -2s infinite;
+  background-image:
+    radial-gradient(circle at calc(var(--h) * .333) 82%, var(--bank) calc(var(--h) * .426), transparent calc(var(--h) * .426 + 1px)),
+    radial-gradient(circle at calc(var(--h) * 2) 82%, var(--bank) calc(var(--h) * .426), transparent calc(var(--h) * .426 + 1px)),
+    radial-gradient(circle at calc(var(--h) * .926) 62%, var(--bank) calc(var(--h) * .556), transparent calc(var(--h) * .556 + 1px)),
+    radial-gradient(circle at calc(var(--h) * 1.389) 84%, var(--bank) calc(var(--h) * .37), transparent calc(var(--h) * .37 + 1px)),
+    radial-gradient(circle at calc(var(--h) * -.278) 84%, var(--bank) calc(var(--h) * .37), transparent calc(var(--h) * .37 + 1px));
+}
+/* El movimiento recorre exactamente 2 repeticiones del patrón, para volver al inicio sin saltos */
+.sky-bank--back { --drift: calc(var(--h) * 3.04); }
+.sky-bank--front { --drift: calc(var(--h) * 3.334); }
+@keyframes bankDrift { from { background-position: 0 100%; } to { background-position: var(--drift) 100%; } }
+@keyframes bankBob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-star, .sky-shooting, .sky-cloud, .sky-bank { animation: none; }
+  .sky-cloud { left: 12%; }
+}
+
+
+/* ===== Noche: el cielo se oscurece, sale la luna y el banco de nubes se hunde ===== */
+.sky-night {
+  position: absolute; inset: 0; opacity: 0; transition: opacity 2.6s ease;
+  background: linear-gradient(180deg, #070a24 0%, #181350 48%, #3a2a7a 82%, #6a3f93 100%);
+}
+/* Al anochecer todo cambia rápido (el fundido a negro lo tapa); al amanecer sigue lento, 2.6 s */
+.sky--night .sky-night { opacity: .97; transition-duration: .5s; }
+.sky-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 2.6s ease; }
+.sky--night .sky-canvas { opacity: 1; transition-duration: .6s; }
+.sky-moon {
+  position: absolute; top: 9%; right: 12%; width: 84px; height: 84px; border-radius: 50%; opacity: 0; translate: 0 50px;
+  box-shadow: inset -20px -4px 0 0 #fff6d8, 0 0 44px 8px #fff6d844; transition: opacity 2.4s ease, translate 3s ease;
+}
+.sky--night .sky-moon { opacity: .95; translate: 0 0; transition: opacity 1.6s ease .5s, translate 2.4s ease .5s; }
+.sky-bank { transition: transform 3s ease-out, opacity 2.6s ease; }
+.sky--night .sky-bank { transform: translateY(110%); opacity: 0; transition: transform 1.4s cubic-bezier(.4, 0, .8, 1), opacity .8s ease; }
+.sky-bank--back { opacity: .8; }
+.sky--night .sky-bank--back { opacity: 0; }
+
+/* La decoración de fiesta se desvanece de noche */
+.bunting, .floating-decor { transition: opacity 1.4s ease; }
+.is-night .bunting, .is-night .floating-decor, .is-dark .bunting, .is-dark .floating-decor { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-bank, .sky--night .sky-bank { transition: none; }
+}

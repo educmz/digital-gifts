@@ -1,0 +1,110 @@
+/* Mundos de fondo de las cartas: casita de gatitos (Pum), polo norte de noche (Lynki) y bosque de Totoro (Giank). */
+
+.letter-page::before, .letter-page--penguin::before, .letter-page--totoro::before { display: none; }
+
+.scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; animation: sceneIn 1.2s ease both; }
+@keyframes sceneIn { from { opacity: 0; } to { opacity: 1; } }
+.sc-sky { position: absolute; inset: 0; }
+.sc-star { position: absolute; width: var(--s); aspect-ratio: 1; background: #fff; opacity: .5; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: scTwinkle var(--t) ease-in-out var(--d) infinite; }
+@keyframes scTwinkle { 0%, 100% { opacity: .2; scale: .6; } 50% { opacity: 1; scale: 1.2; } }
+
+/* Colinas de abajo, en dos capas que se mecen */
+.sc-hills { position: absolute; left: 0; right: 0; bottom: -2px; height: 22vh; }
+.sc-hill { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; }
+.sc-hill--back { fill: var(--hill-back); animation: scSway 9s ease-in-out infinite alternate; }
+.sc-hill--front { fill: var(--hill-front); height: 78%; animation: scSway 7s ease-in-out -3s infinite alternate-reverse; }
+@keyframes scSway { from { translate: -1.5% 0; } to { translate: 1.5% 0; } }
+.sc-hill { width: 103%; left: -1.5%; }
+
+/* ===== Pum: casita de gatitos, atardecer rosado con ovillos, peces y huellitas ===== */
+.sc--cat { --hill-back: #ffc1da; --hill-front: #ff9fc6; }
+.sc--cat .sc-sky { background: linear-gradient(180deg, #ffe9f2 0%, #ffd0e3 55%, #ffb7d4 100%); }
+.sc-blob { position: absolute; border-radius: 50%; filter: blur(46px); opacity: .7; }
+.sc-blob--a { left: -8%; top: 6%; width: 46vw; aspect-ratio: 1; background: #ffe7c8; animation: scDrift 16s ease-in-out infinite alternate; }
+.sc-blob--b { right: -10%; top: 22%; width: 40vw; aspect-ratio: 1; background: #e6d8ff; animation: scDrift 19s ease-in-out -6s infinite alternate-reverse; }
+.sc-blob--c { left: 28%; bottom: 8%; width: 36vw; aspect-ratio: 1; background: #ffc2dc; animation: scDrift 14s ease-in-out -3s infinite alternate; }
+@keyframes scDrift { from { translate: -4vw 2vh; scale: .94; } to { translate: 5vw -3vh; scale: 1.08; } }
+.sc--cat .sc-star { background: #fff8; }
+
+.sc-heart { position: absolute; bottom: -30px; left: 0; width: var(--s); font-style: normal; font-size: var(--s); line-height: 1; color: #ff8fb8; opacity: .6; animation: scHeartUp var(--t) ease-in var(--d) infinite; }
+@keyframes scHeartUp { 0% { translate: 0 0; opacity: 0; } 12% { opacity: .7; } 50% { translate: var(--sw) -55vh; } 100% { translate: calc(var(--sw) * -1) -115vh; opacity: 0; } }
+.sc-fish { position: absolute; left: -120px; width: var(--s); opacity: .8; animation: scSwim var(--t) linear var(--d) infinite; }
+.sc-fish svg { display: block; width: 100%; height: auto; animation: scWave 1.8s ease-in-out infinite alternate; }
+@keyframes scSwim { to { translate: calc(100vw + 260px) 0; } }
+@keyframes scWave { from { translate: 0 -9px; rotate: -6deg; } to { translate: 0 9px; rotate: 6deg; } }
+
+.sc-yarn { position: absolute; bottom: 2.4vh; left: -100px; width: var(--s); animation: scRoll var(--t) linear var(--d) infinite; filter: drop-shadow(0 5px 3px #6b1f4a33); }
+.sc-yarn svg { display: block; width: 100%; height: auto; animation: scSpin calc(var(--t) / 5) linear infinite; }
+@keyframes scRoll { to { translate: calc(100vw + 220px) 0; } }
+@keyframes scSpin { to { rotate: 360deg; } }
+
+.sc-pawwalk { position: absolute; left: 4vw; right: 4vw; bottom: 10.5vh; display: flex; justify-content: space-between; color: #f58bb0; }
+.sc-pawwalk span { display: block; width: clamp(18px, 2.2vw, 30px); translate: 0 var(--y); rotate: 90deg; opacity: 0; animation: scPaw 7s ease-in-out calc(var(--i) * .45s) infinite; }
+.sc-pawwalk svg { display: block; width: 100%; height: auto; }
+@keyframes scPaw { 0% { opacity: 0; scale: .4; } 8%, 46% { opacity: .75; scale: 1; } 64%, 100% { opacity: 0; scale: 1; } }
+
+/* ===== Lynki: polo norte de noche con aurora, nieve y un pingüino que se desliza ===== */
+.sc--penguin { --hill-back: #cfc6f7; --hill-front: #f6f2ff; }
+.sc--penguin .sc-sky { background: linear-gradient(180deg, #151248 0%, #2d2573 42%, #5e4fb0 78%, #b5a9ee 100%); }
+.sc-aurora { position: absolute; left: -25%; right: -25%; height: 34vh; filter: blur(34px); opacity: .6; mix-blend-mode: screen; transform-origin: 50% 100%; }
+.sc-aurora--a { top: 2vh; background: linear-gradient(90deg, #0000, #55f0c0aa 28%, #55d6f0aa 60%, #0000); rotate: -6deg; animation: scAurora 11s ease-in-out infinite alternate; }
+.sc-aurora--b { top: 10vh; background: linear-gradient(90deg, #0000, #b88cffaa 30%, #ff9fe0aa 66%, #0000); rotate: 5deg; animation: scAurora 14s ease-in-out -5s infinite alternate-reverse; }
+.sc-aurora--c { top: -2vh; height: 26vh; background: linear-gradient(90deg, #0000, #7affb8aa 40%, #6aa8ffaa 70%, #0000); rotate: -2deg; animation: scAurora 17s ease-in-out -9s infinite alternate; }
+@keyframes scAurora { from { translate: -6% -2vh; scale: 1 .85; filter: blur(34px) hue-rotate(0deg); } to { translate: 6% 3vh; scale: 1.1 1.15; filter: blur(40px) hue-rotate(40deg); } }
+.sc-flake { position: absolute; top: -12px; left: 0; width: var(--s); aspect-ratio: 1; border-radius: 50%; background: #fff; opacity: .85; filter: blur(.3px); animation: scSnow var(--t) linear var(--d) infinite; }
+@keyframes scSnow { 0% { translate: 0 -6vh; } 25% { translate: var(--sw) 28vh; } 50% { translate: calc(var(--sw) * -.6) 58vh; } 75% { translate: var(--sw) 86vh; } 100% { translate: 0 112vh; } }
+.sc-slider { position: absolute; bottom: 5.5vh; left: -90px; width: clamp(54px, 6vw, 84px); animation: scSlide 16s ease-in-out infinite; filter: drop-shadow(0 6px 3px #1a145a55); }
+.sc-slider svg { display: block; width: 100%; height: auto; animation: scBelly .9s ease-in-out infinite alternate; }
+.sc-slider::before { content: ""; position: absolute; right: 70%; top: 56%; width: 160%; height: 22px; border-radius: 22px; background: linear-gradient(270deg, #fff9, #fff0); filter: blur(3px); }
+@keyframes scSlide { 0% { translate: 0 0; } 52% { translate: calc(100vw + 280px) 0; } 100% { translate: calc(100vw + 280px) 0; } }
+@keyframes scBelly { from { rotate: 74deg; translate: 0 2px; } to { rotate: 86deg; translate: 0 -5px; } }
+
+/* ===== Giank: bosque de Totoro, rayos de sol, luciérnagas, hojas y bolitas de hollín ===== */
+.sc--totoro .sc-sky { background: linear-gradient(180deg, #f0fff7 0%, #c8f2de 46%, #94dcbb 100%); }
+.sc-shaft { position: absolute; top: -12vh; width: 14vw; height: 130vh; rotate: 16deg; transform-origin: 50% 0; background: linear-gradient(180deg, #fffbd6b0, #fffbd600 78%); filter: blur(6px); animation: scShaft 9s ease-in-out infinite alternate; }
+.sc-shaft--a { left: 8%; } .sc-shaft--b { left: 38%; width: 9vw; animation-delay: -3s; } .sc-shaft--c { left: 70%; width: 12vw; animation-delay: -6s; }
+@keyframes scShaft { from { opacity: .35; rotate: 14deg; } to { opacity: 1; rotate: 19deg; } }
+
+/* Dos capas de árboles que avanzan en sentidos opuestos (recorren 2 repeticiones exactas para no saltar) */
+.sc-trees { position: absolute; left: 0; right: 0; bottom: 0; height: var(--th); background-repeat: repeat-x; background-position: 0 100%; background-size: calc(var(--th) * 2) var(--th); }
+.sc-trees--back { --th: 30vh; bottom: 6vh; opacity: .75; animation: scTrees 120s linear infinite; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cg fill='%23a2e4c2'%3E%3Crect y='170' width='400' height='30'/%3E%3Cpolygon points='70,40 100,105 86,105 112,160 28,160 54,105 40,105'/%3E%3Ccircle cx='190' cy='120' r='34'/%3E%3Crect x='186' y='140' width='8' height='32'/%3E%3Cpolygon points='300,24 332,96 316,96 346,160 254,160 284,96 268,96'/%3E%3Ccircle cx='372' cy='140' r='22'/%3E%3C/g%3E%3C/svg%3E"); }
+.sc-trees--front { --th: 24vh; bottom: -1px; animation: scTrees 70s linear infinite reverse; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'%3E%3Cg fill='%2352c49a'%3E%3Crect y='168' width='400' height='32'/%3E%3Crect x='94' y='128' width='12' height='46'/%3E%3Ccircle cx='100' cy='100' r='44'/%3E%3Crect x='254' y='150' width='12' height='26'/%3E%3Cpolygon points='260,26 294,96 278,96 308,152 212,152 242,96 226,96'/%3E%3Cellipse cx='358' cy='158' rx='34' ry='18'/%3E%3C/g%3E%3Cg fill='%2338a883'%3E%3Ccircle cx='86' cy='92' r='14' opacity='.5'/%3E%3C/g%3E%3C/svg%3E"); }
+@keyframes scTrees { to { background-position: calc(var(--th) * 4) 100%; } }
+.sc-mist { position: absolute; left: -10%; right: -10%; bottom: 8vh; height: 22vh; background: radial-gradient(ellipse at 50% 100%, #ffffffaa, #fff0 70%); filter: blur(14px); animation: scMist 12s ease-in-out infinite alternate; }
+@keyframes scMist { from { translate: -4% 0; opacity: .55; } to { translate: 4% -2vh; opacity: .95; } }
+.sc-leaf { position: absolute; top: -40px; left: 0; width: var(--s); opacity: .85; animation: scLeaf var(--t) linear var(--d) infinite; }
+.sc-leaf svg { display: block; width: 100%; height: auto; animation: scLeafSpin 3.2s ease-in-out infinite alternate; }
+@keyframes scLeaf { 0% { translate: 0 -6vh; } 33% { translate: var(--sw) 34vh; } 66% { translate: calc(var(--sw) * -.8) 70vh; } 100% { translate: 0 112vh; } }
+@keyframes scLeafSpin { from { rotate: -50deg; } to { rotate: 60deg; } }
+.sc-firefly { position: absolute; width: var(--s); aspect-ratio: 1; border-radius: 50%; background: #fff7a0; box-shadow: 0 0 10px 4px #fff59a, 0 0 22px 9px #d7ff7a77; animation: scFly var(--t) ease-in-out var(--d) infinite alternate, scGlow 2.4s ease-in-out var(--d) infinite alternate; }
+@keyframes scFly { from { translate: 0 0; } to { translate: var(--dx) var(--dy); } }
+@keyframes scGlow { from { opacity: .15; } to { opacity: 1; } }
+.sc-hopper { position: absolute; bottom: 5vh; left: -60px; width: clamp(30px, 3.4vw, 46px); animation: scHopAcross var(--t) linear var(--d) infinite; }
+.sc-hopper svg { display: block; width: 100%; height: auto; animation: scHop .55s ease-in-out infinite alternate; }
+@keyframes scHopAcross { to { translate: calc(100vw + 140px) 0; } }
+@keyframes scHop { from { translate: 0 0; scale: 1 .9; } to { translate: 0 -26px; scale: .95 1.08; } }
+
+/* ===== Más vida en la carta: gatito/pingüino/Totoro que se asoman, miran y respiran ===== */
+.mascot-peek { transform-origin: 50% 100%; animation: peekLook 7s ease-in-out infinite; }
+@keyframes peekLook { 0%, 22%, 100% { rotate: 0deg; translate: -50% 0; } 30% { rotate: -5deg; translate: -50% -4px; } 42% { rotate: 5deg; translate: -50% 0; } 52% { rotate: 0deg; translate: -50% -8px; } 58% { translate: -50% 0; } }
+.mascot-sleeping { transform-origin: 50% 100%; animation: breathe 3.6s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { scale: 1; } 50% { scale: 1.045 1.07; } }
+.letter-paper { animation: paperGlow 4.4s ease-in-out infinite alternate; }
+@keyframes paperGlow { from { box-shadow: 0 7px 0 var(--edge), 0 26px 50px color-mix(in srgb, var(--accent) 30%, transparent); } to { box-shadow: 0 7px 0 var(--edge), 0 30px 70px color-mix(in srgb, var(--accent) 55%, transparent); } }
+
+/* Barra de lectura: un amiguito corre por el borde mientras se lee */
+.read-progress { position: fixed; right: 16px; top: 17vh; bottom: 17vh; width: 6px; z-index: 5; border-radius: 6px; background: color-mix(in srgb, var(--accent) 24%, #ffffff99); box-shadow: 0 0 0 2px #ffffff80; }
+.read-fill { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--p, 0) * 100%); border-radius: 6px; background: var(--accent); }
+.read-rider { position: absolute; left: 50%; top: calc(var(--p, 0) * 100%); width: 38px; translate: -50% -50%; filter: drop-shadow(0 3px 2px #0003); animation: riderBob .7s ease-in-out infinite alternate; }
+.read-rider svg { display: block; width: 100%; height: auto; }
+@keyframes riderBob { from { rotate: -8deg; } to { rotate: 8deg; } }
+@media (max-width: 900px) { .read-progress { display: none; } }
+
+@media (max-width: 700px) {
+  .sc-flake:nth-child(n+30), .sc-firefly:nth-child(n+14), .sc-leaf:nth-child(n+8), .sc-fish:nth-child(n+5), .sc-heart:nth-child(n+8), .sc-shaft--c { display: none; }
+  .sc-hills { height: 17vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene, .scene *, .mascot-peek, .mascot-sleeping, .letter-paper, .read-rider { animation: none !important; }
+  .sc-flake, .sc-leaf, .sc-fish, .sc-heart, .sc-yarn, .sc-slider, .sc-hopper, .sc-pawwalk { display: none; }
+}

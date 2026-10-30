@@ -1,0 +1,121 @@
+/* La casa de la fiesta: pared, ventana de noche, luces de hadas, cuadros, peluches, globos, mesa y alfombra. */
+
+:root { --floor: 24vh; --win-left: 4vw; --win-top: 11vh; --win-w: clamp(110px, 14vw, 230px); }
+@media (max-width: 700px) { :root { --floor: 21vh; --win-left: 2vw; --win-top: 10vh; --win-w: 20vw; } }
+
+/* Con la sala iluminada los textos claros se leen mal sobre la pared rosa: se les da contorno */
+.cake-scene .wish-note { color: #fff; text-shadow: -1px -1px 0 #b3416a, 1px -1px 0 #b3416a, -1px 1px 0 #b3416a, 1px 1px 0 #b3416a, 0 2px 0 #b3416a; font-size: 13px; opacity: 1; }
+
+.room { position: fixed; inset: 0; z-index: -1; overflow: hidden; animation: roomIn .9s ease backwards; }
+/* Al aparecer es instantánea (la luz que se expande la revela); al irse se desvanece */
+.room.is-hidden { opacity: 0; animation: none; transition: opacity .5s ease; }
+@keyframes roomIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Pared con papel tapiz de rayas y puntitos, y zócalo */
+.room-wall {
+  position: absolute; inset: 0 0 var(--floor) 0;
+  background: radial-gradient(#ffffff90 1.6px, transparent 2.6px) 0 0 / 26px 26px, repeating-linear-gradient(90deg, #ffd6e8 0 64px, #ffc6df 64px 128px);
+}
+.room-wall::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 15%; background: #fff3f8; border-top: 6px solid #fff; box-shadow: 0 -4px 0 #ffd0e4; }
+
+/* Piso de madera y alfombra */
+.room-floor {
+  position: absolute; left: 0; right: 0; bottom: 0; height: var(--floor);
+  background: repeating-linear-gradient(90deg, #0000000f 0 2px, transparent 2px 110px), linear-gradient(180deg, #f2cdb9, #e3b199);
+  box-shadow: inset 0 14px 18px -10px #0003;
+}
+.room-rug {
+  position: absolute; left: 50%; bottom: 3vh; width: min(88vw, 1000px); height: calc(var(--floor) * .6); translate: -50% 0; border-radius: 50%;
+  background: radial-gradient(ellipse, #ffd0e3 0%, #ff9ec6 100%); border: 6px dashed #ffffffa0; box-shadow: 0 8px 14px #6b1f4a33;
+}
+
+/* Ventana con cortinas y la noche afuera */
+.room-window { position: absolute; left: var(--win-left); top: var(--win-top); width: var(--win-w); height: auto; filter: drop-shadow(0 8px 10px #6b1f4a40); }
+.room-window-star { animation: skyTwinkle 3s ease-in-out infinite; }
+
+/* Luces de hadas: apagadas son grises; al prenderse la sala, se encienden una tras otra */
+.room-lights { position: absolute; left: 0; right: 0; top: 56px; height: 8vh; }
+.room-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.room-bulb {
+  position: absolute; width: clamp(10px, 1.3vw, 18px); aspect-ratio: .75; translate: -50% 0; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: #c9bad6; box-shadow: none; transition: background .2s, box-shadow .2s; transition-delay: 0s;
+}
+.is-lit .room-bulb {
+  background: var(--c); box-shadow: 0 0 10px 3px var(--c), 0 0 26px 8px color-mix(in srgb, var(--c) 45%, transparent);
+  transition-delay: calc(var(--i) * 80ms); animation: bulbTwinkle 2.6s ease-in-out calc(var(--i) * .17s) infinite alternate;
+}
+@keyframes bulbTwinkle { from { filter: brightness(.85); } to { filter: brightness(1.2); } }
+
+/* Cuadros: ustedes y Hetto */
+.room-frames { position: absolute; right: 3.5vw; top: 11vh; width: clamp(190px, 24vw, 420px); display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vw; align-items: start; }
+.room-frame {
+  padding: 5px; background: #fff; border-radius: 6px; box-shadow: 0 7px 14px #6b1f4a44, inset 0 0 0 3px #f4b6cf;
+}
+.room-frame img { display: block; width: 100%; height: auto; border-radius: 3px; }
+.room-frame--tall { rotate: -3deg; }
+.room-frame--square { rotate: 3deg; margin-top: 1.4vw; }
+.room-trio { grid-column: 1 / -1; display: flex; justify-content: space-around; margin-top: .4vw; }
+.room-portrait { display: grid; place-items: center; width: 27%; aspect-ratio: 1; padding: 4px; border: 4px solid #fff; border-radius: 50%; background: #fff7fb; box-shadow: 0 6px 10px #6b1f4a40; }
+.room-portrait svg { display: block; width: 100%; height: auto; }
+
+/* Kuromi y My Melody en el piso, y globos */
+.room-plush { position: absolute; bottom: calc(var(--floor) * .32); width: clamp(90px, 12vw, 190px); filter: drop-shadow(0 8px 6px #0003); animation: plushSway 4.2s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+.room-plush img { display: block; width: 100%; height: auto; }
+.room-plush--kuromi { left: 4vw; }
+.room-plush--melody { right: 4vw; width: clamp(70px, 8.4vw, 140px); animation-delay: -2s; }
+@keyframes plushSway { from { rotate: -2deg; } to { rotate: 2deg; } }
+.room-balloons { position: absolute; bottom: calc(var(--floor) * .12); width: clamp(70px, 8.6vw, 140px); height: auto; filter: drop-shadow(0 6px 4px #0002); animation: balloonBob 5s ease-in-out infinite alternate; transform-origin: 50% 96%; }
+.room-balloons--right { right: 14.5vw; }
+.room-balloons--left { left: 15vw; animation-delay: -2.4s; }
+@keyframes balloonBob { from { rotate: -3.5deg; } to { rotate: 3.5deg; } }
+
+/* Resplandor cálido del techo cuando hay luz */
+.room-glow { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; background: radial-gradient(ellipse at 50% -10%, #fff6d6aa, transparent 62%); }
+.is-lit .room-glow { opacity: 1; }
+
+/* Pompompurin y Pachacco en el piso, a los lados del pastel */
+.room-pal { position: absolute; bottom: calc(var(--floor) * .36); width: clamp(84px, 9.6vw, 150px); filter: drop-shadow(0 7px 5px #6b1f4a40); transform-origin: 50% 100%; animation: palHop 3.4s ease-in-out infinite; }
+.room-pal img { display: block; width: 100%; height: auto; }
+.room-pal--pompom { left: 25vw; }
+.room-pal--pachacco { right: 25vw; width: clamp(78px, 8.6vw, 136px); animation-delay: -1.7s; }
+@keyframes palHop { 0%, 82%, 100% { translate: 0 0; } 90% { translate: 0 -10px; } }
+/* Cinnamoroll flota a la izquierda del pastel; Hello Kitty saluda desde una repisa */
+.room-flyer { position: absolute; left: 21vw; top: 15vh; width: clamp(96px, 11vw, 170px); filter: drop-shadow(0 8px 6px #6b1f4a33); animation: flyerFloat 4.6s ease-in-out infinite alternate; }
+.room-flyer img { display: block; width: 100%; height: auto; }
+@keyframes flyerFloat { from { translate: 0 -8px; rotate: -3deg; } to { translate: 12px 10px; rotate: 3deg; } }
+.room-shelf { position: absolute; left: 21vw; top: 33vh; width: clamp(110px, 12.5vw, 200px); }
+.room-shelf img { display: block; width: 62%; height: auto; margin: 0 auto -3px; position: relative; z-index: 1; transform-origin: 50% 100%; animation: kittyWave 3s ease-in-out infinite alternate; filter: drop-shadow(0 4px 3px #6b1f4a30); }
+.room-shelf-board { display: block; height: 14px; border-radius: 4px; background: linear-gradient(#fff, #ffe3ef); border-bottom: 4px solid #f4b6cf; box-shadow: 0 8px 10px #6b1f4a33; position: relative; }
+.room-shelf-board::before, .room-shelf-board::after { content: ""; position: absolute; top: 14px; width: 16px; height: 22px; background: #f4b6cf; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.room-shelf-board::before { left: 14%; }
+.room-shelf-board::after { right: 14%; scale: -1 1; }
+@keyframes kittyWave { from { rotate: -2.5deg; } to { rotate: 2.5deg; } }
+
+/* Fondo oscuro del inicio: tapa la casa y el cielo para que el pastel aparezca solo, alumbrado por la vela */
+.cake-void { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: #0b060e; animation: voidIn .35s ease both; }
+.is-dark .bunting, .is-dark .floating-decor { transition-duration: .3s; }
+.cake-void.is-off { opacity: 0; transition: opacity .4s ease; animation: none; }
+@keyframes voidIn { from { opacity: 0; } to { opacity: 1; } }
+
+
+/* Fundido a negro entre la casa y la noche: tapa todo, se va despacio y deja ver las estrellas */
+.cake-dip { position: fixed; inset: 0; z-index: 7; pointer-events: none; opacity: 0; background: #070a24; transition: opacity 1.7s ease; }
+.cake-dip.is-on { opacity: 1; transition: opacity .6s ease; }
+
+/* Fase del deseo: el título y el formulario entran cuando el pastel ya subió */
+.cake-scene--wish .cake-title { animation: fadeUp .6s ease .55s backwards; }
+.cake-scene--wish .wish-form { animation: fadeUp .7s ease .5s backwards; }
+@media (max-width: 700px) {
+  /* En celular el pastel ocupa casi todo el ancho: menos cuadros, mesa más angosta y peluches a los costados */
+  .room-frames { right: 3vw; top: 23vh; width: 22vw; }
+  .room-frame--square, .room-trio, .room-balloons, .room-flyer, .room-shelf, .room-pal { display: none; }
+  .room-plush { width: clamp(64px, 19vw, 100px); bottom: calc(var(--floor) * .12); }
+  .room-plush--kuromi { left: 1vw; }
+  .room-plush--melody { right: 2vw; width: clamp(46px, 12vw, 70px); }
+}
+/* En pantallas angostas el pastel ocupa casi todo el ancho: los personajes extra no caben */
+@media (max-width: 900px) { .room-flyer, .room-shelf, .room-pal, .room-balloons { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .room, .room-plush, .room-balloons, .room-window-star, .room-flyer, .room-shelf img, .room-pal { animation: none; }
+  .is-lit .room-bulb { animation: none; }
+}

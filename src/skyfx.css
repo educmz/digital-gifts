@@ -1,0 +1,77 @@
+/* Efectos extra del cielo: atardecer que respira, nubes que flotan, globos que suben y brillos sobre las nubes. */
+
+/* El degradado se desplaza despacio, como un atardecer que cambia de tono */
+.sky { background-size: 100% 140%; animation: skyIn .9s ease both, skyShift 26s ease-in-out infinite alternate; }
+@keyframes skyShift { from { background-position: 50% 0%; } to { background-position: 50% 100%; } }
+.sky-glow { animation: glowBreathe 6s ease-in-out infinite alternate; }
+@keyframes glowBreathe { from { opacity: .7; } to { opacity: 1; } }
+
+/* Las nubes además de avanzar suben y bajan un poquito */
+.sky-cloud { animation: skyDrift 90s linear infinite, cloudBob 6s ease-in-out infinite alternate; }
+@keyframes cloudBob { from { translate: 0 -7px; } to { translate: 0 9px; } }
+
+/* Globos pastel que suben desde abajo, meciéndose */
+.sky-balloons { position: absolute; inset: 0; overflow: hidden; transition: opacity 1.4s ease; }
+.sky-balloon { position: absolute; bottom: -110px; animation: balloonRise 34s linear infinite; }
+.sky-balloon svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 0 #ffffff22); animation: balloonSway var(--sway, 4.5s) ease-in-out infinite alternate; }
+@keyframes balloonRise { from { translate: 0 0; } to { translate: 0 calc(-100vh - 220px); } }
+@keyframes balloonSway { from { translate: -14px 0; rotate: -6deg; } to { translate: 14px 0; rotate: 6deg; } }
+
+/* Brillos que titilan sobre el banco de nubes */
+.sky-sparkles { position: absolute; inset: 0; pointer-events: none; transition: opacity 1.2s ease; }
+.sky-sparkle {
+  position: absolute; aspect-ratio: 1; opacity: 0;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation: sparkleGlint 3s ease-in-out infinite;
+}
+@keyframes sparkleGlint { 0%, 100% { opacity: 0; scale: .3; rotate: 0deg; } 50% { opacity: .95; scale: 1.1; rotate: 45deg; } }
+
+/* De noche se van los globos y los brillos */
+.sky--night .sky-balloons, .sky--night .sky-sparkles { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky, .sky-glow, .sky-cloud, .sky-balloon, .sky-balloon svg, .sky-sparkle { animation: none; }
+  .sky-balloons { display: none; }
+  .sky-sparkle { opacity: .7; }
+}
+
+
+/* ===== Luna: creciente suave con cráteres, halo que respira y destellos a su lado ===== */
+.sky-moon { width: clamp(78px, 8.6vw, 128px); height: auto; aspect-ratio: 1; box-shadow: none; border-radius: 0; top: 8%; right: 11%; }
+.sky--night .sky-moon { animation: moonFloat 7s ease-in-out 2.4s infinite alternate; }
+@keyframes moonFloat { from { translate: 0 0; } to { translate: 0 8px; } }
+.sky-moon::before {
+  content: ""; position: absolute; inset: -95%; translate: 14% 0; pointer-events: none;
+  background: radial-gradient(circle closest-side, #fff1c33d 0, #d8defa1a 42%, #d8defa00 100%); animation: moonHalo 5s ease-in-out infinite alternate;
+}
+@keyframes moonHalo { from { opacity: .6; scale: .94; } to { opacity: 1; scale: 1.06; } }
+.sky-moon-disc {
+  position: absolute; inset: 0; border-radius: 50%; rotate: -20deg;
+  background:
+    radial-gradient(circle at 74% 28%, #d9c892 0 5%, #0000 6.5%), radial-gradient(circle at 82% 52%, #dccb97 0 7%, #0000 8.5%),
+    radial-gradient(circle at 66% 70%, #e0d09c 0 5.5%, #0000 7%), radial-gradient(circle at 88% 30%, #e2d3a0 0 3%, #0000 4%),
+    radial-gradient(circle at 62% 38%, #fffdf0, #f8ecc0 55%, #e8d49a);
+  /* Se recorta con un círculo desplazado: el cielo se ve por el hueco, así es una creciente de verdad y no un disco oscuro encima */
+  -webkit-mask-image: radial-gradient(circle at 12% 38%, #0000 0 52%, #000 58%); mask-image: radial-gradient(circle at 12% 38%, #0000 0 52%, #000 58%);
+  filter: drop-shadow(0 0 10px #fff1c3aa);
+}
+.sky-moon-twinkle {
+  position: absolute; width: 16%; aspect-ratio: 1; background: #fff6d6; filter: drop-shadow(0 0 5px #fff1c3);
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation: skyTwinkle 2.6s ease-in-out infinite;
+}
+.sky-moon-twinkle--a { left: -38%; top: 8%; }
+.sky-moon-twinkle--b { right: -34%; bottom: 4%; width: 11%; animation-delay: -1.2s; }
+
+/* ===== Farolito del deseo: más pequeño y delicado ===== */
+.wish-lantern { width: min(214px, 58vw); padding: 30px 16px 20px; border-radius: 28px 28px 20px 20px; }
+.wish-lantern p { font-size: clamp(21px, 4.8vw, 27px); line-height: 1.1; -webkit-line-clamp: 5; line-clamp: 5; }
+.wish-star { top: -24px; font-size: 36px; }
+
+/* ===== Llegada: texto y botón compactos, pegados abajo y siempre completos en pantalla ===== */
+.wish-arrival { top: auto; bottom: max(22px, 4.5svh); gap: 10px; width: max-content; max-width: calc(100vw - 28px); }
+.wish-arrival p { padding: 6px 18px; font-size: clamp(17px, 2.3vw, 24px); line-height: 1.2; border-radius: 999px; background: #140e4699; box-shadow: 0 0 0 1px #ffe9a833; text-shadow: 0 1px 0 #0008, 0 0 14px #ffd27a77; }
+.wish-arrival .cake-blow { padding: 11px 30px; font-size: clamp(16px, 2vw, 19px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-moon::before, .sky-moon-twinkle, .sky--night .sky-moon { animation: none; }
+}

@@ -1,0 +1,269 @@
+/* Decoración extra, guirnalda y secciones finales (mensajes, razones, vales). */
+
+.birthday-content { z-index: 1; }
+
+/* Corazones y destellos que suben flotando */
+.floating-decor { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.floating-decor--section { position: sticky; inset: auto; top: 0; width: 100%; height: 100svh; margin-bottom: -100svh; }
+.decor-item {
+  position: absolute; top: 100%; line-height: 1; color: #fff; text-shadow: 0 0 8px #ff9fc4;
+  opacity: 0; will-change: transform, opacity; animation: decorRise linear infinite;
+}
+.decor-item.is-pink { color: #ff7fae; text-shadow: 0 0 6px #fff8; }
+.floating-decor--section .decor-item { color: #f2759f; text-shadow: none; }
+@keyframes decorRise {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  10%, 90% { opacity: var(--alpha); }
+  100% { transform: translate3d(var(--drift), -115svh, 0) rotate(300deg); opacity: 0; }
+}
+
+/* Guirnalda de banderines */
+.bunting { position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; padding: 0 4px; pointer-events: none; }
+.bunting::before { content: ""; position: absolute; top: 5px; left: 0; right: 0; height: 3px; background: #fff9; }
+.bunting i {
+  flex: 1 1 0; margin: 5px 2px 0; height: clamp(34px, 6vw, 52px); background: var(--flag);
+  clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; animation: flagSwing 3.2s ease-in-out infinite;
+}
+.bunting i:nth-child(3n + 1) { --flag: #fff1f7; }
+.bunting i:nth-child(3n + 2) { --flag: #ffc2d9; }
+.bunting i:nth-child(3n) { --flag: #ff8fb8; }
+.bunting i:nth-child(even) { animation-delay: -1.6s; }
+@keyframes flagSwing { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+
+/* Banda rosada con borde festoneado que continúa después de la galería */
+.extras { position: relative; z-index: 2; width: 100%; padding-top: 18px; }
+.extras-band {
+  position: relative; color: #781c39;
+  background: radial-gradient(#fff9 2px, transparent 3px) 0 0 / 30px 30px,
+    linear-gradient(180deg, #ffeef3 0%, #ffd3e2 50%, #ffe6ef 100%);
+}
+.extras-band::before {
+  content: ""; position: absolute; left: 0; right: 0; top: -17px; height: 18px;
+  background: radial-gradient(circle at 50% 100%, #ffeef3 11px, transparent 12px) 0 0 / 28px 18px repeat-x;
+}
+.extra-section { position: relative; z-index: 1; width: min(100%, 1080px); margin: 0 auto; padding: clamp(46px, 8vw, 90px) clamp(16px, 4vw, 36px) 0; text-align: center; }
+.extra-kicker { margin: 0; font: 700 clamp(18px, 2.2vw, 22px) 'Dancing Script', cursive; letter-spacing: 1px; color: #c0577d; }
+.extra-title { margin: 4px 0 8px; font: 700 clamp(32px, 5.4vw, 54px)/1.1 'Dancing Script', 'Caveat', cursive; color: #781c39; text-shadow: 0 1px 1px #fff; }
+.extra-lead { margin: 0 auto clamp(24px, 4vw, 42px); max-width: 640px; font: 500 clamp(20px, 2.4vw, 26px)/1.3 'Caveat', cursive; color: #8d4358; }
+
+/* Mensajes de los tres amigos */
+.friends-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 34px); }
+.friends-grid > li:nth-child(1) { --tilt: -2deg; }
+.friends-grid > li:nth-child(2) { --tilt: 1.5deg; }
+.friends-grid > li:nth-child(3) { --tilt: -1deg; }
+.friend-card {
+  position: relative; height: 100%; padding: 38px 22px 28px; background: #fffdfd; border: 1px solid #f4cad3; border-radius: 4px;
+  box-shadow: 0 3px 0 #edc4cd, 0 14px 30px #8d416440; transform: rotate(var(--tilt, 0deg));
+  transition: transform .35s cubic-bezier(.2, .9, .3, 1.3), box-shadow .35s;
+}
+.friend-card::before {
+  content: ""; position: absolute; top: -12px; left: 50%; width: 90px; height: 24px;
+  background: #ffc9d8b0; border: 1px dashed #ffffff90; transform: translateX(-50%) rotate(-3deg);
+}
+.friend-card:hover { transform: rotate(0deg) translateY(-8px) scale(1.02); box-shadow: 0 3px 0 #edc4cd, 0 22px 36px #8d416455; }
+.friend-avatar {
+  width: 72px; height: 72px; margin: 0 auto 10px; display: grid; place-items: center; border-radius: 50%;
+  font: 700 36px Georgia, serif; color: #fff; background: linear-gradient(145deg, #f48fb1, #d6537f);
+  border: 4px solid #ffe3ec; box-shadow: 0 4px 0 #b83a64;
+}
+.friend-name { margin: 0 0 8px; font: 700 clamp(28px, 3vw, 34px) 'Dancing Script', cursive; color: #8d294b; }
+.friend-message { margin: 0; font: 500 clamp(21px, 2vw, 25px)/1.3 'Caveat', cursive; color: #633b43; }
+
+/* Tarjetas que se voltean */
+.reasons-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2.4vw, 24px); }
+.reason-card { position: relative; display: block; width: 100%; aspect-ratio: 1 / .9; padding: 0; border: 0; background: none; color: inherit; perspective: 900px; }
+.reason-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+.reason-card[aria-pressed='true'] .reason-inner { transform: rotateY(180deg); }
+.reason-card[aria-pressed='false']:hover .reason-inner { transform: rotateY(-10deg) translateY(-4px); }
+.reason-face {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px;
+  border: 3px solid #fff; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 8px 0 #c9577c33, 0 12px 22px #8d416440;
+}
+.reason-front { background: linear-gradient(150deg, #ff9fc0, #e9608d); color: #fff; }
+.reason-back { background: #fffdfd; color: #6d3346; border-color: #ffc4d5; transform: rotateY(180deg); }
+.reason-symbol { font-size: clamp(28px, 5vw, 46px); line-height: 1; text-shadow: 0 2px 0 #b3416a; }
+.reason-title { font: 700 clamp(20px, 2.8vw, 30px)/1.1 'Dancing Script', cursive; }
+.reason-hint { font: 600 clamp(10px, 1.2vw, 13px) Arial, sans-serif; opacity: .85; }
+.reason-text { font: 500 clamp(17px, 2.2vw, 24px)/1.2 'Caveat', cursive; }
+
+/* Vales con forma de boleto */
+.vouchers-list { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: 18px; max-width: 760px; }
+.voucher { filter: drop-shadow(0 8px 10px #8d416440); }
+.voucher-ticket {
+  display: grid; grid-template-columns: 1fr auto; align-items: stretch; text-align: left; border-radius: 10px;
+  background: linear-gradient(120deg, #fff, #fff3f7);
+  mask: radial-gradient(circle 12px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 12px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
+}
+.voucher-main { padding: 18px 26px; }
+.voucher-label { font: 700 13px Arial, sans-serif; letter-spacing: 3px; color: #c0577d; }
+.voucher-title { margin: 2px 0; font: 700 clamp(24px, 3.4vw, 33px)/1.1 'Dancing Script', cursive; color: #8d294b; }
+.voucher-from { font: 500 21px 'Caveat', cursive; color: #8d4358; }
+.voucher-stub { display: grid; place-items: center; min-width: 120px; padding: 12px 20px; border-left: 3px dashed #efb4c5; }
+.voucher-button {
+  padding: 10px 18px; border: 2px solid #a6274a; border-radius: 30px; background: #d74b6b; color: #fff;
+  font: bold 15px Arial, sans-serif; box-shadow: inset 0 2px #f2a9b6, 0 3px #a6274a;
+}
+.voucher-button:hover { background: #b73155; }
+.voucher.is-redeemed .voucher-button { background: #fff; color: #a6274a; box-shadow: none; }
+.voucher.is-redeemed .voucher-title { text-decoration: line-through; text-decoration-color: #d74b6b88; }
+
+/* Despedida */
+.closing { padding-bottom: clamp(60px, 10vw, 110px); }
+.closing-heart {
+  display: inline-block; margin: 10px 0; font-size: clamp(70px, 16vw, 130px); line-height: 1; color: #e0457b;
+  text-shadow: 0 6px 0 #a42a55, 0 0 30px #ff8fb8; animation: heartbeat 1.6s ease-in-out infinite;
+}
+@keyframes heartbeat { 0%, 28%, 70%, 100% { transform: scale(1); } 14% { transform: scale(1.16); } 42% { transform: scale(1.12); } }
+.closing-sign { margin: 0; font: 700 clamp(32px, 6vw, 54px)/1.1 'Dancing Script', cursive; color: #781c39; }
+.closing-names { margin: 8px 0 0; font: 500 clamp(22px, 3.4vw, 30px)/1.3 'Caveat', cursive; color: #8d4358; }
+.closing-button {
+  margin-top: 26px; padding: 12px 28px; border: 2px solid #a6274a; border-radius: 30px; background: #d74b6b; color: #fff;
+  font: bold 16px Arial, sans-serif; box-shadow: inset 0 2px #f2a9b6, 0 4px #a6274a;
+}
+.closing-button:hover { background: #b73155; }
+
+@media (max-width: 760px) {
+  .friends-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+  .reasons-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .voucher-main { padding: 14px 18px; }
+  .voucher-stub { min-width: 104px; padding: 10px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-decor { display: none; }
+  .bunting i, .closing-heart { animation: none; }
+  .reason-inner, .friend-card { transition: none; }
+}
+
+/* Animación de la carta: destello de apertura y detalles de lectura */
+.letter-flash {
+  position: fixed; inset: 0; z-index: 9; opacity: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #fff 0%, #ffe6f0 45%, #ffc2d9 100%);
+}
+.letter-sparkle { animation: sparkleGlow 2.6s ease-in-out infinite; }
+@keyframes sparkleGlow { 0%, 100% { text-shadow: 0 0 0 #ff9fc400; } 50% { text-shadow: 0 0 14px #ff8fb8; } }
+.letter-end span { display: inline-block; animation: heartbeat 1.8s ease-in-out infinite; }
+.letter-end small { animation: scrollNudge 1.8s ease-in-out infinite; }
+@keyframes scrollNudge { 0%, 100% { transform: translateY(0); opacity: .75; } 50% { transform: translateY(7px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .letter-sparkle, .letter-end span, .letter-end small { animation: none; }
+}
+
+/* ===== Tipografía: fuente redondeada y divertida para títulos, botones y avisos ===== */
+:root { --font-fun: 'Fredoka', 'Trebuchet MS', 'Arial Rounded MT Bold', sans-serif; }
+.lock h1, .hint, .keys button, .result-modal h2, .result-modal p, .modal-button,
+.birthday-top, .birthday-top span, .count-number, .birthday-action, .birthday-headline, .birthday-subtitle,
+.envelope-heading, .envelope-scene p, .envelope-instruction, .reason-hint, .voucher-label, .voucher-button, .closing-button {
+  font-family: var(--font-fun);
+}
+.lock h1 { font-weight: 700; letter-spacing: .5px; text-align: center; text-shadow: 2px 3px 0 #fff, 4px 6px 0 #f3b3b5; }
+.hint { font-weight: 500; letter-spacing: .3px; }
+.birthday-headline { font-weight: 700; text-wrap: balance; }
+.birthday-subtitle, .envelope-scene p { font-weight: 500; text-wrap: balance; }
+/* Deja aire entre el subtítulo y el personaje, que sube y baja al flotar */
+.birthday-subtitle { margin-bottom: 30px; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* ===== Texto que rebota letra por letra ===== */
+.bouncy, .bouncy-visual, .bouncy-word, .bouncy-char { font: inherit; font-style: normal; text-decoration: none; }
+.bouncy-word { display: inline-block; white-space: nowrap; }
+.bouncy-char { display: inline-block; animation: charWave 2.8s ease-in-out infinite; animation-delay: calc(0.9s + var(--i) * 0.09s); }
+.bouncy--pop .bouncy-char {
+  animation: charPop .7s cubic-bezier(.2, 1.6, .4, 1) both, charWave 2.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.05s), calc(1s + var(--i) * 0.09s);
+}
+@keyframes charPop { from { opacity: 0; transform: translateY(.7em) scale(.3) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes charWave { 0%, 55%, 100% { transform: translateY(0) rotate(0); } 28% { transform: translateY(-.16em) rotate(-3deg); } }
+
+/* ===== Textos centrados ===== */
+.birthday-letter .letter-body { max-width: 30em; margin: 0 auto; text-align: center; }
+.birthday-letter .letter-body p { text-indent: 0; text-wrap: pretty; }
+.extra-head, .friend-card, .reason-face, .voucher-main { text-align: center; }
+.voucher-main { text-align: left; }
+
+/* ===== Galería: nada se parte ni se tapa ===== */
+.cinematic-gallery .memory-caption {
+  position: relative; z-index: 4; align-self: center; justify-self: center; width: 100%; max-width: 21em; padding: 4px 6px;
+  font: 700 clamp(16px, 1.9vw, 26px)/1.22 'Dancing Script', 'Caveat', cursive; text-align: center;
+  writing-mode: horizontal-tb; transform: none; text-wrap: balance;
+  overflow-wrap: normal; word-break: normal; hyphens: auto;
+}
+.cinematic-gallery .memory-frame { animation: frameSway 6s ease-in-out infinite alternate; transition: scale .3s cubic-bezier(.2, 1.6, .4, 1); }
+.cinematic-gallery .memory-frame:hover { animation-play-state: paused; scale: 1.07; z-index: 6; }
+.cinematic-gallery .frame-2, .cinematic-gallery .frame-5 { animation-delay: -1.5s; animation-duration: 7s; }
+.cinematic-gallery .frame-3, .cinematic-gallery .frame-6 { animation-delay: -3s; animation-duration: 5.5s; }
+@keyframes frameSway { from { rotate: -1.6deg; } to { rotate: 1.6deg; } }
+
+@media (min-width: 1001px) {
+  .cinematic-gallery .memories-grid .frame-1 { grid-column: 1 / 4; grid-row: 1; height: 90%; width: 92%; }
+  .cinematic-gallery .memory-caption-left { grid-column: 4 / 6; grid-row: 1; }
+  .cinematic-gallery .memories-grid .frame-2 { grid-column: 6 / 8; grid-row: 1; height: 72%; width: 90%; }
+  .cinematic-gallery .memory-caption-middle { grid-column: 8 / 10; grid-row: 1; }
+  .cinematic-gallery .memories-grid .frame-3 { grid-column: 10 / 13; grid-row: 1; height: 90%; width: 92%; }
+  .cinematic-gallery .memories-grid .frame-4 { grid-column: 1 / 4; grid-row: 2; height: 88%; width: 90%; }
+  .cinematic-gallery .memories-grid .frame-5 { grid-column: 4 / 8; grid-row: 2; height: 90%; width: 92%; }
+  .cinematic-gallery .memory-caption-right { grid-column: 8 / 10; grid-row: 2; }
+  .cinematic-gallery .memories-grid .frame-6 { grid-column: 10 / 13; grid-row: 2; height: 76%; width: 90%; }
+}
+
+/* Celular y tableta: 6 fotos grandes y una frase a la vez que va cambiando */
+@media (max-width: 1000px) {
+  .cinematic-gallery { padding: 10px 10px 12px; }
+  .cinematic-gallery .gallery-heading { font-size: clamp(21px, 5.2vw, 32px); line-height: 1.12; text-wrap: balance; }
+  .cinematic-gallery .gallery-footer { font-size: clamp(19px, 4.6vw, 28px); line-height: 1.12; text-align: center; text-wrap: balance; }
+  .cinematic-gallery .memories-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)) auto; gap: 9px; }
+  .cinematic-gallery .memories-grid .memory-frame { width: 94%; height: 94%; align-self: center; justify-self: center; }
+  .cinematic-gallery .memories-grid .frame-1 { grid-column: 1; grid-row: 1; }
+  .cinematic-gallery .memories-grid .frame-2 { grid-column: 2; grid-row: 1; }
+  .cinematic-gallery .memories-grid .frame-3 { grid-column: 1; grid-row: 2; }
+  .cinematic-gallery .memories-grid .frame-4 { grid-column: 2; grid-row: 2; }
+  .cinematic-gallery .memories-grid .frame-5 { grid-column: 1; grid-row: 3; }
+  .cinematic-gallery .memories-grid .frame-6 { grid-column: 2; grid-row: 3; }
+  .cinematic-gallery .memory-caption {
+    grid-column: 1 / -1; grid-row: 4; max-width: 24em; font-size: clamp(19px, 5vw, 27px);
+    opacity: 0; animation: captionCycle 12s ease-in-out infinite both;
+  }
+  .cinematic-gallery .memory-caption-middle { animation-delay: 4s; }
+  .cinematic-gallery .memory-caption-right { animation-delay: 8s; }
+}
+@keyframes captionCycle {
+  0% { opacity: 0; transform: translateY(12px) scale(.95); }
+  5%, 30% { opacity: 1; transform: none; }
+  34%, 100% { opacity: 0; transform: translateY(-10px) scale(.97); }
+}
+
+/* ===== Animaciones divertidas ===== */
+.cake-art { animation: cakeBob 3s ease-in-out infinite; }
+@keyframes cakeBob { 0%, 100% { translate: 0 0; rotate: -1.5deg; } 50% { translate: 0 -10px; rotate: 1.5deg; } }
+.birthday-character { animation: pop .8s ease, characterBob 2.6s ease-in-out .8s infinite; }
+@keyframes characterBob { 0%, 100% { translate: 0 0; rotate: -2deg; scale: 1; } 50% { translate: 0 -12px; rotate: 2deg; scale: 1.03; } }
+.count-number { display: inline-block; animation: countPop .8s cubic-bezier(.2, 1.8, .4, 1) both; }
+@keyframes countPop { from { opacity: 0; scale: 2.4; rotate: -25deg; } to { opacity: 1; scale: 1; rotate: 0deg; } }
+.heart-slot.active { animation: slotPop .4s cubic-bezier(.2, 1.8, .4, 1); }
+@keyframes slotPop { 0% { scale: 1; } 40% { scale: 1.25; rotate: -6deg; } 100% { scale: 1; rotate: 0deg; } }
+.birthday-action { animation: pop .4s ease, buttonPulse 1.8s ease-in-out .4s infinite; }
+.envelope-instruction { animation: buttonPulse 1.6s ease-in-out infinite; }
+@keyframes buttonPulse { 0%, 100% { scale: 1; } 50% { scale: 1.07; } }
+.birthday-action:hover, .modal-button:hover, .closing-button:hover, .voucher-button:hover { animation: wiggle .5s ease-in-out; }
+@keyframes wiggle { 0%, 100% { rotate: 0deg; } 25% { rotate: -5deg; } 75% { rotate: 5deg; } }
+.friend-avatar { animation: avatarWiggle 3.2s ease-in-out infinite; }
+.friends-grid > li:nth-child(2) .friend-avatar { animation-delay: -1.1s; }
+.friends-grid > li:nth-child(3) .friend-avatar { animation-delay: -2.2s; }
+@keyframes avatarWiggle { 0%, 70%, 100% { rotate: 0deg; scale: 1; } 78% { rotate: -9deg; scale: 1.08; } 86% { rotate: 9deg; scale: 1.08; } 94% { rotate: -4deg; } }
+.reason-card:hover .reason-symbol { animation: wiggle .6s ease-in-out; }
+.voucher-ticket { transition: transform .3s cubic-bezier(.2, 1.6, .4, 1); }
+.voucher-ticket:hover { transform: translateY(-4px) rotate(-.6deg); }
+@media (prefers-reduced-motion: reduce) {
+  .bouncy-char, .cinematic-gallery .memory-frame, .cake-art, .birthday-character, .count-number, .heart-slot.active,
+  .birthday-action, .envelope-instruction, .friend-avatar { animation: none !important; }
+  .cinematic-gallery .memory-caption { animation: none; opacity: 1; }
+}
+/* Sin movimiento no hay frases que cambien: se muestran las tres apiladas. */
+@media (prefers-reduced-motion: reduce) and (max-width: 1000px) {
+  .cinematic-gallery .memory-caption { grid-row: auto; font-size: clamp(14px, 3.8vw, 18px); }
+}
+
+@media (max-width: 650px) {
+  .birthday-screen:has(.memory-gallery) .birthday-letter { padding: 26px 20px 34px; }
+}

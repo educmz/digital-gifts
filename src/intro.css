@@ -1,0 +1,156 @@
+/* Broma de inicio: cargando → error → terminal de "hackeo" → alerta con cuenta regresiva → "era broma".
+   Sin destellos rápidos: solo pulsos lentos y un leve temblor. */
+
+.intro { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 24px; overflow: hidden; color: #fff; text-align: center; }
+.intro-box { position: relative; z-index: 1; width: min(100%, 560px); }
+.intro--loading, .intro--breach, .intro--terminal { font-family: ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace; }
+
+/* Líneas de escaneo, como un monitor viejo */
+.intro--loading::after, .intro--breach::after, .intro--terminal::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  background: repeating-linear-gradient(0deg, #0000002e 0 2px, transparent 2px 4px);
+}
+.intro--terminal::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 4;
+  background: radial-gradient(ellipse at center, transparent 55%, #000000a0 100%);
+}
+
+/* 1. Cargando: parece una carga normal */
+.intro--loading { background: #12141c; }
+.intro-label { margin: 0 0 16px; font-size: clamp(20px, 5vw, 26px); letter-spacing: 1px; }
+.intro-bar { height: 16px; border: 2px solid #9ad7ff; border-radius: 3px; padding: 2px; }
+.intro-bar i { display: block; height: 100%; background: #9ad7ff; }
+.intro-bar--red { border-color: #ff4d5e; }
+.intro-bar--red i { background: #ff4d5e; }
+.intro-percent { margin: 10px 0 0; font-size: 18px; color: #9ad7ff; }
+
+/* 2. Error falso */
+.intro--breach { background: radial-gradient(circle at 50% 45%, #4a0a12 0%, #14060a 80%); animation: breachPulse 1.4s ease-in-out infinite alternate; }
+@keyframes breachPulse { from { filter: brightness(.8); } to { filter: brightness(1.1); } }
+.intro-noise {
+  position: absolute; inset: -20px; z-index: 0; opacity: .22; pointer-events: none;
+  background: repeating-linear-gradient(90deg, #fff0 0 3px, #ffffff40 3px 4px), repeating-linear-gradient(0deg, #fff0 0 5px, #ffffff30 5px 6px);
+  animation: noiseShift .5s steps(3) infinite;
+}
+@keyframes noiseShift { 0% { translate: 0 0; } 50% { translate: -6px 4px; } 100% { translate: 5px -3px; } }
+.intro-breach-title { margin: 0 0 6px; font-size: clamp(26px, 7vw, 40px); font-weight: 700; color: #ff4d5e; letter-spacing: 2px; text-shadow: 0 0 18px #ff4d5e88; }
+.intro-breach-text { margin: 0 0 18px; font-size: clamp(16px, 4vw, 20px); color: #ffb3ba; }
+
+/* 3. Terminal */
+.intro--terminal { background: #03100a; place-items: center; }
+.intro-hex { position: absolute; inset: 0; overflow: hidden; opacity: .13; color: #39ff88; font-size: 13px; line-height: 1.5; text-align: left; white-space: nowrap; }
+.intro-hex > div { animation: hexRun 14s linear infinite; }
+.intro-hex p { margin: 0; }
+@keyframes hexRun { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.term {
+  position: relative; z-index: 2; width: min(100%, 700px); text-align: left; color: #7dffb0;
+  background: #06180ff2; border: 1px solid #39ff8877; border-radius: 8px; box-shadow: 0 0 40px #39ff8830, inset 0 0 30px #00000066;
+  transition: opacity .5s ease, filter .5s ease;
+}
+.is-alert .term { opacity: .35; filter: blur(1.5px); }
+.term-bar { display: flex; align-items: center; gap: 7px; padding: 8px 12px; border-bottom: 1px solid #39ff8855; background: #0b2418; border-radius: 8px 8px 0 0; font-size: 12px; color: #8fc7a4; }
+.term-bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.term-bar i:nth-child(2) { background: #febc2e; }
+.term-bar i:nth-child(3) { background: #28c840; margin-right: 6px; }
+.term-body { padding: 12px 14px 14px; font-size: clamp(11.5px, 3.1vw, 15px); line-height: 1.55; }
+.term-line { margin: 0; white-space: pre; overflow: hidden; color: #7dffb0; }
+.term-line:first-child { color: #c9ffe0; }
+.term-caret { display: inline-block; width: .55em; height: 1.05em; margin-left: 2px; vertical-align: -.15em; background: #7dffb0; animation: caretBlink 1s steps(1) infinite; }
+@keyframes caretBlink { 50% { opacity: 0; } }
+.term-progress { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; margin: 8px 0; color: #c9ffe0; }
+.term-meter { height: 10px; border: 1px solid #39ff88aa; border-radius: 2px; padding: 1px; }
+.term-meter i { display: block; height: 100%; background: #39ff88; }
+.term-report { margin: 10px 0 0; padding-top: 10px; border-top: 1px dashed #39ff8866; display: grid; gap: 2px; }
+.term-report div { display: grid; grid-template-columns: minmax(7.5em, 34%) 1fr; gap: 8px; }
+.term-report dt { color: #5fa57c; }
+.term-report dd { margin: 0; color: #e7fff1; overflow-wrap: anywhere; }
+.term-report dd.is-redacted { color: #ff7a86; letter-spacing: 1px; }
+
+/* Alerta grande encima de la terminal */
+.intro-alertbox { position: absolute; inset: 0; z-index: 6; display: grid; place-items: center; padding: 24px; background: radial-gradient(circle at 50% 42%, #7d0c15cc 0%, #1c0206ee 80%); animation: alertIn .35s ease both; }
+@keyframes alertIn { from { opacity: 0; scale: 1.08; } to { opacity: 1; scale: 1; } }
+.intro-skull { margin: 0; font-size: clamp(50px, 13vw, 84px); line-height: 1; color: #ffd9dc; }
+.intro-alert {
+  position: relative; margin: 8px 0 14px; font: 900 clamp(34px, 9.5vw, 78px)/1.05 'Arial Black', Impact, sans-serif; letter-spacing: 1px;
+  color: #ff3d4f; text-shadow: 0 0 22px #ff3d4f99; text-wrap: balance; animation: glitchJitter 1.1s steps(1) infinite;
+}
+.intro-alert::before, .intro-alert::after { content: attr(data-text); position: absolute; inset: 0; opacity: .85; }
+.intro-alert::before { color: #44f4ff; translate: -4px 0; clip-path: inset(12% 0 66% 0); }
+.intro-alert::after { color: #ffe14a; translate: 4px 0; clip-path: inset(62% 0 14% 0); }
+@keyframes glitchJitter { 0%, 100% { translate: 0 0; } 25% { translate: 3px -2px; } 50% { translate: -3px 1px; } 75% { translate: 2px 2px; } }
+.intro-countdown { margin: 0 0 14px; font-size: clamp(15px, 4.2vw, 20px); color: #ffb3ba; }
+.intro-countdown strong { display: inline-block; min-width: 3.6em; color: #fff; font-size: 1.35em; letter-spacing: 2px; text-shadow: 0 0 14px #ff4d5e; }
+
+/* 4. Era broma */
+.intro--reveal {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(6px, 1.6svh, 16px); padding: 14px 12px;
+  background: radial-gradient(circle at 50% 50%, #ffd7ea 0%, #ff9cc6 60%, #b777f5 100%); color: #fff; font-family: var(--font-fun);
+  animation: revealIn .45s ease both;
+}
+@keyframes revealIn { from { opacity: 0; scale: 1.08; } to { opacity: 1; scale: 1; } }
+/* Se desvanece encima de la pantalla siguiente, que ya está debajo */
+.intro--reveal.is-leaving { animation: revealOut .8s ease forwards; pointer-events: none; }
+@keyframes revealOut { to { opacity: 0; scale: 1.05; } }
+
+/* Rayos que giran despacio detrás de la diablita */
+.reveal-rays {
+  position: absolute; left: 50%; top: 50%; width: 220vmax; height: 220vmax; translate: -50% -50%; z-index: 0; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, #ffffff59 0 7deg, #ffffff00 7deg 14deg);
+  mask-image: radial-gradient(circle, #000 0, transparent 60%); animation: raySpin 36s linear infinite;
+}
+@keyframes raySpin { to { rotate: 360deg; } }
+
+/* Lluvia de "67" */
+.reveal-rain { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.reveal-rain span { position: absolute; top: -14vh; font: 900 28px Impact, 'Arial Black', sans-serif; text-shadow: 0 2px 0 #0004; animation: rain67 8s linear infinite; }
+@keyframes rain67 { from { translate: 0 0; rotate: -12deg; } to { translate: 0 125vh; rotate: 16deg; } }
+
+/* Stickers de memes: entran con rebote y flotan */
+.reveal-memes { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.reveal-meme {
+  position: absolute; font: 900 calc(var(--s) * 1px * var(--k, 1))/1 Impact, 'Arial Black', sans-serif; color: #fff; rotate: var(--r); opacity: 0;
+  text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 18px #ff5c8a;
+  animation: memePop .6s cubic-bezier(.2, 1.8, .4, 1) var(--d) forwards, memeFloat 3.2s ease-in-out calc(var(--d) + .6s) infinite alternate;
+}
+@keyframes memePop { from { opacity: 0; scale: 0; } to { opacity: 1; scale: 1; } }
+@keyframes memeFloat { from { translate: 0 -7px; rotate: calc(var(--r) - 5deg); } to { translate: 0 9px; rotate: calc(var(--r) + 5deg); } }
+
+/* La diablita, enorme: entra rebotando, flota, se sacude de risa y cada pocos segundos da un golpe de zoom con glitch de colores */
+.reveal-evil {
+  position: relative; z-index: 1; flex: none; width: min(240vw, calc(125svh * 1.4825), 2200px); aspect-ratio: 1100 / 742;
+  filter: drop-shadow(0 0 0 #00e5ff00) drop-shadow(0 0 0 #ff2a6d00) drop-shadow(0 0 24px #ff5c8acc) saturate(1.2) contrast(1.06);
+  animation: evilPop 1s cubic-bezier(.2, 1.5, .4, 1) .15s backwards, evilBob 2.8s ease-in-out 1.15s infinite,
+    evilLaugh 3.4s ease-in-out 1.6s infinite, evilPunch 2.8s ease-in-out 1.8s infinite;
+}
+.reveal-evil::before { content: ""; position: absolute; inset: -14% -10% -4%; z-index: -1; background: radial-gradient(ellipse at 50% 60%, #fff9, #ff9cc655 45%, transparent 70%); animation: revealGlow 2.4s ease-in-out infinite alternate; }
+.reveal-evil-img { display: block; width: 100%; height: 100%; object-fit: contain; }
+@keyframes evilPop { from { opacity: 0; scale: .15; rotate: -16deg; translate: 0 80px; } }
+@keyframes evilBob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+@keyframes evilLaugh { 0%, 78%, 100% { rotate: 0deg; } 80% { rotate: -3deg; } 84% { rotate: 3deg; } 88% { rotate: -3deg; } 92% { rotate: 2deg; } 96% { rotate: -1deg; } }
+@keyframes evilPunch {
+  0%, 70%, 100% { scale: 1; filter: drop-shadow(0 0 0 #00e5ff00) drop-shadow(0 0 0 #ff2a6d00) drop-shadow(0 0 24px #ff5c8acc) saturate(1.2) contrast(1.06); }
+  72% { scale: 1.1; filter: drop-shadow(-8px 0 0 #00e5ff) drop-shadow(8px 0 0 #ff2a6d) drop-shadow(0 0 24px #ff5c8acc) saturate(1.9) contrast(1.4); }
+  78% { scale: 1.03; filter: drop-shadow(0 0 0 #00e5ff00) drop-shadow(0 0 0 #ff2a6d00) drop-shadow(0 0 24px #ff5c8acc) saturate(1.2) contrast(1.06); }
+}
+@keyframes revealGlow { from { opacity: .65; scale: .96; } to { opacity: 1; scale: 1.05; } }
+
+/* Lentes pixelados de "deal with it" que le caen encima */
+.reveal-glasses { position: absolute; left: 27%; top: 38%; z-index: 2; width: 46%; height: auto; filter: drop-shadow(0 4px 0 #0006); animation: glassesDrop .8s cubic-bezier(.3, 1.6, .5, 1) 2s backwards; }
+@keyframes glassesDrop { from { translate: 0 -280%; rotate: -14deg; opacity: 0; } 55% { opacity: 1; } }
+
+/* El botón va en una esquina para que la imagen se vea completa */
+.intro-button--corner { position: absolute; right: max(14px, 2vw); bottom: max(14px, 2.4svh); z-index: 5; padding: 11px 24px; font-size: 15px; }
+@media (max-width: 600px) { .reveal-meme { --k: .62; } }
+.intro-button {
+  padding: 14px 30px; border: 3px solid #fff; border-radius: 34px; background: linear-gradient(180deg, #ffb9d3, #f58bb0); color: #fff;
+  font: 700 clamp(16px, 4.2vw, 19px) var(--font-fun); text-shadow: 0 1px 0 #c0457a; box-shadow: 0 5px 0 #e98db3, 0 10px 14px #5b3a5f30;
+  animation: buttonPulse 1.8s ease-in-out infinite;
+}
+.intro-button:hover { animation: wiggle .5s ease-in-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro--breach, .intro-noise, .intro-hex > div, .intro-alert, .intro-alertbox, .intro-button, .intro--reveal { animation: none; }
+  .reveal-rays, .reveal-rain span, .reveal-evil, .reveal-evil::before, .reveal-glasses { animation: none; }
+  .reveal-rain { display: none; }
+  .reveal-meme { animation: none; opacity: 1; }
+}
