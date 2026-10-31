@@ -99,11 +99,10 @@ function PlaneTransition({ direction, onCovered, onDone }: Props) {
       const sun = find<HTMLElement>('.pt-sun')
       const horizon = find<HTMLElement>('.pt-horizon')
       const clouds = find<HTMLElement>('.pt-clouds')
-      const banks = find<HTMLElement>('.pt-banks')
-      const bankBack = find<HTMLElement>('.sky-bank--back')
-      const bankFront = find<HTMLElement>('.sky-bank--front')
       const plane = find<SVGElement>('.pt-plane')
-      const contrail = find<HTMLElement>('.pt-contrail')
+      const contrail = find<SVGElement>('.pt-contrail')
+      const trailGradient = find<SVGElement>('#ptTrailGradient')
+      const trailPaths = Array.from(root.querySelectorAll<SVGPathElement>('.pt-contrail path'))
       const cloudShapes = Array.from(root.querySelectorAll<HTMLElement>('.pt-cloud'))
 
       const width = root.clientWidth
@@ -119,6 +118,44 @@ function PlaneTransition({ direction, onCovered, onDone }: Props) {
       const horizonX = forward ? width * 0.66 : width * 0.24
       const horizonY = height + sunSize * 0.45
       const state = { p: 0, t: 0 }
+
+      // Posición del avión en cada instante t (0 a 1): avanza en línea recta, sube y baja suave y se balancea un poco.
+      const pose = (t: number) => ({
+        x: startX + (endX - startX) * t,
+        y: planeY + Math.sin(t * Math.PI * 2) * 5,
+        bank: Math.sin(t * Math.PI * 2 + 1) * 1.6,
+      })
+      // Punta de la cola del avión (de donde sale la estela), ya girada con el balanceo
+      const tailAt = (t: number): [number, number] => {
+        const { x, y, bank } = pose(t)
+        const dx = -planeWidth * 0.48
+        const dy = planeHeight * (0.38 - 0.5)
+        const rad = (bank * Math.PI) / 180
+        return [x + planeWidth / 2 + dx * Math.cos(rad) - dy * Math.sin(rad), y + planeHeight / 2 + dx * Math.sin(rad) + dy * Math.cos(rad)]
+      }
+      // La estela es una cinta que sigue el camino real que dejó el avión (curva con él) y se adelgaza y desvanece hacia atrás.
+      const TRAIL_POINTS = 30
+      const drawTrail = (t: number) => {
+        const [tailX] = tailAt(t)
+        const leftX = Math.max(0, tailX - width * 0.58)
+        const span = tailX - leftX
+        if (span < 6) { trailPaths.forEach(path => path.setAttribute('d', '')); return }
+        const top: string[] = []
+        const bottom: string[] = []
+        for (let i = 0; i <= TRAIL_POINTS; i++) {
+          const u = i / TRAIL_POINTS                       // 0 = extremo lejano, 1 = junto al avión
+          const sampleX = leftX + span * u
+          const sampleT = Math.max(0, t - (tailX - sampleX) / (endX - startX))
+          const [, sampleY] = tailAt(sampleT)
+          const half = (0.5 + 2.6 * u * u) / 2 * 2         // grosor: casi un hilo atrás, ~5 px junto al avión
+          top.push(`${sampleX.toFixed(1)} ${(sampleY - half).toFixed(1)}`)
+          bottom.push(`${sampleX.toFixed(1)} ${(sampleY + half).toFixed(1)}`)
+        }
+        const d = `M${top.join(' L')} L${bottom.reverse().join(' L')} Z`
+        trailPaths.forEach(path => path.setAttribute('d', d))
+        trailGradient.setAttribute('x1', String(leftX))
+        trailGradient.setAttribute('x2', String(tailX))
+      }
 
       const render = () => {
         const { p, t } = state
@@ -145,19 +182,10 @@ function PlaneTransition({ direction, onCovered, onDone }: Props) {
         const light = forward ? smooth(0.2, 0.85, p) : 1 - smooth(0.4, 0.9, p)
         clouds.style.setProperty('--cloud-fill', mix('#ffc2a8', '#ffffff', smooth(0.55, 1, light)))
         clouds.style.opacity = String(smooth(0.05, 0.5, light) * 0.95)
-        // El banco de nubes de abajo (el mismo de las otras pantallas) sube al clarear y se hunde al anochecer
-        banks.style.transform = `translateY(${(1 - smooth(0.1, 0.75, light)) * height * 0.32}px)`
-        bankBack.style.setProperty('--bank', mix('#d99fbd', '#ffe9f5', smooth(0.3, 1, light)))
-        bankFront.style.setProperty('--bank', mix('#f4c2bb', '#ffffff', smooth(0.3, 1, light)))
         // Avión y estela
-        const x = startX + (endX - startX) * t
-        const y = planeY + Math.sin(t * Math.PI * 2) * 5
-        const bank = Math.sin(t * Math.PI * 2 + 1) * 1.6
+        const { x, y, bank } = pose(t)
         plane.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${bank}deg)`
-        const tail = x + planeWidth * 0.04
-        const left = Math.max(0, tail - width * 0.62)
-        contrail.style.transform = `translate3d(${left}px, ${y + planeHeight * 0.5}px, 0)`
-        contrail.style.width = `${Math.max(0, tail - left)}px`
+        drawTrail(t)
         contrail.style.opacity = String(Math.min(1, t * 6) * (1 - smooth(0.92, 1, t)))
       }
       render()
@@ -194,12 +222,21 @@ function PlaneTransition({ direction, onCovered, onDone }: Props) {
           <div className="sky-moon pt-moon"><i className="sky-moon-disc" /><i className="sky-moon-twinkle sky-moon-twinkle--a" /><i className="sky-moon-twinkle sky-moon-twinkle--b" /></div>
           <div className="pt-horizon" />
           <div className="pt-sun"><i /></div>
-          <div className="pt-banks"><div className="sky-bank sky-bank--back" /><div className="sky-bank sky-bank--front" /></div>
           <div className="pt-clouds">
-            {CLOUDS.map(cloud => <div key={cloud.top} className="sky-cloud pt-cloud" style={{ top: cloud.top, '--w': `px` } as CSSProperties} />)}
+            {CLOUDS.map(cloud => <div key={cloud.top} className="sky-cloud pt-cloud" style={{ top: cloud.top, '--w': `${cloud.size}px` } as CSSProperties} />)}
           </div>
           <div className="pt-craft">
-            <div className="pt-contrail" />
+            <svg className="pt-contrail" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="ptTrailGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stopColor="#fff" stopOpacity="0" />
+                  <stop offset=".65" stopColor="#fff" stopOpacity=".7" />
+                  <stop offset="1" stopColor="#fff" stopOpacity=".95" />
+                </linearGradient>
+              </defs>
+              <path className="pt-trail-glow" fill="url(#ptTrailGradient)" />
+              <path className="pt-trail-line" fill="url(#ptTrailGradient)" />
+            </svg>
             <PlaneArt className="pt-plane" />
           </div>
         </>

@@ -3,8 +3,8 @@ import type { CSSProperties } from 'react'
 import { BalloonArt, PlaneArt } from './TravelArt'
 import useReducedMotion from './useReducedMotion'
 
-// Fondo fijo de la pantalla de Perú: sol con rayos, las mismas nubes y el mismo banco de nubes del cielo de las otras pantallas,
-// aves, globos, brillos, los Andes y el grupito BT21 sentado entre las nubes.
+// Fondo fijo de la pantalla de Perú: sol con rayos, las mismas nubes que flotan en el cielo de las otras pantallas,
+// aves, globos, brillos, los Andes y el grupito BT21 sentado sobre las lomas.
 
 // [alto en %, ancho en px, duración en s, desfase en s]: las nubes que ya usa el cielo de la fiesta
 const CLOUDS = [
@@ -83,17 +83,24 @@ function PeruScene() {
   const reduce = useReducedMotion()
   const rootRef = useRef<HTMLDivElement>(null)
 
-  // Parallax suave: el paisaje baja un poquito mientras se desplaza la página.
+  // Parallax: los cerros y el grupito BT21 empiezan un poco escondidos abajo y suben a medida que bajas por la página,
+  // hasta verse COMPLETOS al llegar al final. --peru-p va de 0 (arriba de todo) a 1 (abajo de todo).
   useLayoutEffect(() => {
     const root = rootRef.current
     if (!root || reduce) return
     let frame = 0
-    const update = () => { frame = 0; root.style.setProperty('--peru-scroll', String(Math.round(window.scrollY))) }
-    const onScroll = () => { if (!frame) frame = requestAnimationFrame(update) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', onScroll) }
+    const update = () => {
+      frame = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      root.style.setProperty('--peru-p', (max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1).toFixed(3))
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
+    update()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    const settle = window.setTimeout(update, 600)   // la altura de la página termina de calcularse cuando entra el contenido
+    return () => { cancelAnimationFrame(frame); window.clearTimeout(settle); window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule) }
   }, [reduce])
-
   return (
     <div className="peru-scene" ref={rootRef} aria-hidden="true">
       <div className="peru-sun"><i /></div>
@@ -115,9 +122,7 @@ function PeruScene() {
         <i key={index} className="peru-sparkle" style={{ left: sparkle.left, top: sparkle.top, width: sparkle.size, height: sparkle.size, animationDelay: `${sparkle.delay}s` }} />
       ))}
       <Mountains />
-      <div className="sky-bank sky-bank--back" />
       <img className="peru-crew" src={import.meta.env.BASE_URL + 'images/personaje/bt21.png'} alt="" onError={event => { event.currentTarget.style.display = 'none' }} />
-      <div className="sky-bank sky-bank--front" />
     </div>
   )
 }

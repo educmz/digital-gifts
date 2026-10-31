@@ -178,15 +178,15 @@ export const PERU_PLANS: { icon: PlanIcon; title: string; text: string }[] = [
 export type Memory = { src: string; size: [number, number]; caption: string; alt: string; sticker?: string; corner?: 'tl' | 'tr' }
 
 export const MEMORIES: Memory[] = [
-  { src: 'memories/recuerdo-5.jpeg', size: [1448, 1086], caption: 'Concierto: luces moradas y cara de "ya es tarde"', alt: 'Hetto y su esposo en un concierto lleno de luces moradas', sticker: 'personaje/rj.png', corner: 'tr' },
+  { src: 'memories/recuerdo-5.jpeg', size: [1448, 1086], caption: 'BTS y sus dos mayores fans', alt: 'Hetto y su esposo en un concierto lleno de luces moradas', sticker: 'personaje/rj.png', corner: 'tr' },
   { src: 'memories/recuerdo-2.jpeg', size: [1200, 1600], caption: 'Calabacita robándose todos los dulces', alt: 'Su bebé disfrazada de calabaza entre dulces de Halloween', sticker: 'room/hello-kitty.webp', corner: 'tr' },
   { src: 'memories/recuerdo-1.jpeg', size: [1448, 1086], caption: 'Ella manda la selfie, él solo sobrevive', alt: 'Hetto y su esposo en el carro', sticker: 'room/pompompurin.webp', corner: 'tl' },
-  { src: 'hallowen.jpeg', size: [1600, 962], caption: 'Equipo Rocket: mamá y su Meowth', alt: 'Hetto disfrazada del Equipo Rocket con su bebé vestida de Meowth', sticker: 'personaje/hello kitty.gif', corner: 'tl' },
-  { src: 'memories/recuerdo-4.jpeg', size: [1280, 803], caption: 'Mario y Luigi: los hermanos más peligrosos del carro', alt: 'Hetto y su esposo con filtros de gorras de Mario y Luigi', sticker: 'personaje/Mv-cinnamon.webp', corner: 'tl' },
+  { src: 'hallowen.jpeg', size: [1600, 962], caption: 'Sexy Jessie y su adorable Meowth', alt: 'Hetto disfrazada del Equipo Rocket con su bebé vestida de Meowth', sticker: 'personaje/hello kitty.gif', corner: 'tl' },
+  { src: 'memories/recuerdo-4.jpeg', size: [1280, 803], caption: 'Mario y Luigi elegantes', alt: 'Hetto y su esposo con filtros de gorras de Mario y Luigi', sticker: 'personaje/Mv-cinnamon.webp', corner: 'tl' },
   { src: 'pum-y-chettos.jpg', size: [960, 960], caption: 'Pum dándole un beso a la cumpleañera (sin permiso)', alt: 'Ilustración anime de Pum dándole un beso a Hetto, con globos, regalos y pastel', sticker: 'room/pompompurin.webp', corner: 'tr' },
   { src: 'fotolynkii con hetto.jpeg', size: [1360, 1157], caption: 'Lynkii invadiendo la foto, con pastel y todo', alt: 'Su amigo Lynkii con un pastel, junto a Hetto dibujada en estilo anime', sticker: 'personaje/List-kuromi.webp', corner: 'tr' },
   { src: 'memories/recuerdo-6.jpeg', size: [942, 1280], caption: 'Modo foto seria: nivel profesional', alt: 'Retrato de Hetto con una estrella en el mentón', sticker: 'personaje/mymelody.webp', corner: 'tr' },
   { src: 'memebebe.jpeg', size: [1200, 1600], caption: 'La jefa de la casa cobrando impuestos', alt: 'Meme de su bebé señalando a la cámara', sticker: 'room/cinnamoroll.webp', corner: 'tr' },
-  { src: 'room/hettocumple.webp', size: [460, 518], caption: 'Su versión anime ya está lista para la fiesta', alt: 'Ilustración de Hetto con un pastel y confeti', sticker: 'room/pachacco.webp', corner: 'tl' },
+  { src: 'room/hettocumple.webp', size: [460, 518], caption: 'Hetto ya anda lista para su cumple', alt: 'Ilustración de Hetto con un pastel y confeti', sticker: 'room/pachacco.webp', corner: 'tl' },
   { src: 'memories/recuerdo-3.jpeg', size: [1280, 760], caption: 'Cuando la cámara se acerca demasiado', alt: 'Hetto mirando a la cámara desde abajo', sticker: 'personaje/army.png', corner: 'tl' },
 ]

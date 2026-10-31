@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, RefObject } from 'react'
 import { gsap } from 'gsap'
 import { LETTERS, THEMES } from '../content'
@@ -16,6 +16,7 @@ function EnvelopePicker({ opened, flashRef, onOpen, onContinue }: Props) {
   const [opening, setOpening] = useState<number | null>(null)
   const buttons = useRef<(HTMLButtonElement | null)[]>([])
   const listRef = useRef<HTMLUListElement>(null)
+  const pickerRef = useRef<HTMLDivElement>(null)
 
   // Reacción al acercarte: cada sobre mide qué tan cerca está el puntero (--near, de 0 a 1) y hacia qué lado (--dx).
   // El CSS usa esos valores para levantarlo, inclinarlo, entreabrir la solapa y asomar la carta y el animalito.
@@ -56,6 +57,20 @@ function EnvelopePicker({ opened, flashRef, onOpen, onContinue }: Props) {
       document.documentElement.removeEventListener('pointerleave', leave)
     }
   }, [])
+
+  // Esta pantalla no se desplaza: si todo el contenido no cabe en la ventana, se reduce lo justo para que quepa.
+  useLayoutEffect(() => {
+    const picker = pickerRef.current
+    if (!picker) return
+    const fit = () => {
+      const natural = picker.offsetHeight   // la altura real, sin contar la reducción
+      picker.style.setProperty('--fit', String(natural > 0 ? Math.max(0.5, Math.min(1, window.innerHeight / natural)) : 1))
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    void document.fonts.ready.then(fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [])
   const allOpened = opened.length === LETTERS.length
 
   const open = (index: number) => {
@@ -77,7 +92,7 @@ function EnvelopePicker({ opened, flashRef, onOpen, onContinue }: Props) {
   }
 
   return (
-    <div className="picker">
+    <div className="picker" ref={pickerRef}>
       <h1 className="envelope-heading"><BouncyText text="Tres cartas para ti, Hetto ♡" /></h1>
       <p className="picker-sub">Elige un sobre para empezar a leer...</p>
       <ul className="picker-list" ref={listRef}>

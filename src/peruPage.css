@@ -4,7 +4,7 @@
 .peru-inner { position: relative; z-index: 1; width: min(100%, 720px); display: flex; flex-direction: column; align-items: center; text-align: center; }
 
 /* ----- Fondo fijo: el contenido se desplaza por delante de la escena ----- */
-.peru-scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; --bank-h: 15vh; background: linear-gradient(180deg, #6fbffb 0%, #a0d8ff 40%, #d3efff 74%, #eaf9ff 100%); }
+.peru-scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: linear-gradient(180deg, #6fbffb 0%, #a0d8ff 40%, #d3efff 74%, #eaf9ff 100%); }
 .peru-bunting { position: absolute; top: 0; left: 0; z-index: 2; width: 100%; height: clamp(46px, 7vw, 80px); pointer-events: none; filter: drop-shadow(0 4px 4px #3a6aa433); }
 .peru-pennant { transform-box: fill-box; transform-origin: 50% 0; animation: pennantSway 3.2s ease-in-out infinite alternate; }
 @keyframes pennantSway { from { rotate: -6deg; } to { rotate: 6deg; } }
@@ -25,16 +25,16 @@
 
 .peru-flyby { position: absolute; top: 18%; left: 0; width: 110px; opacity: .75; animation: peruFlyby 46s linear -14s infinite; }
 .peru-flyby svg { display: block; width: 100%; height: auto; }
-.peru-flyby::before { content: ""; position: absolute; right: 88%; top: 46%; width: 260px; height: 5px; border-radius: 5px; background: linear-gradient(90deg, #ffffff00, #ffffffd9); }
+.peru-flyby::before { content: ""; position: absolute; right: 96%; top: calc(38% - 2px); width: 260px; height: 5px; background: linear-gradient(90deg, #ffffff00, #ffffffd9); clip-path: polygon(0 45%, 100% 0, 100% 100%, 0 55%); }
 @keyframes peruFlyby { from { translate: -360px 0; } to { translate: calc(100vw + 80px) 0; } }
 
 .peru-balloon { position: absolute; height: auto; opacity: .94; filter: drop-shadow(0 8px 8px #3a6aa433); animation: balloonFloat ease-in-out infinite alternate; }
 @keyframes balloonFloat { from { translate: 0 0; rotate: -3deg; } to { translate: 8px -28px; rotate: 3deg; } }
 .peru-sparkle { position: absolute; border-radius: 50%; background: radial-gradient(circle, #fff 0 30%, #fff0 70%); animation: starTwinkle 4.2s ease-in-out infinite; }
 
-.peru-mountains { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(160px, 32vh, 300px); display: block; translate: 0 calc(var(--peru-scroll, 0) * .04px); }
+.peru-mountains { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(160px, 32vh, 300px); display: block; translate: 0 calc((1 - var(--peru-p, 1)) * 24%); }
 /* El grupito BT21, sentado entre las nubes de abajo */
-.peru-crew { position: absolute; right: clamp(8px, 7vw, 120px); bottom: calc(var(--bank-h) * .3); width: clamp(86px, 12vw, 160px); height: auto; filter: drop-shadow(0 6px 6px #3a6aa44d); animation: crewBounce 3.6s ease-in-out infinite; translate: 0 calc(var(--peru-scroll, 0) * .03px); }
+.peru-crew { position: absolute; right: clamp(8px, 7vw, 120px); bottom: clamp(4px, 1.2vh, 16px); z-index: 3; width: clamp(86px, 12vw, 160px); height: auto; filter: drop-shadow(0 6px 6px #3a6aa44d); animation: crewBounce 3.6s ease-in-out infinite; translate: 0 calc((1 - var(--peru-p, 1)) * 55%); }
 @keyframes crewBounce { 0%, 100% { rotate: -1.5deg; scale: 1 1; } 50% { rotate: 1.5deg; scale: 1.02 .98; } }
 /* ----- Portada: título y anillos ----- */
 .peru-hero { width: 100%; min-height: calc(100svh - 120px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 18px 0 8px; }
