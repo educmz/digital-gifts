@@ -8,6 +8,7 @@ import BouncyText from './BouncyText'
 import CakeArt from './CakeArt'
 import { MascotFace } from './Mascot'
 import RoomBackground from './RoomBackground'
+import { music } from '../music'
 import { useBlowDetection } from './useBlowDetection'
 
 type Phase = 'blow' | 'wish' | 'sent'
@@ -172,6 +173,11 @@ function CakeScene({ onDone, onNight, onDark }: Props) {
   }
   useEffect(() => { blowRef.current = blowOut })
   useBlowDetection(mic === 'listening' && lit, blowOut, () => setMic('unavailable'))
+  // La música se calla mientras el micrófono escucha el soplido (si no, la propia música cuenta como un soplido)
+  useEffect(() => {
+    music.duck(mic === 'listening' && lit)
+    return () => music.duck(false)
+  }, [mic, lit])
 
   // EL JUEGO: cada toque manda una ráfaga que dobla la llama. Si dejas de tocar, la llama se recupera, y de vez en cuando
   // se reaviva sola, así que hay que soplar rápido y seguido. Al llenar el medidor la vela se apaga.

@@ -163,6 +163,8 @@
   .peru-flyby, .peru-bird, .peru-sun i, .peru-sun::before, .peru-sparkle, .peru-balloon, .peru-crew, .buddy, .peru-pennant, .route-line, .route-pulse, .dial-num, .dial-arc,
   .peru-scroll i { animation: none; transition: none; }
   .peru-flyby, .peru-bird { display: none; }
+  /* sin movimiento, cada nube se queda en su sitio (en vez de amontonarse a la izquierda) */
+  .peru-scene .sky-cloud { left: var(--rest, 12%); }
   .pass-photo, .plan { transition: none; }
 }
 

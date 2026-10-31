@@ -13,8 +13,10 @@ import './room.css'
 import './peru.css'
 import './peruPage.css'
 import './album.css'
+import './music.css'
 import { LETTERS } from './content'
 import { installHeartEffects } from './heartEffects'
+import { music } from './music'
 import BouncyText from './components/BouncyText'
 import CakeScene from './components/CakeScene'
 import EnvelopePicker from './components/EnvelopePicker'
@@ -26,6 +28,7 @@ import Memories from './components/Memories'
 import PeruSection from './components/PeruSection'
 import PlaneTransition from './components/PlaneTransition'
 import type { FlightDirection } from './components/PlaneTransition'
+import MusicPlayer from './components/MusicPlayer'
 import SkyBackground from './components/SkyBackground'
 
 // Personalización: el código es la fecha del cumpleaños (día y mes, por ejemplo 2410). Cámbialo aquí.
@@ -58,6 +61,15 @@ function App() {
   const sunriseTimer = useRef(0)
 
   useEffect(() => installHeartEffects(), [])
+
+  // La música empieza con el primer toque (los navegadores no dejan que suene sola); en la broma de inicio todavía no suena.
+  useEffect(() => {
+    if (stage === 'intro') return
+    const go = () => music.start()
+    window.addEventListener('pointerdown', go, { once: true })
+    window.addEventListener('keydown', go, { once: true })
+    return () => { window.removeEventListener('pointerdown', go); window.removeEventListener('keydown', go) }
+  }, [stage])
 
   const result: Result = !code ? null
     : !PASSCODE.startsWith(code) ? 'error'
@@ -155,6 +167,7 @@ function App() {
   return (
     <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : stage === 'peru' ? 'peru-screen' : stage === 'memories' ? 'memories-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''} ${modalClosing ? 'is-leaving' : ''}`}>
       <div className="letter-flash" ref={flashRef} aria-hidden="true" />
+      <MusicPlayer visible={stage !== 'intro'} />
       {showSky && <SkyBackground night={night} />}
       {showDecor && <FloatingDecor />}
       {showBunting && (
@@ -164,7 +177,7 @@ function App() {
       )}
 
       {(stage === 'intro' || introLeaving) && (
-        <IntroPrank leaving={introLeaving} onDone={() => { setIntroLeaving(true); setStage('locked') }} />
+        <IntroPrank leaving={introLeaving} onDone={() => { music.start(); setIntroLeaving(true); setStage('locked') }} />
       )}
 
       {stage === 'locked' && (

@@ -6,9 +6,9 @@ import useReducedMotion from './useReducedMotion'
 // Fondo fijo de la pantalla de Perú: sol con rayos, las mismas nubes que flotan en el cielo de las otras pantallas,
 // aves, globos, brillos, los Andes y el grupito BT21 sentado sobre las lomas.
 
-// [alto en %, ancho en px, duración en s, desfase en s]: las nubes que ya usa el cielo de la fiesta
+// [alto en %, ancho en px, duración en s, desfase en s, posición en reposo en %]: el mismo tipo de nubes del cielo de la fiesta, cada una en su carril
 const CLOUDS = [
-  [9, 210, 95, -20], [22, 150, 70, -52], [36, 260, 120, -80], [15, 180, 105, -4], [48, 130, 80, -35],
+  [7, 190, 110, -30, 8], [26, 130, 80, -55, 66], [46, 220, 130, -90, 28], [66, 150, 95, -12, 74],
 ]
 const BIRDS = [
   { top: '18%', left: '24%', size: 26, delay: 0 },
@@ -104,9 +104,9 @@ function PeruScene() {
   return (
     <div className="peru-scene" ref={rootRef} aria-hidden="true">
       <div className="peru-sun"><i /></div>
-      {CLOUDS.map(([top, width, duration, delay], index) => (
+      {CLOUDS.map(([top, width, duration, delay, rest], index) => (
         <div key={index} className="sky-cloud"
-          style={{ top: `${top}%`, '--w': `${width}px`, animationDuration: `${duration}s, ${5 + index}s`, animationDelay: `${delay}s, ${-index * 1.3}s` } as CSSProperties} />
+          style={{ top: `${top}%`, '--rest': `${rest}%`, '--w': `${width}px`, animationDuration: `${duration}s, ${5 + index}s`, animationDelay: `${delay}s, ${-index * 1.3}s` } as CSSProperties} />
       ))}
       {BIRDS.map(bird => (
         <svg key={bird.top} className="peru-bird" viewBox="0 0 40 20" style={{ top: bird.top, left: bird.left, width: bird.size, animationDelay: `${bird.delay}s` }}>

@@ -35,11 +35,11 @@ const DUSK: Sky = ['#151a58', '#3d2c84', '#9a4a9a', '#ff8a7a']
 const TO_PERU: Frame[] = [{ at: 0, sky: NIGHT }, { at: 0.3, sky: PREDAWN }, { at: 0.55, sky: SUNRISE }, { at: 0.8, sky: MORNING }, { at: 1, sky: DAY }]
 const FROM_PERU: Frame[] = [{ at: 0, sky: DAY }, { at: 0.3, sky: AFTERNOON }, { at: 0.58, sky: SUNSET }, { at: 0.82, sky: DUSK }, { at: 1, sky: NIGHT }]
 
+// Nubes del vuelo: pocas, pequeñas y cada una en su propio carril (así nunca se encimen) y lejos de la línea del avión.
 const CLOUDS = [
-  { top: '14%', size: 260, from: 0.0, seconds: 5.4 },
-  { top: '58%', size: 340, from: 0.9, seconds: 4.6 },
-  { top: '30%', size: 180, from: 1.5, seconds: 4.2 },
-  { top: '74%', size: 230, from: 0.3, seconds: 5.0 },
+  { top: '8%', size: 190, from: 0.0, seconds: 5.4 },
+  { top: '52%', size: 200, from: 0.8, seconds: 4.8 },
+  { top: '78%', size: 150, from: 0.3, seconds: 5.2 },
 ]
 
 const smooth = (from: number, to: number, value: number) => {
