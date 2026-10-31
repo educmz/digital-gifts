@@ -41,7 +41,7 @@ function CakeScene({ onDone, onNight, onDark }: Props) {
   const lanternRef = useRef<HTMLDivElement>(null)
   const orbRef = useRef<HTMLDivElement>(null)
   const darkRef = useRef<HTMLDivElement>(null)
-  const flameRef = useRef<SVGGElement>(null)
+  const flameRef = useRef<SVGCircleElement>(null)
   const wrapRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -145,10 +145,10 @@ function CakeScene({ onDone, onNight, onDark }: Props) {
         dark.style.setProperty('--fx', `${rect.left + rect.width / 2}px`)
         dark.style.setProperty('--fy', `${rect.top + rect.height / 2}px`)
       }
-      // Mientras más fuerte se sopla, más tiembla la luz y más se encoge; cuando la llama se reaviva, se agranda un poco.
+      // Mientras más fuerte se sopla, más tiembla la luz (casi sin encogerse, para que no se vea raro); cuando la llama se reaviva, se agranda un poco.
       const p = power.current
-      const flicker = reduce ? 1 : 1 + (0.05 + p * 0.12) * Math.sin(time * (0.009 + p * 0.02)) + 0.03 * Math.sin(time * 0.023)
-      const size = (1 - p * 0.5) * (1 + flare.current * 0.22)
+      const flicker = reduce ? 1 : 1 + (0.05 + p * 0.07) * Math.sin(time * (0.009 + p * 0.02)) + 0.03 * Math.sin(time * 0.023)
+      const size = (1 - p * 0.14) * (1 + flare.current * 0.12)
       dark.style.setProperty('--r', `${Math.max(1, light.current.r * flicker * size)}px`)
       dark.style.setProperty('--a', String(light.current.alpha))
       frame = requestAnimationFrame(tick)

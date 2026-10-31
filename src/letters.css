@@ -1,4 +1,4 @@
-/* Selector de sobres y cartas de Pum, Lynki y Giank. Cada carta usa su paleta pastel vía variables CSS. */
+/* Selector de sobres y cartas de Pum, Lynkii y Giank. Cada carta usa su paleta pastel vía variables CSS. */
 
 /* ===== Gatitos: parpadeo ===== */
 .mascot-eye { transform-box: fill-box; transform-origin: center; animation: catBlink 5s infinite; }
@@ -160,7 +160,7 @@
 }
 
 
-/* ===== Carta de Lynki: pingüinos y copos de nieve ===== */
+/* ===== Carta de Lynkii: pingüinos y copos de nieve ===== */
 .letter-page--penguin::before {
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cg fill='none' stroke='%23000' stroke-width='5' stroke-linecap='round'%3E%3Cg transform='translate(14 14) scale(.62)'%3E%3Cpath d='M32 6V58M9.500 19L54.500 45M9.500 45L54.500 19'/%3E%3Cpath d='M32 15l-7-6M32 15l7-6M32 49l-7 6M32 49l7 6'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23000'%3E%3Ccircle cx='104' cy='40' r='4'/%3E%3Ccircle cx='36' cy='112' r='3.500'/%3E%3Cpath d='M108 100l4 9 10 1-7.500 6.500 2.500 10-9-5-9 5 2.500-10-7.500-6.500 10-1z'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 150px 150px repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 150 150'%3E%3Cg fill='none' stroke='%23000' stroke-width='5' stroke-linecap='round'%3E%3Cg transform='translate(14 14) scale(.62)'%3E%3Cpath d='M32 6V58M9.500 19L54.500 45M9.500 45L54.500 19'/%3E%3Cpath d='M32 15l-7-6M32 15l7-6M32 49l-7 6M32 49l7 6'/%3E%3C/g%3E%3C/g%3E%3Cg fill='%23000'%3E%3Ccircle cx='104' cy='40' r='4'/%3E%3Ccircle cx='36' cy='112' r='3.500'/%3E%3Cpath d='M108 100l4 9 10 1-7.500 6.500 2.500 10-9-5-9 5 2.500-10-7.500-6.500 10-1z'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 150px 150px repeat;
@@ -170,7 +170,7 @@
 .letter-page--penguin .paw-trail svg:nth-child(even) { rotate: 30deg; translate: 0 4px; }
 .letter-page--penguin .paw-trail svg { width: 24px; height: 24px; }
 
-/* Pingüino dentro del sobre de Lynki */
+/* Pingüino dentro del sobre de Lynkii */
 .mini-peek { position: absolute; left: 50%; bottom: calc(100% - 5px); z-index: 0; width: 98px; translate: -50% 0; pointer-events: none; }
 @media (max-width: 700px) { .mini-peek { width: 72px; bottom: calc(100% - 4px); } }
 
@@ -199,3 +199,55 @@
   .mini-peek { width: 62px; }
   .mini-name { font-size: 17px; }
 }
+
+
+/* ===== Sobres: más aire entre ellos y con el texto, y reacción cuando te acercas =====
+   El tamaño de cada sobre sale de --env-w (según el ancho y el alto de la ventana), y la separación ya no se encoge
+   en pantallas bajitas: antes el "modo compacto" los dejaba a 8 px entre sí. */
+.picker { gap: 0; padding-top: clamp(56px, 9vh, 92px); }
+.picker .envelope-heading { margin-bottom: 18px; }
+.picker-sub { margin: 0 0 clamp(80px, 13vh, 124px); }
+.picker-list { column-gap: clamp(32px, 5.5vw, 76px); row-gap: clamp(48px, 7vh, 70px); }
+.picker-list li { --env-w: clamp(132px, min(24vw, 30vh), 230px); --near: 0; --dx: 0; position: relative; width: var(--env-w); gap: 12px; }
+.mini-envelope { width: var(--env-w); height: calc(var(--env-w) * .68); margin-top: 0; }
+.mini-peek { width: calc(var(--env-w) * .46); }
+.mini-seal { width: calc(var(--env-w) * .18); height: calc(var(--env-w) * .18); font-size: calc(var(--env-w) * .1); }
+.mini-name { font-size: clamp(18px, calc(var(--env-w) * .11), 26px); }
+.picker-hint { margin-top: clamp(28px, 5vh, 48px); }
+@media (max-width: 700px) {
+  .picker-list li { --env-w: clamp(116px, min(40vw, 24vh), 160px); }
+  .picker-list { column-gap: 14px; row-gap: 40px; }
+  .picker-sub { margin-bottom: 78px; }
+}
+/* Celulares angostos: los tres sobres caben en una sola fila (antes se partían en dos y se salían de la pantalla) */
+@media (max-width: 440px) {
+  .picker-list li { --env-w: clamp(94px, 29vw, 124px); }
+  .picker-list { column-gap: 8px; row-gap: 44px; }
+  .mini-badge { padding: 3px 9px; font-size: 11px; }
+}
+
+/* Al acercar el puntero (o el dedo): el sobre se levanta y se inclina hacia ti, la solapa se entreabre, la carta asoma,
+   el animalito se estira, el sello brilla y aparecen un halo y una chispa. Todo se calcula con --near y --dx. */
+.picker-list li:hover { scale: 1; }
+.mini-envelope {
+  translate: calc(var(--dx) * var(--near) * 12px) calc(var(--near) * -18px); rotate: calc(var(--dx) * var(--near) * 5deg);
+  scale: calc(1 + var(--near) * .1); transition: translate .2s ease-out, rotate .2s ease-out, scale .2s ease-out;
+}
+.mini-flap { rotate: x calc(var(--near) * 34deg); transition: rotate .2s ease-out; }
+.mini-paper { translate: 0 calc(var(--near) * -26px); transition: translate .2s ease-out; }
+.mini-peek { translate: -50% calc(var(--near) * -16px); scale: calc(1 + var(--near) * .12); transform-origin: 50% 100%; transition: translate .2s ease-out, scale .2s ease-out; }
+.mini-seal { scale: calc(1 + var(--near) * .22); box-shadow: 0 0 calc(var(--near) * 20px) var(--accent); }
+.mini-name { scale: calc(1 + var(--near) * .1); transition: scale .2s ease-out; }
+.picker-list li::before {
+  content: ""; position: absolute; left: 50%; top: calc(var(--env-w) * .34); z-index: -1; width: calc(var(--env-w) * 1.6); aspect-ratio: 1;
+  translate: -50% -50%; border-radius: 50%; pointer-events: none; opacity: calc(var(--near) * .75);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, #fff) 0, transparent 66%);
+}
+.picker-list li::after {
+  content: "✦"; position: absolute; top: calc(var(--env-w) * -.04); right: -2%; pointer-events: none; color: #fff; text-shadow: 0 0 10px var(--accent), 0 0 18px #fff;
+  font-size: calc(var(--env-w) * .14); line-height: 1; opacity: clamp(0, calc((var(--near) - .35) * 2.6), 1); animation: nearTwinkle 1s ease-in-out infinite alternate;
+}
+@keyframes nearTwinkle { from { scale: .7; rotate: -12deg; } to { scale: 1.25; rotate: 14deg; } }
+.picker-list li:has(.mini-envelope:focus-visible) { --near: 1; }
+.picker-list li.is-opening::before, .picker-list li.is-opening::after { display: none; }
+@media (prefers-reduced-motion: reduce) { .picker-list li::after { animation: none; } }

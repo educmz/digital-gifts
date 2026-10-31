@@ -30,85 +30,6 @@
 .bunting i:nth-child(even) { animation-delay: -1.6s; }
 @keyframes flagSwing { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
 
-/* Banda rosada con borde festoneado que continúa después de la galería */
-.extras { position: relative; z-index: 2; width: 100%; padding-top: 18px; }
-.extras-band {
-  position: relative; color: #781c39;
-  background: radial-gradient(#fff9 2px, transparent 3px) 0 0 / 30px 30px,
-    linear-gradient(180deg, #ffeef3 0%, #ffd3e2 50%, #ffe6ef 100%);
-}
-.extras-band::before {
-  content: ""; position: absolute; left: 0; right: 0; top: -17px; height: 18px;
-  background: radial-gradient(circle at 50% 100%, #ffeef3 11px, transparent 12px) 0 0 / 28px 18px repeat-x;
-}
-.extra-section { position: relative; z-index: 1; width: min(100%, 1080px); margin: 0 auto; padding: clamp(46px, 8vw, 90px) clamp(16px, 4vw, 36px) 0; text-align: center; }
-.extra-kicker { margin: 0; font: 700 clamp(18px, 2.2vw, 22px) 'Dancing Script', cursive; letter-spacing: 1px; color: #c0577d; }
-.extra-title { margin: 4px 0 8px; font: 700 clamp(32px, 5.4vw, 54px)/1.1 'Dancing Script', 'Caveat', cursive; color: #781c39; text-shadow: 0 1px 1px #fff; }
-.extra-lead { margin: 0 auto clamp(24px, 4vw, 42px); max-width: 640px; font: 500 clamp(20px, 2.4vw, 26px)/1.3 'Caveat', cursive; color: #8d4358; }
-
-/* Mensajes de los tres amigos */
-.friends-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 34px); }
-.friends-grid > li:nth-child(1) { --tilt: -2deg; }
-.friends-grid > li:nth-child(2) { --tilt: 1.5deg; }
-.friends-grid > li:nth-child(3) { --tilt: -1deg; }
-.friend-card {
-  position: relative; height: 100%; padding: 38px 22px 28px; background: #fffdfd; border: 1px solid #f4cad3; border-radius: 4px;
-  box-shadow: 0 3px 0 #edc4cd, 0 14px 30px #8d416440; transform: rotate(var(--tilt, 0deg));
-  transition: transform .35s cubic-bezier(.2, .9, .3, 1.3), box-shadow .35s;
-}
-.friend-card::before {
-  content: ""; position: absolute; top: -12px; left: 50%; width: 90px; height: 24px;
-  background: #ffc9d8b0; border: 1px dashed #ffffff90; transform: translateX(-50%) rotate(-3deg);
-}
-.friend-card:hover { transform: rotate(0deg) translateY(-8px) scale(1.02); box-shadow: 0 3px 0 #edc4cd, 0 22px 36px #8d416455; }
-.friend-avatar {
-  width: 72px; height: 72px; margin: 0 auto 10px; display: grid; place-items: center; border-radius: 50%;
-  font: 700 36px Georgia, serif; color: #fff; background: linear-gradient(145deg, #f48fb1, #d6537f);
-  border: 4px solid #ffe3ec; box-shadow: 0 4px 0 #b83a64;
-}
-.friend-name { margin: 0 0 8px; font: 700 clamp(28px, 3vw, 34px) 'Dancing Script', cursive; color: #8d294b; }
-.friend-message { margin: 0; font: 500 clamp(21px, 2vw, 25px)/1.3 'Caveat', cursive; color: #633b43; }
-
-/* Tarjetas que se voltean */
-.reasons-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(12px, 2.4vw, 24px); }
-.reason-card { position: relative; display: block; width: 100%; aspect-ratio: 1 / .9; padding: 0; border: 0; background: none; color: inherit; perspective: 900px; }
-.reason-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
-.reason-card[aria-pressed='true'] .reason-inner { transform: rotateY(180deg); }
-.reason-card[aria-pressed='false']:hover .reason-inner { transform: rotateY(-10deg) translateY(-4px); }
-.reason-face {
-  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px;
-  border: 3px solid #fff; border-radius: 16px; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  box-shadow: 0 8px 0 #c9577c33, 0 12px 22px #8d416440;
-}
-.reason-front { background: linear-gradient(150deg, #ff9fc0, #e9608d); color: #fff; }
-.reason-back { background: #fffdfd; color: #6d3346; border-color: #ffc4d5; transform: rotateY(180deg); }
-.reason-symbol { font-size: clamp(28px, 5vw, 46px); line-height: 1; text-shadow: 0 2px 0 #b3416a; }
-.reason-title { font: 700 clamp(20px, 2.8vw, 30px)/1.1 'Dancing Script', cursive; }
-.reason-hint { font: 600 clamp(10px, 1.2vw, 13px) Arial, sans-serif; opacity: .85; }
-.reason-text { font: 500 clamp(17px, 2.2vw, 24px)/1.2 'Caveat', cursive; }
-
-/* Vales con forma de boleto */
-.vouchers-list { list-style: none; margin: 0 auto; padding: 0; display: grid; gap: 18px; max-width: 760px; }
-.voucher { filter: drop-shadow(0 8px 10px #8d416440); }
-.voucher-ticket {
-  display: grid; grid-template-columns: 1fr auto; align-items: stretch; text-align: left; border-radius: 10px;
-  background: linear-gradient(120deg, #fff, #fff3f7);
-  mask: radial-gradient(circle 12px at 0 50%, #0000 97%, #000) left / 51% 100% no-repeat,
-    radial-gradient(circle 12px at 100% 50%, #0000 97%, #000) right / 51% 100% no-repeat;
-}
-.voucher-main { padding: 18px 26px; }
-.voucher-label { font: 700 13px Arial, sans-serif; letter-spacing: 3px; color: #c0577d; }
-.voucher-title { margin: 2px 0; font: 700 clamp(24px, 3.4vw, 33px)/1.1 'Dancing Script', cursive; color: #8d294b; }
-.voucher-from { font: 500 21px 'Caveat', cursive; color: #8d4358; }
-.voucher-stub { display: grid; place-items: center; min-width: 120px; padding: 12px 20px; border-left: 3px dashed #efb4c5; }
-.voucher-button {
-  padding: 10px 18px; border: 2px solid #a6274a; border-radius: 30px; background: #d74b6b; color: #fff;
-  font: bold 15px Arial, sans-serif; box-shadow: inset 0 2px #f2a9b6, 0 3px #a6274a;
-}
-.voucher-button:hover { background: #b73155; }
-.voucher.is-redeemed .voucher-button { background: #fff; color: #a6274a; box-shadow: none; }
-.voucher.is-redeemed .voucher-title { text-decoration: line-through; text-decoration-color: #d74b6b88; }
-
 /* Despedida */
 .closing { padding-bottom: clamp(60px, 10vw, 110px); }
 .closing-heart {
@@ -124,16 +45,9 @@
 }
 .closing-button:hover { background: #b73155; }
 
-@media (max-width: 760px) {
-  .friends-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
-  .reasons-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .voucher-main { padding: 14px 18px; }
-  .voucher-stub { min-width: 104px; padding: 10px 14px; }
-}
 @media (prefers-reduced-motion: reduce) {
   .floating-decor { display: none; }
   .bunting i, .closing-heart { animation: none; }
-  .reason-inner, .friend-card { transition: none; }
 }
 
 /* Animación de la carta: destello de apertura y detalles de lectura */

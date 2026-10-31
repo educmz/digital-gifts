@@ -6,7 +6,7 @@ type Props = {
   lit: boolean
   onCandle?: () => void
   // Para saber dónde está la llama y alumbrar desde ahí.
-  flameRef?: RefObject<SVGGElement | null>
+  flameRef?: RefObject<SVGCircleElement | null>
 }
 
 function Strawberry({ x, y }: { x: number; y: number }) {
@@ -132,7 +132,9 @@ function CakeArt({ lit, onCandle, flameRef }: Props) {
         <rect x="122" y="56" width="16" height="40" rx="5" fill="#fff" stroke={LINE} strokeWidth="3" />
         <path d="M123 68 l14 -6 M123 80 l14 -6 M123 92 l14 -6" stroke="#ff9fc0" strokeWidth="4" strokeLinecap="round" />
         <path d="M130 56 v-7" stroke={LINE} strokeWidth="3" strokeLinecap="round" />
-        <g className="cake-flame" ref={flameRef} style={{ transformOrigin: '130px 52px' }}>
+        {/* punto fijo sobre la llama: la luz de la sala se centra aquí, así no se mueve cuando la llama se inclina al soplar */}
+        <circle ref={flameRef} cx="130" cy="36" r="1" fill="none" />
+        <g className="cake-flame" style={{ transformOrigin: '130px 52px' }}>
           <path d="M130 18 C145 34 142 52 130 52 C118 52 115 34 130 18 Z" fill="#ffb347" stroke={LINE} strokeWidth="2.4" strokeLinejoin="round" />
           <path d="M130 31 C137 40 136 49 130 49 C124 49 123 40 130 31 Z" fill="#ffe58a" />
         </g>

@@ -64,7 +64,8 @@ const SPARK_COLORS = ['#ffffff', '#fff3c4', '#ffd27a', '#ffb3d6', '#cfc2ff']
 
 // Estrellas de la noche. Caen hacia abajo (la cámara sube) más rápido cuanto mayor es warp.speed,
 // y al final se dibuja la constelación en forma de corazón con la punta en el lugar donde llega el deseo.
-function NightCanvas({ active }: { active: boolean }) {
+// Con plain solo se dibujan las estrellas en calma (sin el corazón del deseo ni las chispas): se usa en la transición del avión.
+export function NightCanvas({ active, plain = false }: { active: boolean; plain?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const activeRef = useRef(active)
   const offAtRef = useRef(0)
@@ -153,7 +154,7 @@ function NightCanvas({ active }: { active: boolean }) {
       sparks.push({ x, y, vx, vy, life: max, max, size, color: SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)], cross: Math.random() < 0.35 })
     }
     const drawSparks = (dt: number) => {
-      if (reduce) { sparks = []; return }
+      if (reduce || plain) { sparks = []; return }
       if (warp.emit > 0.01 && warp.orbY > 0) {
         spawnDebt += warp.emit * 110 * dt
         while (spawnDebt >= 1) {
@@ -201,7 +202,7 @@ function NightCanvas({ active }: { active: boolean }) {
     }
     const draw = (time: number, dt: number) => {
       context.clearRect(0, 0, width, height)
-      const speed = reduce ? 0 : warp.speed
+      const speed = reduce ? 0 : plain ? 0.25 : warp.speed
       for (const star of stars) {
         star.y += (26 + 240 * speed) * star.z * dt
         if (star.y > height + 12) { star.y = -12; star.x = Math.random() * width }
@@ -228,7 +229,7 @@ function NightCanvas({ active }: { active: boolean }) {
         context.fill()
       }
       context.globalAlpha = 1
-      if (warp.constellation > 0.01) drawHeart(time)
+      if (!plain && warp.constellation > 0.01) drawHeart(time)
       drawSparks(dt)
     }
 
@@ -261,7 +262,7 @@ function NightCanvas({ active }: { active: boolean }) {
       cancelAnimationFrame(frame)
       running = false
     }
-  }, [])
+  }, [plain])
 
   useEffect(() => {
     activeRef.current = active

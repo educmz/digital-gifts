@@ -177,7 +177,7 @@
 /* Destello cálido cuando se prenden las luces */
 .cake-flash { position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 45%, #fff 0, #fffaf0 45%, #fff1d2 100%); }
 
-/* Pum, Lynki y Giank sentados delante del pastel */
+/* Pum, Lynkii y Giank sentados delante del pastel */
 .cake-friends { position: absolute; left: 8%; right: 8%; bottom: -5%; z-index: 2; display: flex; justify-content: space-between; pointer-events: none; }
 .cake-friend { display: block; width: 19%; animation: friendHop 2.6s ease-in-out infinite; }
 .cake-friend svg { display: block; width: 100%; height: auto; filter: drop-shadow(0 4px 0 #0003); }
@@ -272,7 +272,7 @@
 /* Se usan las propiedades individuales (rotate/scale) para no pelear con la animación de parpadeo, que usa transform */
 .cake-flame { rotate: calc(var(--power) * 26deg); scale: calc(1 + var(--flare) * .22 - var(--power) * .12) calc(1 + var(--flare) * .3 - var(--power) * .38); }
 .is-out .cake-flame { rotate: 0deg; }
-.cake-glow { scale: calc(1 - var(--power) * .45); }
+.cake-glow { transform-box: fill-box; transform-origin: center; scale: calc(1 - var(--power) * .15); }
 
 /* Ráfaga de viento: una nubecita que sale desde la izquierda hacia la llama */
 .blow-puff {

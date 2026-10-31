@@ -9,6 +9,9 @@ import './skyfx.css'
 import './intro.css'
 import './cake.css'
 import './room.css'
+import './peru.css'
+import './peruPage.css'
+import './album.css'
 import { LETTERS } from './content'
 import { installHeartEffects } from './heartEffects'
 import BouncyText from './components/BouncyText'
@@ -19,6 +22,9 @@ import IntroPrank from './components/IntroPrank'
 import LetterView from './components/LetterView'
 import LockScreen from './components/LockScreen'
 import Memories from './components/Memories'
+import PeruSection from './components/PeruSection'
+import PlaneTransition from './components/PlaneTransition'
+import type { FlightDirection } from './components/PlaneTransition'
 import SkyBackground from './components/SkyBackground'
 
 // Personalización: el código es la fecha del cumpleaños (día y mes, por ejemplo 2410). Cámbialo aquí.
@@ -27,7 +33,8 @@ const PASSCODE = '2410'
 const DIGITS = 4
 
 type Result = 'success' | 'error' | null
-type Stage = 'intro' | 'locked' | 'cake' | 'envelope' | 'letter' | 'memories'
+type Stage = 'intro' | 'locked' | 'cake' | 'envelope' | 'letter' | 'memories' | 'peru'
+type Flight = { to: Stage; direction: FlightDirection }
 
 // Con "?skip" en la dirección se salta la broma del inicio (útil para probar).
 const skipIntro = () => new URLSearchParams(window.location.search).has('skip')
@@ -41,6 +48,9 @@ function App() {
   const [dark, setDark] = useState(false)
   // La broma se desvanece encima de la pantalla de la fecha (fundido cruzado) antes de quitarse.
   const [introLeaving, setIntroLeaving] = useState(false)
+  // Viaje en avión entre la sección principal y la de Perú (null = sin viaje en curso).
+  const [flight, setFlight] = useState<Flight | null>(null)
+  const returnToEnd = useRef(false)
   const flashRef = useRef<HTMLDivElement>(null)
   const sunriseTimer = useRef(0)
 
@@ -60,8 +70,18 @@ function App() {
   }, [introLeaving])
 
   useEffect(() => {
-    if (stage === 'envelope' || stage === 'letter' || stage === 'memories') {
-      window.scrollTo({ top: 0, behavior: 'instant' })
+    if (stage !== 'envelope' && stage !== 'letter' && stage !== 'memories' && stage !== 'peru') return
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    // Al volver de Perú se regresa a la despedida, donde estaba el botón del avión.
+    if (stage === 'memories' && returnToEnd.current) {
+      returnToEnd.current = false
+      const toEnd = () => {
+        const buttons = document.querySelector('.closing-actions')
+        if (buttons) window.scrollTo({ top: buttons.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.6, behavior: 'instant' })
+      }
+      toEnd()
+      const later = window.setTimeout(toEnd, 300)
+      return () => window.clearTimeout(later)
     }
   }, [stage])
 
@@ -91,6 +111,11 @@ function App() {
     setStage('letter')
   }
   const tryAgain = () => setCode('')
+  const fly = (to: Stage, direction: FlightDirection) => {
+    if (flight) return
+    returnToEnd.current = to === 'memories'
+    setFlight({ to, direction })
+  }
   // Primero amanece (el cielo vuelve al día) y recién entonces entran los sobres, sin pantallas intermedias.
   const finishWish = () => {
     if (sunriseTimer.current) return
@@ -106,7 +131,7 @@ function App() {
   const showDecor = showBunting
 
   return (
-    <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''}`}>
+    <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : stage === 'peru' ? 'peru-screen' : stage === 'memories' ? 'memories-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''}`}>
       <div className="letter-flash" ref={flashRef} aria-hidden="true" />
       {showSky && <SkyBackground night={night} />}
       {showDecor && <FloatingDecor />}
@@ -124,7 +149,9 @@ function App() {
         <LockScreen code={code} digits={DIGITS} onDigit={typeDigit} onDelete={deleteDigit} />
       )}
 
-      {stage !== 'locked' && stage !== 'intro' && (
+      {stage === 'peru' && <PeruSection onBack={() => fly('memories', 'back')} />}
+
+      {stage !== 'locked' && stage !== 'intro' && stage !== 'peru' && (
         <section className="birthday-content">
           {stage === 'cake' && <CakeScene onNight={setNight} onDark={setDark} onDone={finishWish} />}
           {stage === 'envelope' && (
@@ -136,9 +163,11 @@ function App() {
             <LetterView key={LETTERS[activeLetter].id} letter={LETTERS[activeLetter]}
               remaining={LETTERS.length - openedLetters.length} flashRef={flashRef} onBack={() => setStage('envelope')} />
           )}
-          {stage === 'memories' && <Memories onBack={() => setStage('envelope')} />}
+          {stage === 'memories' && <Memories onBack={() => setStage('envelope')} onTravel={() => fly('peru', 'forward')} />}
         </section>
       )}
+
+      {flight && <PlaneTransition direction={flight.direction} onCovered={() => setStage(flight.to)} onDone={() => setFlight(null)} />}
 
       {result && stage === 'locked' && (
         <div className="modal-overlay">

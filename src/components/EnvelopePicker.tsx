@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties, RefObject } from 'react'
 import { gsap } from 'gsap'
 import { LETTERS, THEMES } from '../content'
@@ -15,6 +15,47 @@ type Props = {
 function EnvelopePicker({ opened, flashRef, onOpen, onContinue }: Props) {
   const [opening, setOpening] = useState<number | null>(null)
   const buttons = useRef<(HTMLButtonElement | null)[]>([])
+  const listRef = useRef<HTMLUListElement>(null)
+
+  // Reacción al acercarte: cada sobre mide qué tan cerca está el puntero (--near, de 0 a 1) y hacia qué lado (--dx).
+  // El CSS usa esos valores para levantarlo, inclinarlo, entreabrir la solapa y asomar la carta y el animalito.
+  useEffect(() => {
+    const list = listRef.current
+    if (!list || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const items = Array.from(list.children) as HTMLElement[]
+    let pointer: { x: number; y: number } | null = null
+    let frame = 0
+    const apply = () => {
+      frame = 0
+      for (const item of items) {
+        const envelope = item.querySelector<HTMLElement>('.mini-envelope')
+        if (!pointer || !envelope) { item.style.removeProperty('--near'); item.style.removeProperty('--dx'); continue }
+        const rect = envelope.getBoundingClientRect()
+        const dx = pointer.x - (rect.left + rect.width / 2)
+        const dy = pointer.y - (rect.top + rect.height / 2)
+        const near = Math.pow(Math.max(0, 1 - Math.hypot(dx, dy) / (rect.width * 1.25)), 1.4)
+        item.style.setProperty('--near', near.toFixed(3))
+        item.style.setProperty('--dx', Math.max(-1, Math.min(1, dx / (rect.width * 0.6))).toFixed(3))
+      }
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(apply) }
+    const move = (event: PointerEvent) => { pointer = { x: event.clientX, y: event.clientY }; schedule() }
+    const leave = () => { pointer = null; schedule() }
+    const release = (event: PointerEvent) => { if (event.pointerType !== 'mouse') leave() }
+    window.addEventListener('pointermove', move, { passive: true })
+    window.addEventListener('pointerdown', move, { passive: true })
+    window.addEventListener('pointerup', release)
+    window.addEventListener('pointercancel', leave)
+    document.documentElement.addEventListener('pointerleave', leave)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerdown', move)
+      window.removeEventListener('pointerup', release)
+      window.removeEventListener('pointercancel', leave)
+      document.documentElement.removeEventListener('pointerleave', leave)
+    }
+  }, [])
   const allOpened = opened.length === LETTERS.length
 
   const open = (index: number) => {
@@ -39,7 +80,7 @@ function EnvelopePicker({ opened, flashRef, onOpen, onContinue }: Props) {
     <div className="picker">
       <h1 className="envelope-heading"><BouncyText text="Tres cartas para ti, Hetto ♡" /></h1>
       <p className="picker-sub">Elige un sobre para empezar a leer...</p>
-      <ul className="picker-list">
+      <ul className="picker-list" ref={listRef}>
         {LETTERS.map((letter, index) => {
           const theme = THEMES[letter.id]
           const read = opened.includes(index)

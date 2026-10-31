@@ -1,0 +1,153 @@
+/* ===== Álbum de recuerdos: pared de polaroids con muñequitos y visor ===== */
+.memories-screen {
+  position: relative; display: block; min-height: 100svh; overflow-x: clip; color: #781c39;
+  background: radial-gradient(#fff9 2px, transparent 3px) 0 0 / 30px 30px, linear-gradient(180deg, #ffd4e5 0%, #f3d4f6 42%, #ffeef3 100%);
+}
+.memories-screen .birthday-content { width: 100%; max-width: none; min-height: 0; display: block; padding: 0; animation: none; }
+
+.album { position: relative; z-index: 1; width: min(100%, 1120px); margin: 0 auto; padding: clamp(60px, 8vw, 96px) clamp(14px, 4vw, 36px) clamp(60px, 8vw, 90px); text-align: center; }
+.album .floating-decor--section { z-index: 0; }
+
+/* Cabecera */
+.album-head { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; margin-bottom: clamp(30px, 5vw, 54px); }
+.album-chibi-wrap { position: relative; display: inline-block; }
+.album-chibi { display: block; width: clamp(110px, 17vw, 168px); height: auto; margin-bottom: -6px; filter: drop-shadow(0 8px 8px #a0306044); animation: albumHop 3.4s ease-in-out infinite; }
+.album-kicker { margin: 0; font: 700 clamp(20px, 2.6vw, 26px) 'Dancing Script', cursive; letter-spacing: 1px; color: #c0577d; }
+.album-title { margin: 2px 0 6px; font: 700 clamp(40px, 8vw, 78px)/1.02 'Dancing Script', 'Caveat', cursive; color: #781c39; text-shadow: 0 2px 0 #fff, 0 10px 24px #d0508a55; }
+.album-sub { margin: 0; padding: 4px 16px; border-radius: 20px; background: #ffffffa0; font: 500 clamp(14px, 2.4vw, 16px) var(--font-fun); color: #8d4358; }
+@keyframes albumHop { 0%, 100% { translate: 0 0; rotate: -2deg; } 50% { translate: 0 -8px; rotate: 2deg; } }
+
+/* La pared: columnas que se acomodan solas según la altura de cada foto */
+.album-wall { position: relative; z-index: 2; display: flex; align-items: flex-start; gap: clamp(18px, 3.4vw, 40px); }
+.album-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: clamp(26px, 3.6vw, 42px); margin: 0; padding: 0; list-style: none; }
+.album-col:nth-child(2) { margin-top: clamp(34px, 6vw, 84px); }
+.polaroid { position: relative; display: block; margin: 0; rotate: var(--tilt, 0deg); transition: rotate .35s cubic-bezier(.2, 1.4, .4, 1), scale .35s cubic-bezier(.2, 1.4, .4, 1); }
+.polaroid[hidden] { display: none; }
+.polaroid:hover, .polaroid:focus-within { rotate: 0deg; scale: 1.06; z-index: 4; }
+.polaroid-button {
+  position: relative; display: block; width: 100%; margin: 0; padding: 10px 10px 4px; border: 0; border-radius: 5px; background: #fffdfb; cursor: pointer; text-align: center;
+  box-shadow: 0 3px 0 #ecc3d0, 0 16px 30px #8d416450; transition: box-shadow .3s, transform .18s ease-out;
+  transform: perspective(760px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  animation: polaroidFloat 5.2s ease-in-out var(--bob, 0s) infinite alternate;
+}
+.polaroid:hover .polaroid-button, .polaroid-button:focus-visible { box-shadow: 0 3px 0 #ecc3d0, 0 26px 44px #8d416470; animation-play-state: paused; }
+.polaroid-button:focus-visible { outline: 3px solid #c0457a; outline-offset: 4px; }
+@keyframes polaroidFloat { from { translate: 0 -5px; } to { translate: 0 6px; } }
+.polaroid-photo { position: relative; display: block; overflow: hidden; border-radius: 2px; background: #f6dde7; }
+.polaroid-photo img { display: block; width: 100%; height: auto; transition: scale .7s cubic-bezier(.2, .8, .2, 1); }
+.polaroid:hover .polaroid-photo img { scale: 1.07; }
+/* Brillo que cruza la foto al pasar el cursor */
+.polaroid-shine { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 38%, #ffffff77 50%, transparent 62%); translate: -120% 0; }
+.polaroid:hover .polaroid-shine { translate: 120% 0; transition: translate .9s ease; }
+/* Estrellitas que saltan al aparecer la foto y al pasar el cursor */
+.polaroid-spark { position: absolute; z-index: 4; opacity: 0; font-style: normal; line-height: 1; color: #fff; text-shadow: 0 0 8px #ff8fb8, 0 0 14px #ffd36b; pointer-events: none; }
+.polaroid-spark--a { left: 12%; top: 38%; font-size: 24px; }
+.polaroid-spark--b { right: 9%; top: 56%; font-size: 18px; }
+.polaroid.is-in .polaroid-spark, .polaroid:hover .polaroid-spark { animation: sparkPop .9s ease-out both; }
+.polaroid.is-in .polaroid-spark--b, .polaroid:hover .polaroid-spark--b { animation-delay: .15s; }
+@keyframes sparkPop { 0% { opacity: 0; scale: 0; rotate: 0deg; } 35% { opacity: 1; scale: 1.5; rotate: 70deg; } 100% { opacity: 0; scale: .6; rotate: 160deg; translate: 0 -22px; } }.polaroid-caption { position: relative; z-index: 5; display: block; padding: 10px 6px 10px; text-wrap: balance; font: 600 clamp(20px, 2.4vw, 25px)/1.1 'Caveat', cursive; color: #8d4358; }
+.polaroid-tape {
+  position: absolute; top: -13px; left: 50%; z-index: 1; width: 78px; height: 24px; translate: -50% 0; rotate: -3deg; background: var(--tape, #ffe27acc);
+  box-shadow: 0 2px 4px #0002; clip-path: polygon(0 12%, 4% 0, 8% 12%, 12% 0, 16% 12%, 20% 0, 80% 0, 84% 12%, 88% 0, 92% 12%, 96% 0, 100% 12%, 100% 88%, 96% 100%, 92% 88%, 88% 100%, 84% 88%, 80% 100%, 20% 100%, 16% 88%, 12% 100%, 8% 88%, 4% 100%, 0 88%);
+}
+.polaroid:nth-child(even) .polaroid-tape { rotate: 4deg; }
+
+/* Muñequitos pegados ENCIMA de una esquina de cada foto (van dentro de la polaroid, así se mueven con ella) */
+.polaroid-sticker {
+  position: absolute; z-index: 3; width: clamp(54px, 38%, 98px); height: auto; pointer-events: none; filter: drop-shadow(0 4px 4px #8d416455);
+  animation: stickerWiggle 3.4s ease-in-out var(--bob, 0s) infinite alternate;
+}
+.polaroid:hover .polaroid-sticker { scale: 1.18; }
+.polaroid-sticker { transition: scale .3s cubic-bezier(.2, 1.6, .4, 1); }
+.polaroid-sticker--tl { --r: -10deg; left: -18px; top: -24px; }
+.polaroid-sticker--tr { --r: 9deg; right: -18px; top: -26px; }
+@keyframes stickerWiggle { from { rotate: calc(var(--r, 0deg) - 5deg); translate: 0 -3px; } to { rotate: calc(var(--r, 0deg) + 5deg); translate: 0 4px; } }
+
+/* Foquitos colgados de lado a lado de la pantalla (el contenedor ocupa todo el ancho, aunque el álbum sea más angosto) */
+.album-lights { position: absolute; top: 0; left: 50%; z-index: 2; width: 100vw; height: clamp(50px, 6vw, 78px); translate: -50% 0; pointer-events: none; }
+.album-lights svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.album-bulb {
+  position: absolute; width: 13px; height: 19px; margin: 3px 0 0 -6.5px; border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%; background: currentColor;
+  box-shadow: 0 0 10px 2px currentColor; animation: bulbGlow 2.4s ease-in-out infinite alternate;
+}
+.album-bulb::before { content: ""; position: absolute; left: 50%; top: -5px; width: 6px; height: 7px; margin-left: -3px; border-radius: 2px; background: #8a5a78; }
+@keyframes bulbGlow { from { opacity: .5; } to { opacity: 1; } }
+@media (max-width: 600px) { .album-bulb:nth-child(even) { display: none; } }
+/* Despedida: tarjeta grande con el grupito BT21 encima y una fila de muñequitos abajo */
+.finale { position: relative; z-index: 2; padding: clamp(120px, 15vw, 180px) clamp(14px, 4vw, 36px) clamp(60px, 9vw, 110px); }
+.finale-wrap { position: relative; width: min(100%, 760px); margin: 0 auto; }
+.finale-top { position: absolute; left: 50%; bottom: calc(100% - 26px); z-index: 3; translate: -50% 0; width: clamp(140px, 22vw, 210px); height: auto; filter: drop-shadow(0 6px 6px #8d416440); pointer-events: none; animation: crewBounce 3.6s ease-in-out infinite; }
+.finale-card {
+  position: relative; z-index: 2; padding: clamp(46px, 6vw, 66px) clamp(18px, 5vw, 48px) clamp(34px, 5vw, 48px); border-radius: 38px; text-align: center;
+  background: linear-gradient(180deg, #fffdfd, #fff0f6); border: 3px dashed #f4b6cd; box-shadow: 0 0 0 8px #ffffffaa, 0 26px 56px #8d416455;
+}
+.finale-heart { position: relative; display: inline-block; margin-bottom: 4px; }
+.finale-heart .album-orbit { top: 52%; }
+.finale-heart .album-orbit--a { --orbit: 66px; }
+.finale-heart .album-orbit--b { --orbit: 90px; }
+.finale-heart .album-orbit--c { --orbit: 78px; }
+.finale .closing-heart { display: block; margin: 0; font-size: clamp(48px, 9vw, 78px); }
+.finale-kicker { margin: 0; font: 700 clamp(20px, 2.8vw, 26px) 'Dancing Script', cursive; letter-spacing: 1px; color: #c0577d; }
+.finale .closing-sign { margin: 4px 0 0; }
+.finale .closing-actions { margin-top: 24px; }
+.finale-crew { position: relative; z-index: 3; display: flex; justify-content: center; align-items: flex-end; gap: clamp(2px, 1.6vw, 16px); margin-top: -34px; pointer-events: none; }
+.finale-crew img { height: clamp(52px, 9vw, 90px); width: auto; filter: drop-shadow(0 5px 5px #8d416440); animation: crewHop 2.4s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes crewHop { 0%, 100% { translate: 0 0; } 40% { translate: 0 -10px; } 60% { translate: 0 0; } }
+@keyframes crewBounce { 0%, 100% { rotate: -1.5deg; scale: 1 1; } 50% { rotate: 1.5deg; scale: 1.02 .98; } }
+/* Visor de fotos */
+.lightbox { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 20px 64px; background: #3a0f2bd9; backdrop-filter: blur(8px); animation: lightboxIn .3s ease both; }
+@keyframes lightboxIn { from { opacity: 0; } to { opacity: 1; } }
+.lightbox-card { position: relative; margin: 0; max-width: min(100%, 880px); padding: 12px 12px 6px; border-radius: 6px; background: #fffdfb; box-shadow: 0 30px 80px #0008; animation: lightboxPop .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes lightboxPop { from { opacity: 0; scale: .86; rotate: -3deg; } to { opacity: 1; scale: 1; rotate: 0deg; } }
+.lightbox-sticker { position: absolute; right: -20px; top: -30px; width: clamp(64px, 12vw, 104px); height: auto; rotate: 9deg; filter: drop-shadow(0 5px 5px #0006); pointer-events: none; }
+.lightbox-card img:not(.lightbox-sticker) { display: block; max-width: 100%; max-height: min(74svh, 760px); margin: 0 auto; border-radius: 3px; }
+.lightbox-card figcaption { padding: 10px 6px 8px; font: 600 clamp(24px, 4vw, 32px)/1.1 'Caveat', cursive; color: #8d4358; text-align: center; }
+.lightbox-close, .lightbox-nav {
+  position: absolute; display: grid; place-items: center; width: 46px; height: 46px; border: 2px solid #fff; border-radius: 50%; background: #d74b6b; color: #fff; cursor: pointer;
+  font: 700 22px/1 var(--font-fun); box-shadow: 0 4px 0 #a6274a; transition: scale .2s;
+}
+.lightbox-close:hover, .lightbox-nav:hover { scale: 1.1; }
+.lightbox-close { top: 16px; right: 16px; }
+.lightbox-nav { top: 50%; translate: 0 -50%; font-size: 32px; padding-bottom: 4px; }
+.lightbox-nav--prev { left: 10px; }
+.lightbox-nav--next { right: 10px; }
+
+@media (max-width: 860px) {
+}
+@media (max-width: 520px) {
+  .album-wall { gap: 14px; }
+  .album-col { gap: 22px; }
+  .polaroid-button { padding: 7px 7px 2px; }
+  .polaroid-tape { width: 58px; height: 20px; top: -11px; }
+  .polaroid-sticker { width: 50px; }
+  .lightbox { padding: 14px 10px 74px; }
+  .lightbox-nav { top: auto; bottom: 14px; translate: none; }
+  .lightbox-nav--prev { left: calc(50% - 60px); }
+  .lightbox-nav--next { right: calc(50% - 60px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .album-chibi, .polaroid-sticker, .album-bulb, .finale-top, .finale-crew img, .lightbox, .lightbox-card { animation: none; }
+  .polaroid { transition: none; }
+}
+
+/* Estrellitas y corazones que giran alrededor de la chibi */
+.album-orbit { position: absolute; left: 50%; top: 46%; margin: -10px 0 0 -10px; font-style: normal; font-size: 20px; line-height: 1; color: #ff7fae; text-shadow: 0 0 8px #fff; animation: albumOrbit 6s linear infinite; }
+.album-orbit--b { color: #ffb347; font-size: 16px; animation-duration: 8s; animation-delay: -3s; --orbit: 118px; }
+.album-orbit--c { color: #b79cf2; font-size: 18px; animation-duration: 7s; animation-delay: -1.5s; animation-direction: reverse; --orbit: 100px; }
+.album-orbit--a { --orbit: 88px; }
+@keyframes albumOrbit { from { transform: rotate(0deg) translateX(var(--orbit, 90px)) rotate(0deg); } to { transform: rotate(360deg) translateX(var(--orbit, 90px)) rotate(-360deg); } }
+/* Las letras del título hacen la ola al pasar el cursor */
+.album-title .bouncy-char { display: inline-block; transition: translate .25s cubic-bezier(.2, 1.8, .4, 1), color .25s; }
+.album-title .bouncy-char:hover { translate: 0 -10px; color: #d6537f; }
+
+/* Visor: la foto entra deslizándose según el lado al que se avanza */
+.lightbox-card--next { animation: lightboxNext .42s cubic-bezier(.2, .9, .3, 1) both; }
+.lightbox-card--prev { animation: lightboxPrev .42s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes lightboxNext { from { opacity: 0; translate: 90px 0; rotate: 4deg; } to { opacity: 1; translate: 0 0; rotate: 0deg; } }
+@keyframes lightboxPrev { from { opacity: 0; translate: -90px 0; rotate: -4deg; } to { opacity: 1; translate: 0 0; rotate: 0deg; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .polaroid-button, .album-orbit, .polaroid-spark, .lightbox-card--next, .lightbox-card--prev { animation: none; }
+  .polaroid-photo img, .polaroid-shine, .polaroid-button { transition: none; }
+  .polaroid-spark { display: none; }
+}

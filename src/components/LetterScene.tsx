@@ -25,10 +25,13 @@ const PAWS = make(9, i => vars({ '--i': i, '--y': i % 2 ? '10px' : '-10px' }))
 function Fish() {
   return (
     <svg viewBox="0 0 60 30" aria-hidden="true">
-      <path d="M4 15 Q18 -1 40 15 Q18 31 4 15Z" fill="currentColor" />
-      <path d="M38 15 L58 3 L52 15 L58 27Z" fill="currentColor" />
-      <path d="M22 8 Q27 15 22 22" stroke="#fff" strokeWidth="1.6" fill="none" opacity=".6" />
-      <circle cx="13" cy="13" r="2.2" fill="#fff" /><circle cx="13" cy="13" r="1" fill="#3a2a3f" />
+      {/* el pez nada hacia la derecha: la cabeza (con el ojo) va a la derecha y la cola a la izquierda */}
+      <g transform="translate(60 0) scale(-1 1)">
+        <path d="M4 15 Q18 -1 40 15 Q18 31 4 15Z" fill="currentColor" />
+        <path d="M38 15 L58 3 L52 15 L58 27Z" fill="currentColor" />
+        <path d="M22 8 Q27 15 22 22" stroke="#fff" strokeWidth="1.6" fill="none" opacity=".6" />
+        <circle cx="13" cy="13" r="2.2" fill="#fff" /><circle cx="13" cy="13" r="1" fill="#3a2a3f" />
+      </g>
     </svg>
   )
 }

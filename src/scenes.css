@@ -1,4 +1,4 @@
-/* Mundos de fondo de las cartas: casita de gatitos (Pum), polo norte de noche (Lynki) y bosque de Totoro (Giank). */
+/* Mundos de fondo de las cartas: casita de gatitos (Pum), polo norte de noche (Lynkii) y bosque de Totoro (Giank). */
 
 .letter-page::before, .letter-page--penguin::before, .letter-page--totoro::before { display: none; }
 
@@ -43,7 +43,7 @@
 .sc-pawwalk svg { display: block; width: 100%; height: auto; }
 @keyframes scPaw { 0% { opacity: 0; scale: .4; } 8%, 46% { opacity: .75; scale: 1; } 64%, 100% { opacity: 0; scale: 1; } }
 
-/* ===== Lynki: polo norte de noche con aurora, nieve y un pingüino que se desliza ===== */
+/* ===== Lynkii: polo norte de noche con aurora, nieve y un pingüino que se desliza ===== */
 .sc--penguin { --hill-back: #cfc6f7; --hill-front: #f6f2ff; }
 .sc--penguin .sc-sky { background: linear-gradient(180deg, #151248 0%, #2d2573 42%, #5e4fb0 78%, #b5a9ee 100%); }
 .sc-aurora { position: absolute; left: -25%; right: -25%; height: 34vh; filter: blur(34px); opacity: .6; mix-blend-mode: screen; transform-origin: 50% 100%; }
