@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
-import type { CSSProperties, ReactNode, SyntheticEvent } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import type { CSSProperties, FormEvent, ReactNode, SyntheticEvent } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { FRIENDS, PERU_PLANS, PERU_TRIP, RECIPIENT } from '../content'
@@ -7,6 +7,7 @@ import type { PlanIcon } from '../content'
 import PeruScene, { Bunting } from './PeruScene'
 import { PeruFlag, PlaneArt } from './TravelArt'
 import useCountdown from './useCountdown'
+import useStoredArrival from './useStoredArrival'
 import useReducedMotion from './useReducedMotion'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -46,8 +47,8 @@ function Dial({ value, fraction, label, tone }: { value: number; fraction: numbe
   )
 }
 
-function Countdown() {
-  const left = useCountdown(PERU_TRIP.arrival)
+function Countdown({ arrival }: { arrival: string }) {
+  const left = useCountdown(arrival)
 
   if (left.done) {
     return (
@@ -65,6 +66,45 @@ function Countdown() {
       <Dial value={left.minutes} fraction={left.minutes / 60} label="minutos" tone="#35c27f" />
       <Dial value={left.seconds} fraction={(left.seconds + 1) / 60} label="segundos" tone="#4a90d9" />
     </div>
+  )
+}
+
+// Tarjeta para que Hetto elija el día (y la hora) de su llegada: con eso arranca la cuenta regresiva.
+function ArrivalPicker({ initial, onSave, onCancel }: { initial: string; onSave: (iso: string) => void; onCancel?: () => void }) {
+  const [date, setDate] = useState(initial.slice(0, 10))
+  const [time, setTime] = useState(initial.slice(11, 16) || '12:00')
+  const [error, setError] = useState('')
+  const today = new Date().toLocaleDateString('en-CA')   // AAAA-MM-DD en la hora local
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault()
+    if (!date) { setError('Elige el día en que llegas'); return }
+    const iso = `${date}T${time || '12:00'}:00-05:00`   // hora de Perú
+    if (Number.isNaN(Date.parse(iso)) || Date.parse(iso) <= Date.now()) { setError('Elige un día que todavía no haya pasado'); return }
+    onSave(iso)
+  }
+
+  return (
+    <form className="arrival-card" onSubmit={submit} noValidate>
+      <PlaneArt className="arrival-plane" />
+      <h2 className="arrival-title">¿Qué día llegas?</h2>
+      <p className="arrival-text">Elige la fecha de tu llegada y empieza la cuenta regresiva</p>
+      <div className="arrival-fields">
+        <label className="arrival-field">
+          <span>Día</span>
+          <input type="date" value={date} min={today} onChange={event => { setDate(event.target.value); setError('') }} required />
+        </label>
+        <label className="arrival-field">
+          <span>Hora (Perú)</span>
+          <input type="time" value={time} onChange={event => { setTime(event.target.value); setError('') }} />
+        </label>
+      </div>
+      {error && <p className="arrival-error" role="alert">{error}</p>}
+      <div className="arrival-actions">
+        <button type="submit" className="arrival-save">Empezar la cuenta regresiva ✈</button>
+        {onCancel && <button type="button" className="arrival-cancel" onClick={onCancel}>Cancelar</button>}
+      </div>
+    </form>
   )
 }
 
@@ -97,10 +137,16 @@ function PeruSection({ onBack }: Props) {
   const rootRef = useRef<HTMLElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
 
-  const arrival = new Date(PERU_TRIP.arrival)
-  const valid = !Number.isNaN(arrival.getTime())
+  // La fecha la elige Hetto (se guarda en su navegador); si no ha elegido, se usa la de content.ts, y si tampoco hay, se le pide.
+  const [chosen, saveChosen] = useStoredArrival()
+  const [editing, setEditing] = useState(false)
+  const arrivalISO = chosen || PERU_TRIP.arrival
+  const arrival = new Date(arrivalISO)
+  const valid = arrivalISO !== '' && !Number.isNaN(arrival.getTime())
   const arrivalText = valid ? new Intl.DateTimeFormat('es', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'America/Lima' }).format(arrival) : ''
-  const arrivalShort = valid ? new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Lima' }).format(arrival) : 'Por confirmar'
+  const arrivalShort = valid ? new Intl.DateTimeFormat('es', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Lima' }).format(arrival) : 'Por elegir'
+  const arrivalTime = valid ? new Intl.DateTimeFormat('es', { hour: 'numeric', minute: '2-digit', timeZone: 'America/Lima' }).format(arrival) : ''
+  const picking = !valid || editing
 
   useEffect(() => { titleRef.current?.focus({ preventScroll: true }) }, [])
 
@@ -134,8 +180,15 @@ function PeruSection({ onBack }: Props) {
             Próxima parada: Perú <PeruFlag />
           </h1>
           <p className="peru-sub">La cuenta regresiva para tenerte por aquí</p>
-          <Countdown />
-          {PERU_TRIP.isEstimated && arrivalText && <p className="cd-note">Fecha estimada de llegada · {arrivalText}</p>}
+          {picking ? (
+            <ArrivalPicker initial={valid ? arrivalISO : ''} onSave={iso => { saveChosen(iso); setEditing(false) }} onCancel={valid ? () => setEditing(false) : undefined} />
+          ) : (
+            <>
+              <Countdown arrival={arrivalISO} />
+              <p className="cd-note">{chosen || !PERU_TRIP.isEstimated ? 'Llegas el' : 'Fecha estimada de llegada ·'} {arrivalText} · {arrivalTime} (hora de Perú)</p>
+              <button type="button" className="cd-change" onClick={() => setEditing(true)}>✎ Cambiar la fecha</button>
+            </>
+          )}
           <span className="peru-scroll" aria-hidden="true">desliza <i>↓</i></span>
         </header>
 
@@ -160,7 +213,7 @@ function PeruSection({ onBack }: Props) {
               </div>
               <dl className="pass-fields">
                 <div><dt>Pasajera</dt><dd>{RECIPIENT}</dd></div>
-                <div><dt>Llegada</dt><dd>{arrivalShort}{PERU_TRIP.isEstimated && valid ? ' (est.)' : ''}</dd></div>
+                <div><dt>Llegada</dt><dd>{arrivalShort}{!chosen && PERU_TRIP.isEstimated && valid ? ' (est.)' : ''}</dd></div>
                 <div><dt>Equipaje</dt><dd>Muchos abrazos</dd></div>
                 <div><dt>Puerta</dt><dd>♡ 24</dd></div>
               </dl>

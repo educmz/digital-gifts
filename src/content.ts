@@ -140,10 +140,11 @@ export const FRIENDS: { id: FriendId; name: string; message: string }[] = [
 
 // Viaje a Perú (botón "¿Cuánto falta para vernos?" al final de los recuerdos).
 export const PERU_TRIP = {
-  // Fecha y hora de llegada: es la ÚNICA línea que hay que cambiar para mover la cuenta regresiva.
-  // Formato AAAA-MM-DDTHH:MM:SS-05:00 (el -05:00 es la hora de Perú).
-  arrival: '2027-03-01T12:00:00-05:00',
-  // EJEMPLO / FECHA ESTIMADA: mientras sea true se muestra "fecha estimada"; ponlo en false cuando ya sea la definitiva.
+  // Como todavía no se sabe qué día llega, Hetto elige la fecha en la propia pantalla (y la puede cambiar cuando quiera):
+  // se guarda en su navegador. Si ya hay una fecha segura, ponla aquí y será la que se use mientras ella no elija otra.
+  // Formato AAAA-MM-DDTHH:MM:SS-05:00 (el -05:00 es la hora de Perú). Déjala vacía ('') para que ella la elija.
+  arrival: '',
+  // Solo si pones una fecha arriba: mientras sea true se muestra "fecha estimada"; ponlo en false cuando ya sea la definitiva.
   isEstimated: true,
   // Ilustración que aparece como foto del pasaporte (ruta dentro de public/).
   photo: 'images/room/hetto-peruana.webp',

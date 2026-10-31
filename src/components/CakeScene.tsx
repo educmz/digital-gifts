@@ -138,18 +138,24 @@ function CakeScene({ onDone, onNight, onDark }: Props) {
     if (!dark) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let frame = 0
+    let last = 0
+    let smoothSize = 1   // el tamaño de la luz se suaviza: un cambio brusco de un cuadro a otro se vería como un parpadeo
     const tick = (time: number) => {
+      const dt = Math.min(0.05, (time - last) / 1000 || 0.016)
+      last = time
       const flame = flameRef.current
       if (flame && lit) {
         const rect = flame.getBoundingClientRect()
         dark.style.setProperty('--fx', `${rect.left + rect.width / 2}px`)
         dark.style.setProperty('--fy', `${rect.top + rect.height / 2}px`)
       }
-      // Mientras más fuerte se sopla, más tiembla la luz (casi sin encogerse, para que no se vea raro); cuando la llama se reaviva, se agranda un poco.
+      // La luz respira despacio, como una vela (movimientos lentos y pequeños; al soplar fuerte solo se encoge un poco y tiembla un poco más,
+      // sin acelerar el ritmo). Cuando la llama se reaviva la luz crece suave, sin saltos.
       const p = power.current
-      const flicker = reduce ? 1 : 1 + (0.05 + p * 0.07) * Math.sin(time * (0.009 + p * 0.02)) + 0.03 * Math.sin(time * 0.023)
-      const size = (1 - p * 0.14) * (1 + flare.current * 0.12)
-      dark.style.setProperty('--r', `${Math.max(1, light.current.r * flicker * size)}px`)
+      const flicker = reduce ? 1 : 1 + (0.022 + p * 0.016) * Math.sin(time * 0.0034) + 0.012 * Math.sin(time * 0.0083 + 1.3)
+      const targetSize = (1 - p * 0.14) * (1 + flare.current * 0.08)
+      smoothSize += (targetSize - smoothSize) * (1 - Math.exp(-dt * 9))
+      dark.style.setProperty('--r', `${Math.max(1, light.current.r * flicker * smoothSize)}px`)
       dark.style.setProperty('--a', String(light.current.alpha))
       frame = requestAnimationFrame(tick)
     }

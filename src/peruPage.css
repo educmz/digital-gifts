@@ -165,3 +165,33 @@
   .peru-flyby, .peru-bird { display: none; }
   .pass-photo, .plan { transition: none; }
 }
+
+/* ----- Elegir el día de llegada ----- */
+.arrival-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(100%, 520px); padding: clamp(22px, 4vw, 32px) clamp(18px, 4vw, 30px) clamp(20px, 3.4vw, 28px);
+  border-radius: 32px; border: 2px solid #fff; background: linear-gradient(180deg, #ffffffee, #f1f9ffe0); box-shadow: 0 20px 44px #3a8fc566; backdrop-filter: blur(8px);
+}
+.arrival-plane { width: clamp(84px, 16vw, 116px); height: auto; margin-bottom: 2px; filter: drop-shadow(0 4px 4px #2a7aa866); animation: planeHover 2.8s ease-in-out infinite; }
+.arrival-title { margin: 0; font: 700 clamp(26px, 5.4vw, 36px)/1.1 var(--font-fun); color: var(--trip-ink); }
+.arrival-text { margin: 0 0 6px; font: 500 clamp(21px, 3.8vw, 26px)/1.2 'Caveat', cursive; color: var(--trip-soft); text-wrap: balance; }
+.arrival-fields { display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; width: 100%; }
+.arrival-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: left; }
+.arrival-field span { padding-left: 6px; font: 600 11px var(--font-fun); letter-spacing: .08em; text-transform: uppercase; color: var(--trip-soft); }
+.arrival-field input {
+  width: 100%; min-width: 0; padding: 12px 14px; border: 2px solid #bfe0f5; border-radius: 18px; background: #fff; color: var(--trip-ink);
+  font: 600 16px var(--font-fun); color-scheme: light; box-sizing: border-box;
+}
+.arrival-field input:focus { outline: none; border-color: var(--trip-green); box-shadow: 0 0 0 4px #35c27f33; }
+.arrival-error { margin: 2px 0 0; padding: 4px 14px; border-radius: 20px; background: #ffe3e6; font: 600 14px var(--font-fun); color: #c0394f; }
+.arrival-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px; }
+.arrival-save {
+  padding: 13px 26px; border: 2px solid var(--trip-green-dark); border-radius: 30px; background: linear-gradient(180deg, #4fd49a, #2fb878); color: #fff; cursor: pointer;
+  font: 600 16px var(--font-fun); box-shadow: inset 0 2px #a8f0cc, 0 4px var(--trip-green-dark);
+}
+.arrival-save:hover { background: linear-gradient(180deg, #43c78d, #27a56a); }
+.arrival-cancel { padding: 13px 22px; border: 2px solid #bfe0f5; border-radius: 30px; background: #fff; color: var(--trip-soft); cursor: pointer; font: 600 15px var(--font-fun); }
+.arrival-cancel:hover { background: #f1f9ff; }
+.cd-change { margin-top: 8px; padding: 6px 16px; border: 2px solid #ffffffcc; border-radius: 30px; background: #ffffff77; color: var(--trip-soft); cursor: pointer; font: 600 13px var(--font-fun); transition: background .2s, scale .2s; }
+.cd-change:hover { background: #fff; scale: 1.05; }
+@media (max-width: 420px) { .arrival-fields { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .arrival-plane { animation: none; } .cd-change { transition: none; } }
