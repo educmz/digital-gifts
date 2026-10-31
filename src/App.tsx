@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
 import './App.css'
 import './extras.css'
 import './letters.css'
@@ -51,6 +52,8 @@ function App() {
   // Viaje en avión entre la sección principal y la de Perú (null = sin viaje en curso).
   const [flight, setFlight] = useState<Flight | null>(null)
   const returnToEnd = useRef(false)
+  const covering = useRef(false)
+  const [modalClosing, setModalClosing] = useState(false)   // el aviso de acceso se desvanece antes de pasar a la torta
   const flashRef = useRef<HTMLDivElement>(null)
   const sunriseTimer = useRef(0)
 
@@ -111,6 +114,25 @@ function App() {
     setStage('letter')
   }
   const tryAgain = () => setCode('')
+  // Cambio de pantalla con un destello rosado que la cubre y se retira (sin cortes bruscos entre cartas, sobres y recuerdos).
+  const coverTo = (to: Stage) => {
+    const flash = flashRef.current
+    if (!flash || covering.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setStage(to); return }
+    covering.current = true
+    gsap.to(flash, {
+      opacity: 1, duration: 0.3, ease: 'power1.in', overwrite: true,
+      onComplete: () => {
+        setStage(to)
+        gsap.to(flash, { opacity: 0, duration: 0.7, delay: 0.15, ease: 'power1.out', overwrite: true, onComplete: () => { covering.current = false } })
+      },
+    })
+  }
+  const enterCake = () => {
+    if (modalClosing) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setDark(true); setStage('cake'); return }
+    setModalClosing(true)
+    window.setTimeout(() => { setDark(true); setStage('cake'); setModalClosing(false) }, 340)
+  }
   const fly = (to: Stage, direction: FlightDirection) => {
     if (flight) return
     returnToEnd.current = to === 'memories'
@@ -131,7 +153,7 @@ function App() {
   const showDecor = showBunting
 
   return (
-    <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : stage === 'peru' ? 'peru-screen' : stage === 'memories' ? 'memories-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''}`}>
+    <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : stage === 'peru' ? 'peru-screen' : stage === 'memories' ? 'memories-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''} ${modalClosing ? 'is-leaving' : ''}`}>
       <div className="letter-flash" ref={flashRef} aria-hidden="true" />
       {showSky && <SkyBackground night={night} />}
       {showDecor && <FloatingDecor />}
@@ -156,28 +178,28 @@ function App() {
           {stage === 'cake' && <CakeScene onNight={setNight} onDark={setDark} onDone={finishWish} />}
           {stage === 'envelope' && (
             <div className="stage">
-              <EnvelopePicker opened={openedLetters} flashRef={flashRef} onOpen={openLetter} onContinue={() => setStage('memories')} />
+              <EnvelopePicker opened={openedLetters} flashRef={flashRef} onOpen={openLetter} onContinue={() => coverTo('memories')} />
             </div>
           )}
           {stage === 'letter' && (
             <LetterView key={LETTERS[activeLetter].id} letter={LETTERS[activeLetter]}
-              remaining={LETTERS.length - openedLetters.length} flashRef={flashRef} onBack={() => setStage('envelope')} />
+              remaining={LETTERS.length - openedLetters.length} flashRef={flashRef} onBack={() => coverTo('envelope')} />
           )}
-          {stage === 'memories' && <Memories onBack={() => setStage('envelope')} onTravel={() => fly('peru', 'forward')} />}
+          {stage === 'memories' && <Memories onBack={() => coverTo('envelope')} onTravel={() => fly('peru', 'forward')} />}
         </section>
       )}
 
       {flight && <PlaneTransition direction={flight.direction} onCovered={() => setStage(flight.to)} onDone={() => setFlight(null)} />}
 
       {result && stage === 'locked' && (
-        <div className="modal-overlay">
+        <div className={`modal-overlay ${modalClosing ? 'is-closing' : ''}`}>
           <section className="result-modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
             <h2 id="result-title"><BouncyText text={result === 'success' ? '¡Acceso permitido!' : '¡Código incorrecto!'} /></h2>
             <div className={`character ${result}`} role="img" aria-label={result === 'success' ? 'Perrito feliz' : 'Perrito triste'}>
               <img className="character-image" src={import.meta.env.BASE_URL + 'images/' + (result === 'success' ? 'success-character.webp' : 'error-character.webp')} alt="" onError={e => { e.currentTarget.style.display = 'none' }} />
             </div>
             <p>{result === 'success' ? '¡Lo conseguiste!' : '¿Intentamos otra vez?'}</p>
-            <button className="modal-button" onClick={result === 'error' ? tryAgain : () => { setDark(true); setStage('cake') }}>
+            <button className="modal-button" onClick={result === 'error' ? tryAgain : enterCake}>
               {result === 'success' ? 'Continuar' : 'Reintentar'}
             </button>
           </section>

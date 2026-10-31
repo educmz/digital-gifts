@@ -61,6 +61,7 @@ function MemoryAlbum() {
   const rootRef = useRef<HTMLElement>(null)
   const [open, setOpen] = useState<number | null>(null)
   const [direction, setDirection] = useState<'next' | 'prev' | null>(null)
+  const [closing, setClosing] = useState(false)
   const openerRef = useRef<HTMLElement | null>(null)
 
   useLayoutEffect(() => {
@@ -91,11 +92,19 @@ function MemoryAlbum() {
     return () => { window.clearTimeout(pending); context.revert() }
   }, [reduce, columns])
 
+  // El visor se desvanece al cerrar (en vez de desaparecer de golpe)
   const close = useCallback(() => {
-    setOpen(null)
-    setDirection(null)
-    openerRef.current?.focus({ preventScroll: true })
-  }, [])
+    if (closing) return
+    const finish = () => {
+      setOpen(null)
+      setDirection(null)
+      setClosing(false)
+      openerRef.current?.focus({ preventScroll: true })
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return }
+    setClosing(true)
+    window.setTimeout(finish, 240)
+  }, [closing])
   const step = useCallback((delta: number) => {
     setDirection(delta > 0 ? 'next' : 'prev')
     setOpen(current => current === null ? null : (current + delta + MEMORIES.length) % MEMORIES.length)
@@ -159,7 +168,7 @@ function MemoryAlbum() {
       </div>
 
       {current && createPortal(
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label={current.caption} onClick={close}>
+        <div className={`lightbox ${closing ? 'is-closing' : ''}`} role="dialog" aria-modal="true" aria-label={current.caption} onClick={close}>
           <figure className={`lightbox-card ${direction ? `lightbox-card--${direction}` : ''}`} key={open} onClick={event => event.stopPropagation()}>
             <img src={image(current.src)} alt={current.alt} />
             <figcaption>{current.caption}</figcaption>

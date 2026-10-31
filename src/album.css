@@ -140,6 +140,12 @@
 .album-title .bouncy-char { display: inline-block; transition: translate .25s cubic-bezier(.2, 1.8, .4, 1), color .25s; }
 .album-title .bouncy-char:hover { translate: 0 -10px; color: #d6537f; }
 
+/* Visor: se desvanece al cerrar */
+.lightbox.is-closing { animation: lightboxOut .24s ease-in forwards; pointer-events: none; }
+.lightbox.is-closing .lightbox-card { animation: lightboxCardOut .24s ease-in forwards; }
+@keyframes lightboxOut { to { opacity: 0; } }
+@keyframes lightboxCardOut { to { opacity: 0; scale: .9; rotate: 2deg; } }
+
 /* Visor: la foto entra deslizándose según el lado al que se avanza */
 .lightbox-card--next { animation: lightboxNext .42s cubic-bezier(.2, .9, .3, 1) both; }
 .lightbox-card--prev { animation: lightboxPrev .42s cubic-bezier(.2, .9, .3, 1) both; }

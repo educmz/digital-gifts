@@ -72,7 +72,7 @@ function CakeScene({ onDone, onNight, onDark }: Props) {
     gsap.set(light.current, { r: Math.max(Math.min(window.innerWidth, window.innerHeight) * 0.62, cake) * 1.2, alpha: 0 })
     darkNotifyRef.current(true)
     const timeline = gsap.timeline()
-      .to(light.current, { alpha: 0.94, duration: reduce ? 0 : 0.8, ease: 'power2.out' }, 0)
+      .to(light.current, { alpha: 0.94, duration: reduce ? 0 : 1.2, ease: 'sine.inOut' }, 0)
       .add(() => { canBlow.current = true }, reduce ? 0 : 1.8)
     return () => { timeline.kill(); darkNotifyRef.current(false) }
   }, [])

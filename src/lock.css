@@ -85,3 +85,11 @@
 .modal-button:hover { background: linear-gradient(180deg, #ffc4da, #f69dbb); }
 .modal-button:active { transform: translateY(4px); box-shadow: 0 1px 0 #e98db3; }
 
+/* El aviso de acceso se desvanece al continuar (en vez de desaparecer de golpe) */
+.modal-overlay.is-closing { animation: modalOut .34s ease-in forwards; pointer-events: none; }
+.modal-overlay.is-closing .result-modal { animation: modalCardOut .34s ease-in forwards; }
+@keyframes modalOut { to { opacity: 0; backdrop-filter: blur(0); } }
+@keyframes modalCardOut { to { opacity: 0; scale: .92; translate: 0 -14px; } }
+.is-leaving .pin { animation: pinOut .34s ease-in forwards; }
+.is-leaving .floating-decor--lock { opacity: 0; transition: opacity .34s ease-in; }
+@keyframes pinOut { to { opacity: 0; scale: .96; translate: 0 -10px; } }

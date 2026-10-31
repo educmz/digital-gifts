@@ -71,7 +71,6 @@ function LetterView({ letter, remaining, flashRef, onBack }: Props) {
     return () => {
       observer?.disconnect()
       flashFade?.kill()
-      if (flash) gsap.set(flash, { opacity: 0 })
       context.revert()
     }
   }, [flashRef, letter.id, reveal])
