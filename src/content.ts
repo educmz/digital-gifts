@@ -162,7 +162,7 @@ export const PERU_TRIP = {
 }
 
 // Música de fondo: las canciones que le gustan a Hetto (archivos en public/Audio/, con el nombre tal cual del archivo).
-// Suenan en este orden, una tras otra y en bucle; empiezan con el primer toque en la página y ella puede pausarlas o saltar de canción.
+// Suenan en este orden, una tras otra y en bucle, sin ningún control a la vista; empiezan solas con el primer toque en la página.
 export const SONGS: { file: string; title: string; artist: string }[] = [
   { file: "BTS (방탄소년단) - 'Like Animals' (Traducida al español Hangul Lyrics).mp3", title: 'Like Animals', artist: 'BTS' },
   { file: 'Lauv - Who ft. BTS (Traducida al Español).mp3', title: 'Who', artist: 'Lauv ft. BTS' },

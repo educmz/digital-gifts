@@ -140,6 +140,7 @@ function PeruSection({ onBack }: Props) {
   // La fecha la elige Hetto (se guarda en su navegador); si no ha elegido, se usa la de content.ts, y si tampoco hay, se le pide.
   const [chosen, saveChosen] = useStoredArrival()
   const [editing, setEditing] = useState(false)
+  const [swapped, setSwapped] = useState(false)   // ya hubo un cambio hecho por Hetto (activa el fundido de entrada)
   const arrivalISO = chosen || PERU_TRIP.arrival
   const arrival = new Date(arrivalISO)
   const valid = arrivalISO !== '' && !Number.isNaN(arrival.getTime())
@@ -180,15 +181,19 @@ function PeruSection({ onBack }: Props) {
             Próxima parada: Perú <PeruFlag />
           </h1>
           <p className="peru-sub">La cuenta regresiva para tenerte por aquí</p>
-          {picking ? (
-            <ArrivalPicker initial={valid ? arrivalISO : ''} onSave={iso => { saveChosen(iso); setEditing(false) }} onCancel={valid ? () => setEditing(false) : undefined} />
-          ) : (
-            <>
-              <Countdown arrival={arrivalISO} />
-              <p className="cd-note">{chosen || !PERU_TRIP.isEstimated ? 'Llegas el' : 'Fecha estimada de llegada ·'} {arrivalText} · {arrivalTime} (hora de Perú)</p>
-              <button type="button" className="cd-change" onClick={() => setEditing(true)}>✎ Cambiar la fecha</button>
-            </>
-          )}
+          {/* Al elegir o cambiar la fecha, lo nuevo aparece con un fundido (en vez de cambiar de golpe) */}
+          <div className={`hero-swap ${swapped ? 'is-swapped' : ''}`} key={picking ? 'elegir' : 'contar'}>
+            {picking ? (
+              <ArrivalPicker initial={valid ? arrivalISO : ''}
+                onSave={iso => { saveChosen(iso); setSwapped(true); setEditing(false) }} onCancel={valid ? () => { setSwapped(true); setEditing(false) } : undefined} />
+            ) : (
+              <>
+                <Countdown arrival={arrivalISO} />
+                <p className="cd-note">{chosen || !PERU_TRIP.isEstimated ? 'Llegas el' : 'Fecha estimada de llegada ·'} {arrivalText} · {arrivalTime} (hora de Perú)</p>
+                <button type="button" className="cd-change" onClick={() => { setSwapped(true); setEditing(true) }}>✎ Cambiar la fecha</button>
+              </>
+            )}
+          </div>
           <span className="peru-scroll" aria-hidden="true">desliza <i>↓</i></span>
         </header>
 

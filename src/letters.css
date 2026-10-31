@@ -263,3 +263,6 @@ html:has(.picker) { overflow: hidden; }
   .picker-list { row-gap: clamp(30px, 5vh, 48px); }
   .picker-hint { margin-top: clamp(12px, 3vh, 28px); }
 }
+
+/* En las cartas, los stickers y adornos de los bordes nunca hacen que la página se desplace hacia los lados */
+.birthday-screen:has(.letter-page) { overflow-x: clip; }

@@ -13,7 +13,6 @@ import './room.css'
 import './peru.css'
 import './peruPage.css'
 import './album.css'
-import './music.css'
 import { LETTERS } from './content'
 import { installHeartEffects } from './heartEffects'
 import { music } from './music'
@@ -28,7 +27,6 @@ import Memories from './components/Memories'
 import PeruSection from './components/PeruSection'
 import PlaneTransition from './components/PlaneTransition'
 import type { FlightDirection } from './components/PlaneTransition'
-import MusicPlayer from './components/MusicPlayer'
 import SkyBackground from './components/SkyBackground'
 
 // Personalización: el código es la fecha del cumpleaños (día y mes, por ejemplo 2410). Cámbialo aquí.
@@ -167,7 +165,6 @@ function App() {
   return (
     <main className={`${stage === 'locked' || stage === 'intro' ? 'gift-screen' : stage === 'peru' ? 'peru-screen' : stage === 'memories' ? 'memories-screen' : 'birthday-screen'} ${night ? 'is-night' : ''} ${dark ? 'is-dark' : ''} ${modalClosing ? 'is-leaving' : ''}`}>
       <div className="letter-flash" ref={flashRef} aria-hidden="true" />
-      <MusicPlayer visible={stage !== 'intro'} />
       {showSky && <SkyBackground night={night} />}
       {showDecor && <FloatingDecor />}
       {showBunting && (
